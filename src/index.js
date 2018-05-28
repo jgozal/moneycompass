@@ -1,29 +1,16 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import StepCard from "./components/step-card";
 
 class App extends React.Component {
   constructor (props) {
       super(props);
-      this.state = {
-          inputvalue: ''
-      }
-      this.handleChange = this.handleChange.bind(this);
-  }
-  
-  handleChange (event) {
-    this.setState({
-        inputvalue: event.target.value
-    })
   }
   
   render() {
     return (
       <div className="app">
-          <form>
-              <label>Name</label>
-              <input type="text" value={this.state.inputvalue} onChange={this.handleChange}/>
-              <input type="submit" value="Submit"/>
-          </form>
+        <StepCard />
       </div>
     );
   }
