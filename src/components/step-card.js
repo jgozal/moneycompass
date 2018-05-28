@@ -1,4 +1,15 @@
 import React from "react";
+import styled, { css } from 'react-emotion'
+
+const Card = styled('div')`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 300px;
+    width: 600px;
+    background: #F5F5F5;
+`
 
 class StepCard extends React.Component {
     constructor (props) {
@@ -17,9 +28,9 @@ class StepCard extends React.Component {
     
     render() {
       return (
-        <div className="step-card">
-            Card Placeholder
-        </div>
+        <Card>
+            Step Card Placeholder
+        </Card>
       );
     }
   }
