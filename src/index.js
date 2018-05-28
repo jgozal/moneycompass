@@ -4,20 +4,25 @@ import styled, { css } from 'react-emotion'
 
 import StepCard from "./components/step-card";
 
-const Container = styled('div')`
+const Container = styled('div') `
     display: flex;
     flex-direction: column;
     justify-content: center;
     vertical-align: center;
     align-items: center;
-    height: 95vh;
+    height: 97vh;
+    background-image: url("src/assets/income.jpeg");
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
 `
 
 class App extends React.Component {
-  constructor (props) {
-      super(props);
+  constructor(props) {
+    super(props);
   }
-  
+
   render() {
     return (
       <Container>
