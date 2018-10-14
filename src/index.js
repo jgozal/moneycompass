@@ -1,22 +1,8 @@
+import 'bootstrap/dist/css/bootstrap.css';
 import React from "react";
 import ReactDOM from "react-dom";
-import styled, { css } from 'react-emotion'
 
-import StepCard from "./components/step-card";
-
-const Container = styled('div') `
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    vertical-align: center;
-    align-items: center;
-    height: 97vh;
-    background-image: url("src/assets/income.jpeg");
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
-`
+import MainForm from "./components/main-form";
 
 class App extends React.Component {
   constructor(props) {
@@ -25,9 +11,9 @@ class App extends React.Component {
 
   render() {
     return (
-      <Container>
-        <StepCard />
-      </Container>
+      <div>
+        <MainForm />
+      </div>
     );
   }
 }
