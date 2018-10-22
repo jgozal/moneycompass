@@ -1,6 +1,13 @@
 // TODO:
-// - Set return amount
 // - Basic styling
+
+// make inputs less wide (1/3 2/3)
+// rates should be percentages
+// Division between the two sections
+// Intro paragraph? What do we want to write? (Context)
+// Format the numbers
+// General text spacing
+// Font size differences?
 
 import _ from 'lodash';
 import React from 'react';
@@ -11,7 +18,10 @@ class MainForm extends React.Component {
 
   constructor() {
     super();
+
     this.calculate = this.calculate.bind(this);
+    this.updateInput = this.updateInput.bind(this);
+
     this.state = this.calculate({
       investmentRate: 0.07,
       mortgageAmt: 200000,
@@ -34,12 +44,13 @@ class MainForm extends React.Component {
   }
 
   updateInput(e) {
-    const state = _.cloneDeep(this.state);
+    let state = _.cloneDeep(this.state);
     const key = e.target.name;
-    const value = Number(e.target.value);
+    const value = parseInt(e.target.value);
+
     _.set(state, key, value);
-    const updatedState = this.calculate(state);
-    this.setState(updatedState);
+    state = this.calculate(state);
+    this.setState(state);
   }
 
   // TODO:
@@ -47,6 +58,10 @@ class MainForm extends React.Component {
   // When I'm done with the mortgage, then invest for the rest of the time
   calculate(state) {
     const COMPOUND_FREQUENCY = 12
+
+    if (!state.options.a.mortgageTerm || !state.options.b.mortgageTerm) {
+      return state
+    }
 
     state.options.a.pmt = PMT(state.mortgageInterestRate / COMPOUND_FREQUENCY, state.options.a.mortgageTerm * COMPOUND_FREQUENCY, state.mortgageAmt);
     state.options.a.interestAmt = state.options.a.pmt * (state.options.a.mortgageTerm * COMPOUND_FREQUENCY) + state.mortgageAmt;
@@ -61,15 +76,13 @@ class MainForm extends React.Component {
   }
 
   render() {
-    // TODO: Calculate PMT
-    // TODO: Calculate interest amount
-
+    console.log(this.state.options)
     let gainForA = this.state.options.a.fv + this.state.options.a.interestAmt
     let gainForB = this.state.options.b.fv + this.state.options.b.interestAmt
 
     return (
-      <div className="clearfix">
-        <div className="col col-6">
+      <div className="row">
+        <div className="col-4 p-1">
           <label>What is your mortgate interest rate?</label>
           <Input type="number" name="mortgageInterestRate" value={this.state.mortgageInterestRate} placeholder="Interest rate (annual)" onChange={this.updateInput}/>
           <label>How long is your first mortgate option?</label>
@@ -81,12 +94,12 @@ class MainForm extends React.Component {
           <label>What is the expected return if you invest your money instead?</label>
           <Input type="number" name="investmentRate" value={this.state.investmentRate} placeholder="Expected return for your investments" onChange={this.updateInput}/>
         </div>
-        <div className="col col-6">
-          <div>The amount of money you'll have if you invest {-1 * (this.state.options.b.pmt - this.state.options.a.pmt).toFixed(0)} on a monthly basis at a {this.state.investmentRate} annual return rate after {this.state.options.a.mortgageTerm} years: {this.state.options.a.fv.toFixed(0)}</div>
-          <div>FV for B: {this.state.options.b.fv.toFixed(0)}</div>
-          <div>FV for A minus interest: {gainForA.toFixed(0)}</div>
-          <div>FV for B minus interest: {gainForB.toFixed(0)}</div>
-          <div>Opportunity cost: {(gainForA - gainForB).toFixed(0)}</div>
+        <div className="col-8 p-1">
+          <div>The amount of money you'll have if you invest {-1 * (this.state.options.b.pmt - this.state.options.a.pmt).toFixed(0)} on a monthly basis at a {this.state.investmentRate} annual return rate after {this.state.options.a.mortgageTerm} years, minus a total mortgage interest of {-1 * this.state.options.a.interestAmt.toFixed(0)}: {gainForA.toFixed(0)}</div>
+
+          <div>The amount of money you'll have if you invest {-1 * this.state.options.b.pmt.toFixed(0)} on a monthly basis at a {this.state.investmentRate} annual return rate after {this.state.options.a.mortgageTerm - this.state.options.b.mortgageTerm} years, minus a total mortgage interest of {-1 * this.state.options.b.interestAmt.toFixed(0)}: {gainForB.toFixed(0)}</div>
+
+          <div>Opportunity cost (the amount of money gained/lost by going with a {this.state.options.a.mortgageTerm} year mortgage): {(gainForA - gainForB).toFixed(0)}</div>
         </div>
       </div>
     )
