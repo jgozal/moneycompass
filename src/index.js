@@ -12,6 +12,9 @@ class App extends React.Component {
   render() {
     return (
       <div>
+        <div class="p-2">
+          Hello world!
+        </div>
         <MainForm />
       </div>
     );

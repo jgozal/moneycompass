@@ -1,3 +1,7 @@
+// References:
+// https://www.bankrate.com/calculators/mortgages/new-house-calculator.aspx
+// https://www.nerdwallet.com/mortgages/mortgage-rates/30-year-fixed
+
 // TODO:
 // - Basic styling
 
@@ -25,28 +29,32 @@ class MainForm extends React.Component {
     this.state = this.calculate({
       investmentRate: 0.07,
       mortgageAmt: 200000,
-      mortgageInterestRate: 0.04,
       options: {
         a: {
           fv: 0,
           interestAmt: 0,
+          mortgageInterestRate: 0.043,
           mortgageTerm: 30,
           pmt: 0,
         },
         b: {
           fv: 0,
           interestAmt: 0,
+          mortgageInterestRate: 0.04,
           mortgageTerm: 15,
           pmt: 0,
         }
       }
-    })
+    });
   }
 
   updateInput(e) {
     let state = _.cloneDeep(this.state);
     const key = e.target.name;
-    const value = parseInt(e.target.value);
+
+    // key and value be explicit
+
+    const value = parseFloat(e.target.value);
 
     _.set(state, key, value);
     state = this.calculate(state);
@@ -57,49 +65,113 @@ class MainForm extends React.Component {
   // What's the longest time to invest?
   // When I'm done with the mortgage, then invest for the rest of the time
   calculate(state) {
-    const COMPOUND_FREQUENCY = 12
+    const COMPOUND_FREQUENCY = 12;
 
-    if (!state.options.a.mortgageTerm || !state.options.b.mortgageTerm) {
-      return state
+    const a = state.options.a;
+    const b = state.options.b;
+
+    if (!a.mortgageTerm || !b.mortgageTerm) {
+      return state;
     }
 
-    state.options.a.pmt = PMT(state.mortgageInterestRate / COMPOUND_FREQUENCY, state.options.a.mortgageTerm * COMPOUND_FREQUENCY, state.mortgageAmt);
-    state.options.a.interestAmt = state.options.a.pmt * (state.options.a.mortgageTerm * COMPOUND_FREQUENCY) + state.mortgageAmt;
+    a.pmt = PMT(a.mortgageInterestRate / COMPOUND_FREQUENCY, a.mortgageTerm * COMPOUND_FREQUENCY, state.mortgageAmt);
+    a.interestAmt = a.pmt * (a.mortgageTerm * COMPOUND_FREQUENCY) + state.mortgageAmt;
 
-    state.options.b.pmt = PMT(state.mortgageInterestRate / COMPOUND_FREQUENCY, state.options.b.mortgageTerm * COMPOUND_FREQUENCY, state.mortgageAmt);
-    state.options.b.interestAmt = state.options.b.pmt * (state.options.b.mortgageTerm * COMPOUND_FREQUENCY) + state.mortgageAmt;
+    b.pmt = PMT(b.mortgageInterestRate / COMPOUND_FREQUENCY, b.mortgageTerm * COMPOUND_FREQUENCY, state.mortgageAmt);
+    b.interestAmt = b.pmt * (b.mortgageTerm * COMPOUND_FREQUENCY) + state.mortgageAmt;
 
-    state.options.a.fv = FV(state.investmentRate / COMPOUND_FREQUENCY, state.options.a.mortgageTerm * COMPOUND_FREQUENCY, state.options.b.pmt - state.options.a.pmt, 0)
-    state.options.b.fv = FV(state.investmentRate / COMPOUND_FREQUENCY, (state.options.a.mortgageTerm - state.options.b.mortgageTerm) * COMPOUND_FREQUENCY, state.options.b.pmt, 0)
+    a.fv = FV(state.investmentRate / COMPOUND_FREQUENCY, a.mortgageTerm * COMPOUND_FREQUENCY, b.pmt - a.pmt, 0);
+    b.fv = FV(state.investmentRate / COMPOUND_FREQUENCY, (a.mortgageTerm - b.mortgageTerm) * COMPOUND_FREQUENCY, b.pmt, 0);
 
-    return state
+    return state;
   }
 
   render() {
-    console.log(this.state.options)
-    let gainForA = this.state.options.a.fv + this.state.options.a.interestAmt
-    let gainForB = this.state.options.b.fv + this.state.options.b.interestAmt
+    const a = this.state.options.a;
+    const b = this.state.options.b;
+
+    let gainForA = a.fv + a.interestAmt;
+    let gainForB = b.fv + b.interestAmt;
 
     return (
-      <div className="row">
-        <div className="col-4 p-1">
-          <label>What is your mortgate interest rate?</label>
-          <Input type="number" name="mortgageInterestRate" value={this.state.mortgageInterestRate} placeholder="Interest rate (annual)" onChange={this.updateInput}/>
-          <label>How long is your first mortgate option?</label>
-          <Input type="number" name="options.a.mortgageTerm" value={this.state.options.a.mortgageTerm} placeholder="Number of years" onChange={this.updateInput}/>
-          <label>How long is your second mortgate option?</label>
-          <Input type="number" name="options.b.mortgageTerm" value={this.state.options.b.mortgageTerm} placeholder="Number of years (to compare)" onChange={this.updateInput}/>
+      <div className="row p-2">
+        <div className="col-6">
+          <div class="row mb-1">
+            <div class="col-6 border p-1">
+              <h3>Mortgage option 1</h3>
+              <label>What is your mortgate interest rate?</label>
+              <Input
+                name="options.a.mortgageInterestRate"
+                onChange={this.updateInput}
+                placeholder="Interest rate (annual)"
+                type="number"
+                value={a.mortgageInterestRate}
+                />
+              <label>How long is your first mortgate option?</label>
+              <Input
+                name="options.a.mortgageTerm"
+                onChange={this.updateInput}
+                placeholder="Number of years"
+                type="number"
+                value={a.mortgageTerm}
+                />
+            </div>
+            <div class="col-6 border p-1">
+              <h3>Mortgage option 2</h3>
+              <label>What is your mortgate interest rate?</label>
+              <Input
+                name="options.b.mortgageInterestRate"
+                onChange={this.updateInput}
+                placeholder="Interest rate (annual)"
+                type="number"
+                value={b.mortgageInterestRate}
+                />
+              <label>How long is your second mortgate option?</label>
+              <Input
+                name="options.b.mortgageTerm"
+                onChange={this.updateInput}
+                placeholder="Number of years (to compare)"
+                type="number"
+                value={b.mortgageTerm}
+                />
+            </div>
+          </div>
           <label>How much is your mortgage amount (the loan you are taking out)?</label>
-          <Input type="number" name="mortgageAmt" value={this.state.mortgageAmt} placeholder="Mortgage amount (the loan you are taking out)" onChange={this.updateInput}/>
+          <Input
+            class="mb-1"
+            name="mortgageAmt"
+            onChange={this.updateInput}
+            placeholder="Mortgage amount (the loan you are taking out)"
+            type="number"
+            value={this.state.mortgageAmt}
+            />
           <label>What is the expected return if you invest your money instead?</label>
-          <Input type="number" name="investmentRate" value={this.state.investmentRate} placeholder="Expected return for your investments" onChange={this.updateInput}/>
+          <Input
+            class="mb-1"
+            name="investmentRate"
+            onChange={this.updateInput}
+            placeholder="Expected return for your investments"
+            type="number"
+            value={this.state.investmentRate}
+            />
         </div>
-        <div className="col-8 p-1">
-          <div>The amount of money you'll have if you invest {-1 * (this.state.options.b.pmt - this.state.options.a.pmt).toFixed(0)} on a monthly basis at a {this.state.investmentRate} annual return rate after {this.state.options.a.mortgageTerm} years, minus a total mortgage interest of {-1 * this.state.options.a.interestAmt.toFixed(0)}: {gainForA.toFixed(0)}</div>
-
-          <div>The amount of money you'll have if you invest {-1 * this.state.options.b.pmt.toFixed(0)} on a monthly basis at a {this.state.investmentRate} annual return rate after {this.state.options.a.mortgageTerm - this.state.options.b.mortgageTerm} years, minus a total mortgage interest of {-1 * this.state.options.b.interestAmt.toFixed(0)}: {gainForB.toFixed(0)}</div>
-
-          <div>Opportunity cost (the amount of money gained/lost by going with a {this.state.options.a.mortgageTerm} year mortgage): {(gainForA - gainForB).toFixed(0)}</div>
+        <div className="col-6">
+          <p>
+            The amount of money you'll have if you invest {-1 * (b.pmt - a.pmt).toFixed(0)}
+            on a monthly basis at a {this.state.investmentRate} annual return rate
+            after {a.mortgageTerm} years, minus a total mortgage interest of
+            {-1 * a.interestAmt.toFixed(0)}: {gainForA.toFixed(0)}
+          </p>
+          <p>
+            The amount of money you'll have if you invest {-1 * b.pmt.toFixed(0)}
+            on a monthly basis at a {this.state.investmentRate} annual return rate
+            after {a.mortgageTerm - b.mortgageTerm} years, minus a total mortgage
+            interest of {-1 * b.interestAmt.toFixed(0)}: {gainForB.toFixed(0)}
+          </p>
+          <p>
+            Opportunity cost (the amount of money gained/lost by going with a
+            {a.mortgageTerm} year mortgage): {(gainForA - gainForB).toFixed(0)}
+          </p>
         </div>
       </div>
     )
@@ -107,5 +179,3 @@ class MainForm extends React.Component {
 }
 
 export default MainForm;
-
-// https://www.bankrate.com/calculators/mortgages/new-house-calculator.aspx
