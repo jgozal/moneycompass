@@ -84,7 +84,7 @@ class MainForm extends React.Component {
 
     return (
       <div className="row p-2">
-        <div className="col-4">
+        <div className="col-4 border-right">
           <div class="row mb-1">
             <div class="col-6 border p-1">
               <h3>Mortgage option 1</h3>
