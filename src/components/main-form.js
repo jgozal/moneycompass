@@ -87,9 +87,10 @@ class MainForm extends React.Component {
         <div className="col-4 border-right">
           <div className="row">
             <div className="col-6">
-              <h3>Mortgage option 1</h3>
+              <h4>Mortgage option 1</h4>
               <label>What is your mortgate interest rate?</label>
               <Input
+                className="mb-2"
                 name="options.a.mortgageInterestRate"
                 onChange={this.updateInput}
                 placeholder="Interest rate (annual)"
@@ -98,6 +99,7 @@ class MainForm extends React.Component {
                 />
               <label>How long is your first mortgate option?</label>
               <Input
+                className="mb-2"
                 name="options.a.mortgageTerm"
                 onChange={this.updateInput}
                 placeholder="Number of years"
@@ -106,9 +108,10 @@ class MainForm extends React.Component {
                 />
             </div>
             <div className="col-6">
-              <h3>Mortgage option 2</h3>
+              <h4>Mortgage option 2</h4>
               <label>What is your mortgate interest rate?</label>
               <Input
+                className="mb-2"
                 name="options.b.mortgageInterestRate"
                 onChange={this.updateInput}
                 placeholder="Interest rate (annual)"
@@ -117,6 +120,7 @@ class MainForm extends React.Component {
                 />
               <label>How long is your second mortgate option?</label>
               <Input
+                className="mb-2"
                 name="options.b.mortgageTerm"
                 onChange={this.updateInput}
                 placeholder="Number of years (to compare)"
@@ -127,7 +131,7 @@ class MainForm extends React.Component {
           </div>
           <label>How much is your mortgage amount (the loan you are taking out)?</label>
           <Input
-            className="mb-1"
+            className="mb-2"
             name="mortgageAmt"
             onChange={this.updateInput}
             placeholder="Mortgage amount (the loan you are taking out)"
@@ -136,7 +140,7 @@ class MainForm extends React.Component {
             />
           <label>What is the expected return if you invest your money instead?</label>
           <Input
-            className="mb-1"
+            className="mb-2"
             name="investmentRate"
             onChange={this.updateInput}
             placeholder="Expected return for your investments"
