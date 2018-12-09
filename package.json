@@ -1,7 +1,7 @@
 {
   "name": "moneycompass",
   "version": "1.0.0",
-  "description": "See how your finances compare with millions of people like you",
+  "description": "Free financial planning for everyone",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

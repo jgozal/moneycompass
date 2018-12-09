@@ -2,17 +2,6 @@
 // https://www.bankrate.com/calculators/mortgages/new-house-calculator.aspx
 // https://www.nerdwallet.com/mortgages/mortgage-rates/30-year-fixed
 
-// TODO:
-// - Basic styling
-
-// make inputs less wide (1/3 2/3)
-// rates should be percentages
-// Division between the two sections
-// Intro paragraph? What do we want to write? (Context)
-// Format the numbers
-// General text spacing
-// Font size differences?
-
 import _ from 'lodash';
 import React from 'react';
 import { InputGroup, InputGroupAddon, InputGroupText, Input } from 'reactstrap';
