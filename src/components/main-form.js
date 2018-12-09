@@ -88,7 +88,7 @@ class MainForm extends React.Component {
           <div className="row">
             <div className="col-6">
               <h4>Mortgage option 1</h4>
-              <label>What is your mortgate interest rate?</label>
+              <label>What is your mortgage interest rate?</label>
               <Input
                 className="mb-2"
                 name="options.a.mortgageInterestRate"
@@ -97,7 +97,7 @@ class MainForm extends React.Component {
                 type="number"
                 value={a.mortgageInterestRate}
                 />
-              <label>How long is your first mortgate option?</label>
+              <label>How long is your first mortgage option?</label>
               <Input
                 className="mb-2"
                 name="options.a.mortgageTerm"
@@ -109,7 +109,7 @@ class MainForm extends React.Component {
             </div>
             <div className="col-6">
               <h4>Mortgage option 2</h4>
-              <label>What is your mortgate interest rate?</label>
+              <label>What is your mortgage interest rate?</label>
               <Input
                 className="mb-2"
                 name="options.b.mortgageInterestRate"
@@ -118,7 +118,7 @@ class MainForm extends React.Component {
                 type="number"
                 value={b.mortgageInterestRate}
                 />
-              <label>How long is your second mortgate option?</label>
+              <label>How long is your second mortgage option?</label>
               <Input
                 className="mb-2"
                 name="options.b.mortgageTerm"
