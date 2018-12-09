@@ -12,7 +12,7 @@ class App extends React.Component {
   render() {
     // TODO 018.12.09: Include an intro paragraph
     return (
-      <div>
+      <div className="container-fluid">
         <MainForm />
       </div>
     );
