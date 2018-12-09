@@ -84,7 +84,7 @@ class MainForm extends React.Component {
 
     return (
       <div className="row p-2">
-        <div className="col-6">
+        <div className="col-4">
           <div class="row mb-1">
             <div class="col-6 border p-1">
               <h3>Mortgage option 1</h3>
@@ -144,7 +144,7 @@ class MainForm extends React.Component {
             value={this.state.investmentRate}
             />
         </div>
-        <div className="col-6">
+        <div className="col-8">
           <p>
             The amount of money you'll have if you invest {-1 * (b.pmt - a.pmt).toFixed(0)}
             on a monthly basis at a {this.state.investmentRate} annual return rate
