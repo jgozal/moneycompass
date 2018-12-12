@@ -45,9 +45,11 @@ class MainForm extends React.Component {
 
     const value = parseFloat(e.target.value);
 
-    _.set(state, key, value);
-    state = this.calculate(state);
-    this.setState(state);
+     _.set(state, key, value);
+      if (!isNaN(value)) {
+        state = this.calculate(state);
+      }
+      this.setState(state);
   }
 
   // TODO:
