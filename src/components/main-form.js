@@ -16,20 +16,20 @@ class MainForm extends React.Component {
     this.updateInput = this.updateInput.bind(this);
 
     this.state = this.calculate({
-      investmentRate: 0.07,
+      investmentRate: 7,
       mortgageAmt: 200000,
       options: {
         a: {
           fv: 0,
           interestAmt: 0,
-          mortgageInterestRate: 0.043,
+          mortgageInterestRate: 4.3,
           mortgageTerm: 30,
           pmt: 0,
         },
         b: {
           fv: 0,
           interestAmt: 0,
-          mortgageInterestRate: 0.04,
+          mortgageInterestRate: 4,
           mortgageTerm: 15,
           pmt: 0,
         }
@@ -50,9 +50,6 @@ class MainForm extends React.Component {
     this.setState(state);
   }
 
-  // TODO:
-  // What's the longest time to invest?
-  // When I'm done with the mortgage, then invest for the rest of the time
   calculate(state) {
     const COMPOUND_FREQUENCY = 12;
 
@@ -63,14 +60,14 @@ class MainForm extends React.Component {
       return state;
     }
 
-    a.pmt = PMT(a.mortgageInterestRate / COMPOUND_FREQUENCY, a.mortgageTerm * COMPOUND_FREQUENCY, state.mortgageAmt);
+    a.pmt = PMT(a.mortgageInterestRate / 100 / COMPOUND_FREQUENCY, a.mortgageTerm * COMPOUND_FREQUENCY, state.mortgageAmt);
     a.interestAmt = a.pmt * (a.mortgageTerm * COMPOUND_FREQUENCY) + state.mortgageAmt;
 
-    b.pmt = PMT(b.mortgageInterestRate / COMPOUND_FREQUENCY, b.mortgageTerm * COMPOUND_FREQUENCY, state.mortgageAmt);
+    b.pmt = PMT(b.mortgageInterestRate / 100 / COMPOUND_FREQUENCY, b.mortgageTerm * COMPOUND_FREQUENCY, state.mortgageAmt);
     b.interestAmt = b.pmt * (b.mortgageTerm * COMPOUND_FREQUENCY) + state.mortgageAmt;
 
-    a.fv = FV(state.investmentRate / COMPOUND_FREQUENCY, a.mortgageTerm * COMPOUND_FREQUENCY, b.pmt - a.pmt, 0);
-    b.fv = FV(state.investmentRate / COMPOUND_FREQUENCY, (a.mortgageTerm - b.mortgageTerm) * COMPOUND_FREQUENCY, b.pmt, 0);
+    a.fv = FV(state.investmentRate / 100 / COMPOUND_FREQUENCY, a.mortgageTerm * COMPOUND_FREQUENCY, b.pmt - a.pmt, 0);
+    b.fv = FV(state.investmentRate / 100 / COMPOUND_FREQUENCY, (a.mortgageTerm - b.mortgageTerm) * COMPOUND_FREQUENCY, b.pmt, 0);
 
     return state;
   }
@@ -146,20 +143,13 @@ class MainForm extends React.Component {
         </div>
         <div className="col-6">
           <p>
-            The amount of money you'll have if you invest {-1 * (b.pmt - a.pmt).toFixed(0)}
-            on a monthly basis at a {this.state.investmentRate} annual return rate
-            after {a.mortgageTerm} years, minus a total mortgage interest of
-            {-1 * a.interestAmt.toFixed(0)}: {gainForA.toFixed(0)}
+            The amount of money you'll have if you invest ${-1 * (b.pmt - a.pmt).toFixed(0).toLocaleString()} on a monthly basis at a {this.state.investmentRate.toLocaleString()}% annual return rate after {a.mortgageTerm.toLocaleString()} years, minus a total mortgage interest of ${-1 * a.interestAmt.toFixed(0).toLocaleString()}: ${gainForA.toFixed(0).toLocaleString(undefined, {maximumFractionDigits:2})}
           </p>
           <p>
-            The amount of money you'll have if you invest {-1 * b.pmt.toFixed(0)}
-            on a monthly basis at a {this.state.investmentRate} annual return rate
-            after {a.mortgageTerm - b.mortgageTerm} years, minus a total mortgage
-            interest of {-1 * b.interestAmt.toFixed(0)}: {gainForB.toFixed(0)}
+            The amount of money you'll have if you invest ${-1 * b.pmt.toFixed(0).toLocaleString()} on a monthly basis at a {this.state.investmentRate.toLocaleString()}% annual return rate after {(a.mortgageTerm - b.mortgageTerm).toLocaleString()} years, minus a total mortgage interest of ${-1 * b.interestAmt.toFixed(0).toLocaleString()}: ${gainForB.toFixed(0).toLocaleString()}
           </p>
           <p>
-            Opportunity cost (the amount of money gained/lost by going with a
-            {a.mortgageTerm} year mortgage): {(gainForA - gainForB).toFixed(0)}
+            Opportunity cost (the amount of money gained/lost by going with a {a.mortgageTerm.toLocaleString()} year mortgage): ${(gainForA - gainForB).toFixed(0).toLocaleString()}
           </p>
         </div>
       </div>
