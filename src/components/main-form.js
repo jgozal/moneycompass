@@ -4,6 +4,7 @@
 
 import _ from 'lodash';
 import React from 'react';
+import numeral from 'numeral';
 import { InputGroup, InputGroupAddon, InputGroupText, Input } from 'reactstrap';
 import { FV, PMT } from 'formulajs/lib/financial';
 
@@ -143,13 +144,13 @@ class MainForm extends React.Component {
         </div>
         <div className="col-6">
           <p>
-            The amount of money you'll have if you invest ${-1 * (b.pmt - a.pmt).toFixed(0).toLocaleString()} on a monthly basis at a {this.state.investmentRate.toLocaleString()}% annual return rate after {a.mortgageTerm.toLocaleString()} years, minus a total mortgage interest of ${-1 * a.interestAmt.toFixed(0).toLocaleString()}: ${gainForA.toFixed(0).toLocaleString(undefined, {maximumFractionDigits:2})}
+            The amount of money you'll have if you invest ${numeral(-1 * (b.pmt - a.pmt).toFixed(0)).format('0,0')} on a monthly basis at a {numeral(this.state.investmentRate).format('0,0')}% annual return rate after {numeral(a.mortgageTerm).format('0,0')} years, minus a total mortgage interest of ${numeral(-1 * a.interestAmt.toFixed(0)).format('0,0')}: ${numeral(gainForA.toFixed(0)).format('0,0')}
           </p>
           <p>
-            The amount of money you'll have if you invest ${-1 * b.pmt.toFixed(0).toLocaleString()} on a monthly basis at a {this.state.investmentRate.toLocaleString()}% annual return rate after {(a.mortgageTerm - b.mortgageTerm).toLocaleString()} years, minus a total mortgage interest of ${-1 * b.interestAmt.toFixed(0).toLocaleString()}: ${gainForB.toFixed(0).toLocaleString()}
+            The amount of money you'll have if you invest ${numeral(-1 * b.pmt.toFixed(0)).format('0,0')} on a monthly basis at a {numeral(this.state.investmentRate).format('0,0')}% annual return rate after {numeral(a.mortgageTerm - b.mortgageTerm).format('0,0')} years, minus a total mortgage interest of ${numeral(-1 * b.interestAmt.toFixed(0)).format('0,0')}: ${numeral(gainForB.toFixed(0)).format('0,0')}
           </p>
           <p>
-            Opportunity cost (the amount of money gained/lost by going with a {a.mortgageTerm.toLocaleString()} year mortgage): ${(gainForA - gainForB).toFixed(0).toLocaleString()}
+            Opportunity cost (the amount of money gained/lost by going with a {numeral(a.mortgageTerm).format('0,0')} year mortgage): ${numeral((gainForA - gainForB).toFixed(0)).format('0,0')}
           </p>
         </div>
       </div>
