@@ -87,17 +87,17 @@ class MainForm extends React.Component {
         <div className="col-4 border-right">
           <div className="row">
             <div className="col-6">
-              <h4>Mortgage option 1</h4>
-              <label>What is your mortgage interest rate?</label>
+              <h4>Mortgage 1</h4>
+              <label>What is the mortgage's APR? (annual percentage rate)</label>
               <Input
                 className="mb-2"
                 name="options.a.mortgageInterestRate"
                 onChange={this.updateInput}
-                placeholder="Interest rate (annual)"
+                placeholder="Annual Percentage Rate"
                 type="number"
                 value={a.mortgageInterestRate}
                 />
-              <label>How long is your first mortgage option?</label>
+              <label>What is the term of the first mortgage? (in years)</label>
               <Input
                 className="mb-2"
                 name="options.a.mortgageTerm"
@@ -108,37 +108,37 @@ class MainForm extends React.Component {
                 />
             </div>
             <div className="col-6">
-              <h4>Mortgage option 2</h4>
-              <label>What is your mortgage interest rate?</label>
+              <h4>Mortgage 2</h4>
+              <label>What is the mortgage's APR? (annual percentage rate)</label>
               <Input
                 className="mb-2"
                 name="options.b.mortgageInterestRate"
                 onChange={this.updateInput}
-                placeholder="Interest rate (annual)"
+                placeholder="Annual Percentage Rate"
                 type="number"
                 value={b.mortgageInterestRate}
                 />
-              <label>How long is your second mortgage option?</label>
+              <label>What is the term of the second mortgage? (in years)</label>
               <Input
                 className="mb-2"
                 name="options.b.mortgageTerm"
                 onChange={this.updateInput}
-                placeholder="Number of years (to compare)"
+                placeholder="Number of years"
                 type="number"
                 value={b.mortgageTerm}
                 />
             </div>
           </div>
-          <label>How much is your mortgage amount (the loan you are taking out)?</label>
+          <label>What is the size of your loan?</label>
           <Input
             className="mb-2"
             name="mortgageAmt"
             onChange={this.updateInput}
-            placeholder="Mortgage amount (the loan you are taking out)"
+            placeholder="Mortgage amount"
             type="number"
             value={this.state.mortgageAmt}
             />
-          <label>What is the expected return if you invest your money instead?</label>
+          <label>What is your expected return if you invest your money?</label>
           <Input
             className="mb-2"
             name="investmentRate"
@@ -150,10 +150,10 @@ class MainForm extends React.Component {
         </div>
         <div className="col-8">
           <p>
-            The amount of money you'll have if you invest ${numeral(-1 * (b.pmt - a.pmt).toFixed(0)).format('0,0')} on a monthly basis at a {numeral(this.state.investmentRate).format('0,0')}% annual return rate after {numeral(a.mortgageTerm).format('0,0')} years, minus a total mortgage interest of ${numeral(-1 * a.interestAmt.toFixed(0)).format('0,0')}: <b>${numeral(gainForA.toFixed(0)).format('0,0')}</b>
+            This is the amount of money you'll have if you invest ${numeral(-1 * (b.pmt - a.pmt).toFixed(0)).format('0,0')} on a monthly basis at a {numeral(this.state.investmentRate).format('0,0')}% annual return rate after {numeral(a.mortgageTerm).format('0,0')} years, minus a total mortgage interest of ${numeral(-1 * a.interestAmt.toFixed(0)).format('0,0')}: <b>${numeral(gainForA.toFixed(0)).format('0,0')}</b>
           </p>
           <p>
-            The amount of money you'll have if you invest ${numeral(-1 * b.pmt.toFixed(0)).format('0,0')} on a monthly basis at a {numeral(this.state.investmentRate).format('0,0')}% annual return rate after {numeral(a.mortgageTerm - b.mortgageTerm).format('0,0')} years, minus a total mortgage interest of ${numeral(-1 * b.interestAmt.toFixed(0)).format('0,0')}: <b>${numeral(gainForB.toFixed(0)).format('0,0')}</b>
+            This is the amount of money you'll have if you invest ${numeral(-1 * b.pmt.toFixed(0)).format('0,0')} on a monthly basis at a {numeral(this.state.investmentRate).format('0,0')}% annual return rate after {numeral(a.mortgageTerm - b.mortgageTerm).format('0,0')} years, minus a total mortgage interest of ${numeral(-1 * b.interestAmt.toFixed(0)).format('0,0')}: <b>${numeral(gainForB.toFixed(0)).format('0,0')}</b>
           </p>
           <p>
             Opportunity cost (the amount of money gained/lost by going with a {numeral(a.mortgageTerm).format('0,0')} year mortgage): <b>${numeral((gainForA - gainForB).toFixed(0)).format('0,0')}</b>
