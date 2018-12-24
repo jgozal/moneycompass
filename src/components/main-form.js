@@ -158,6 +158,14 @@ class MainForm extends React.Component {
           <p>
             Opportunity cost (the amount of money gained/lost by going with a {numeral(a.mortgageTerm).format('0,0')} year mortgage): <b>${numeral((gainForA - gainForB).toFixed(0)).format('0,0')}</b>
           </p>
+          <h3>FAQ</h3>
+          <h6>Why APR and not mortgage interest rate?</h6>
+          <p>
+            A mortgage interest rate does not include the necessary fees that come from taking the mortgage. You pay these fees upfront, and we need to factor in this opportunity cost.
+          </p>
+          <p>
+            Learn more about here: <a href="https://www.bankrate.com/finance/mortgages/apr-and-interest-rate.aspx">https://www.bankrate.com/finance/mortgages/apr-and-interest-rate.aspx</a>
+          </p>
         </div>
       </div>
     )
