@@ -23,14 +23,14 @@ class MainForm extends React.Component {
         a: {
           fv: 0,
           interestAmt: 0,
-          mortgageInterestRate: 4.3,
+          apr: 4.3,
           mortgageTerm: 30,
           pmt: 0,
         },
         b: {
           fv: 0,
           interestAmt: 0,
-          mortgageInterestRate: 4,
+          apr: 4,
           mortgageTerm: 15,
           pmt: 0,
         }
@@ -63,10 +63,10 @@ class MainForm extends React.Component {
       return state;
     }
 
-    a.pmt = PMT(a.mortgageInterestRate / 100 / COMPOUND_FREQUENCY, a.mortgageTerm * COMPOUND_FREQUENCY, state.mortgageAmt);
+    a.pmt = PMT(a.apr / 100 / COMPOUND_FREQUENCY, a.mortgageTerm * COMPOUND_FREQUENCY, state.mortgageAmt);
     a.interestAmt = a.pmt * (a.mortgageTerm * COMPOUND_FREQUENCY) + state.mortgageAmt;
 
-    b.pmt = PMT(b.mortgageInterestRate / 100 / COMPOUND_FREQUENCY, b.mortgageTerm * COMPOUND_FREQUENCY, state.mortgageAmt);
+    b.pmt = PMT(b.apr / 100 / COMPOUND_FREQUENCY, b.mortgageTerm * COMPOUND_FREQUENCY, state.mortgageAmt);
     b.interestAmt = b.pmt * (b.mortgageTerm * COMPOUND_FREQUENCY) + state.mortgageAmt;
 
     a.fv = FV(state.investmentRate / 100 / COMPOUND_FREQUENCY, a.mortgageTerm * COMPOUND_FREQUENCY, b.pmt - a.pmt, 0);
@@ -91,11 +91,11 @@ class MainForm extends React.Component {
               <label>What is the mortgage's APR? (annual percentage rate)</label>
               <Input
                 className="mb-2"
-                name="options.a.mortgageInterestRate"
+                name="options.a.apr"
                 onChange={this.updateInput}
                 placeholder="Annual Percentage Rate"
                 type="number"
-                value={a.mortgageInterestRate}
+                value={a.apr}
                 />
               <label>What is the term of the first mortgage? (in years)</label>
               <Input
@@ -112,11 +112,11 @@ class MainForm extends React.Component {
               <label>What is the mortgage's APR? (annual percentage rate)</label>
               <Input
                 className="mb-2"
-                name="options.b.mortgageInterestRate"
+                name="options.b.apr"
                 onChange={this.updateInput}
                 placeholder="Annual Percentage Rate"
                 type="number"
-                value={b.mortgageInterestRate}
+                value={b.apr}
                 />
               <label>What is the term of the second mortgage? (in years)</label>
               <Input
