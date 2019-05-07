@@ -56,13 +56,12 @@ class MainForm extends React.Component {
 
   validateData(obj) {
     for (let key in obj)
-      if (typeof obj[key] === 'object' ) {
+      if (typeof obj[key] === 'object') {
         return this.validateData(obj[key])
       }
-      else if(!obj[key] && obj[key] !== 0) {
+      else if (!obj[key] && obj[key] !== 0) {
         return false;
       }
-
     return true;
   }
 
@@ -162,7 +161,7 @@ class MainForm extends React.Component {
           />
         </div>
         <div className="col-8">
-          { this.validateData(this.state) ?
+          {this.validateData(this.state) ?
             <div>
               <p>
                 This is the amount of money you'll have if you invest ${numeral(-1 * (b.pmt - a.pmt).toFixed(0)).format('0,0')} on a monthly basis at a {numeral(this.state.investmentRate).format('0,0')}% annual return rate after {numeral(a.mortgageTerm).format('0,0')} years, minus a total mortgage interest of ${numeral(-1 * a.interestAmt.toFixed(0)).format('0,0')}: <b>${numeral(gainForA.toFixed(0)).format('0,0')}</b>
