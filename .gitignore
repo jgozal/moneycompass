@@ -61,4 +61,8 @@ typings/
 .next
 
 # Custom
+<<<<<<< HEAD
+=======
+dist/
+>>>>>>> parent of ab7729f... Initial dist subtree commit
 package-lock.json
