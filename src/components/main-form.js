@@ -15,6 +15,7 @@ class MainForm extends React.Component {
 
     this.calculate = this.calculate.bind(this);
     this.updateInput = this.updateInput.bind(this);
+    this.validateData = this.validateData.bind(this);
 
     this.state = this.calculate({
       investmentRate: 7,
@@ -46,11 +47,18 @@ class MainForm extends React.Component {
 
     const value = parseFloat(e.target.value);
 
-     _.set(state, key, value);
-      if (!isNaN(value)) {
-        state = this.calculate(state);
-      }
-      this.setState(state);
+    _.set(state, key, value);
+    if (!isNaN(value)) {
+      state = this.calculate(state);
+    }
+    this.setState(state);
+  }
+
+  validateData(obj) {
+    for (let key in obj)
+      if (!obj[key]) return false;
+
+    return true;
   }
 
   calculate(state) {
@@ -96,7 +104,7 @@ class MainForm extends React.Component {
                 placeholder="Annual Percentage Rate"
                 type="number"
                 value={a.mortgageInterestRate}
-                />
+              />
               <label>What is the term of the first mortgage? (in years)</label>
               <Input
                 className="mb-2"
@@ -105,7 +113,7 @@ class MainForm extends React.Component {
                 placeholder="Number of years"
                 type="number"
                 value={a.mortgageTerm}
-                />
+              />
             </div>
             <div className="col-6">
               <h4>Mortgage 2</h4>
@@ -117,7 +125,7 @@ class MainForm extends React.Component {
                 placeholder="Annual Percentage Rate"
                 type="number"
                 value={b.mortgageInterestRate}
-                />
+              />
               <label>What is the term of the second mortgage? (in years)</label>
               <Input
                 className="mb-2"
@@ -126,7 +134,7 @@ class MainForm extends React.Component {
                 placeholder="Number of years"
                 type="number"
                 value={b.mortgageTerm}
-                />
+              />
             </div>
           </div>
           <label>What is the size of your loan?</label>
@@ -137,7 +145,7 @@ class MainForm extends React.Component {
             placeholder="Mortgage amount"
             type="number"
             value={this.state.mortgageAmt}
-            />
+          />
           <label>What is your expected return if you invest your money?</label>
           <Input
             className="mb-2"
@@ -146,18 +154,23 @@ class MainForm extends React.Component {
             placeholder="Expected return for your investments"
             type="number"
             value={this.state.investmentRate}
-            />
+          />
         </div>
         <div className="col-8">
-          <p>
-            This is the amount of money you'll have if you invest ${numeral(-1 * (b.pmt - a.pmt).toFixed(0)).format('0,0')} on a monthly basis at a {numeral(this.state.investmentRate).format('0,0')}% annual return rate after {numeral(a.mortgageTerm).format('0,0')} years, minus a total mortgage interest of ${numeral(-1 * a.interestAmt.toFixed(0)).format('0,0')}: <b>${numeral(gainForA.toFixed(0)).format('0,0')}</b>
-          </p>
-          <p>
-            This is the amount of money you'll have if you invest ${numeral(-1 * b.pmt.toFixed(0)).format('0,0')} on a monthly basis at a {numeral(this.state.investmentRate).format('0,0')}% annual return rate after {numeral(a.mortgageTerm - b.mortgageTerm).format('0,0')} years, minus a total mortgage interest of ${numeral(-1 * b.interestAmt.toFixed(0)).format('0,0')}: <b>${numeral(gainForB.toFixed(0)).format('0,0')}</b>
-          </p>
-          <p>
-            Opportunity cost (the amount of money gained/lost by going with a {numeral(a.mortgageTerm).format('0,0')} year mortgage): <b>${numeral((gainForA - gainForB).toFixed(0)).format('0,0')}</b>
-          </p>
+          {this.validateData(a) && this.validateData(b) && this.validateData(this.state) ?
+            <div>
+              <p>
+                This is the amount of money you'll have if you invest ${numeral(-1 * (b.pmt - a.pmt).toFixed(0)).format('0,0')} on a monthly basis at a {numeral(this.state.investmentRate).format('0,0')}% annual return rate after {numeral(a.mortgageTerm).format('0,0')} years, minus a total mortgage interest of ${numeral(-1 * a.interestAmt.toFixed(0)).format('0,0')}: <b>${numeral(gainForA.toFixed(0)).format('0,0')}</b>
+              </p>
+              <p>
+                This is the amount of money you'll have if you invest ${numeral(-1 * b.pmt.toFixed(0)).format('0,0')} on a monthly basis at a {numeral(this.state.investmentRate).format('0,0')}% annual return rate after {numeral(a.mortgageTerm - b.mortgageTerm).format('0,0')} years, minus a total mortgage interest of ${numeral(-1 * b.interestAmt.toFixed(0)).format('0,0')}: <b>${numeral(gainForB.toFixed(0)).format('0,0')}</b>
+              </p>
+              <p>
+                Opportunity cost (the amount of money gained/lost by going with a {numeral(a.mortgageTerm).format('0,0')} year mortgage): <b>${numeral((gainForA - gainForB).toFixed(0)).format('0,0')}</b>
+              </p>
+            </div>
+            : <p>Please fill out all the fields.</p>
+          }
         </div>
       </div>
     )
