@@ -56,7 +56,7 @@ class MainForm extends React.Component {
 
   validateData(obj) {
     for (let key in obj)
-      if (!obj[key]) return false;
+      if (!obj[key] && obj[key] !== 0) return false;
 
     return true;
   }
@@ -169,7 +169,7 @@ class MainForm extends React.Component {
                 Opportunity cost (the amount of money gained/lost by going with a {numeral(a.mortgageTerm).format('0,0')} year mortgage): <b>${numeral((gainForA - gainForB).toFixed(0)).format('0,0')}</b>
               </p>
             </div>
-            : <p>Please fill out all the fields.</p>
+            : <p>Please fill out all the inputs/fields on the left.</p>
           }
         </div>
       </div>
