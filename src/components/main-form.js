@@ -113,56 +113,76 @@ class MainForm extends React.Component {
                   <InputGroupText>%</InputGroupText>
                 </InputGroupAddon>
               </InputGroup>
-              <label>What is the term of the first mortgage? (in years)</label>
-              <Input
-                className="mb-2"
-                name="options.a.mortgageTerm"
-                onChange={this.updateInput}
-                placeholder="Number of years"
-                type="number"
-                value={a.mortgageTerm}
-              />
+              <label>What is the term of the first mortgage?</label>
+              <InputGroup className="mb-2">
+                <Input
+                  name="options.a.mortgageTerm"
+                  onChange={this.updateInput}
+                  placeholder="Number of years"
+                  type="number"
+                  value={a.mortgageTerm}
+                />
+                <InputGroupAddon addonType="append">
+                  <InputGroupText>years</InputGroupText>
+                </InputGroupAddon>
+              </InputGroup>
             </div>
             <div className="col-6">
               <h4>Mortgage 2</h4>
               <label>What is the mortgage's APR? (annual percentage rate)</label>
-              <Input
-                className="mb-2"
-                name="options.b.mortgageInterestRate"
-                onChange={this.updateInput}
-                placeholder="Annual Percentage Rate"
-                type="number"
-                value={b.mortgageInterestRate}
-              />
-              <label>What is the term of the second mortgage? (in years)</label>
-              <Input
-                className="mb-2"
-                name="options.b.mortgageTerm"
-                onChange={this.updateInput}
-                placeholder="Number of years"
-                type="number"
-                value={b.mortgageTerm}
-              />
+              <InputGroup className="mb-2">
+                <Input
+                  name="options.b.mortgageInterestRate"
+                  onChange={this.updateInput}
+                  placeholder="Annual Percentage Rate"
+                  type="number"
+                  value={b.mortgageInterestRate}
+                />
+                <InputGroupAddon addonType="append">
+                  <InputGroupText>%</InputGroupText>
+                </InputGroupAddon>
+              </InputGroup>
+              <label>What is the term of the second mortgage?</label>
+              <InputGroup className="mb-2">
+                <Input
+                  name="options.b.mortgageTerm"
+                  onChange={this.updateInput}
+                  placeholder="Number of years"
+                  type="number"
+                  value={b.mortgageTerm}
+                />
+                <InputGroupAddon addonType="append">
+                  <InputGroupText>years</InputGroupText>
+                </InputGroupAddon>
+              </InputGroup>
             </div>
           </div>
           <label>What is the size of your loan?</label>
-          <Input
-            className="mb-2"
-            name="mortgageAmt"
-            onChange={this.updateInput}
-            placeholder="Mortgage amount"
-            type="number"
-            value={this.state.mortgageAmt}
-          />
+          <InputGroup class="mb-2">
+            <InputGroupAddon addonType="prepend">
+              <InputGroupText>$</InputGroupText>
+            </InputGroupAddon>
+            <Input
+              name="mortgageAmt"
+              onChange={this.updateInput}
+              placeholder="Mortgage amount"
+              type="number"
+              value={this.state.mortgageAmt}
+            />
+          </InputGroup>
           <label>What is your expected return if you invest your money?</label>
-          <Input
-            className="mb-2"
-            name="investmentRate"
-            onChange={this.updateInput}
-            placeholder="Expected return for your investments"
-            type="number"
-            value={this.state.investmentRate}
-          />
+          <InputGroup className="mb-2">
+            <Input
+              name="investmentRate"
+              onChange={this.updateInput}
+              placeholder="Expected return for your investments"
+              type="number"
+              value={this.state.investmentRate}
+            />
+            <InputGroupAddon addonType="append">
+              <InputGroupText>%</InputGroupText>
+            </InputGroupAddon>
+          </InputGroup>
         </div>
         <div className="col-8">
           {this.validateData(this.state) ?
