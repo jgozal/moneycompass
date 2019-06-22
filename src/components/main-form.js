@@ -164,10 +164,10 @@ class MainForm extends React.Component {
           {this.validateData(this.state) ?
             <div>
               <p>
-                This is the amount of money gains you'll expect if you invest ${numeral(-1 * (b.pmt - a.pmt).toFixed(0)).format('0,0')} on a monthly basis at a {numeral(this.state.investmentRate).format('0,0')}% annual return rate after {numeral(a.mortgageTerm).format('0,0')} years, minus a total mortgage interest of ${numeral(-1 * a.interestAmt.toFixed(0)).format('0,0')}: <b>${numeral(gainForA.toFixed(0)).format('0,0')}</b>
+                This is the amount of money gains you may expect if you invest ${numeral(-1 * (b.pmt - a.pmt).toFixed(0)).format('0,0')} on a monthly basis at a {numeral(this.state.investmentRate).format('0,0')}% annual return rate after {numeral(a.mortgageTerm).format('0,0')} years, minus a total mortgage interest of ${numeral(-1 * a.interestAmt.toFixed(0)).format('0,0')}: <b>${numeral(gainForA.toFixed(0)).format('0,0')}</b>
               </p>
               <p>
-                This is the amount of money gains you'll expect if you invest ${numeral(-1 * b.pmt.toFixed(0)).format('0,0')} on a monthly basis at a {numeral(this.state.investmentRate).format('0,0')}% annual return rate after {numeral(a.mortgageTerm - b.mortgageTerm).format('0,0')} years, minus a total mortgage interest of ${numeral(-1 * b.interestAmt.toFixed(0)).format('0,0')}: <b>${numeral(gainForB.toFixed(0)).format('0,0')}</b>
+                This is the amount of money gains you may expect if you invest ${numeral(-1 * b.pmt.toFixed(0)).format('0,0')} on a monthly basis at a {numeral(this.state.investmentRate).format('0,0')}% annual return rate after {numeral(a.mortgageTerm - b.mortgageTerm).format('0,0')} years, minus a total mortgage interest of ${numeral(-1 * b.interestAmt.toFixed(0)).format('0,0')}: <b>${numeral(gainForB.toFixed(0)).format('0,0')}</b>
               </p>
               <p>
                 Opportunity cost (the amount of money gained/lost by going with a {numeral(a.mortgageTerm).format('0,0')} year mortgage): <b>${numeral((gainForA - gainForB).toFixed(0)).format('0,0')}</b>
