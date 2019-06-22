@@ -101,14 +101,18 @@ class MainForm extends React.Component {
             <div className="col-6">
               <h4>Mortgage 1</h4>
               <label>What is the mortgage's APR? (annual percentage rate)</label>
-              <Input
-                className="mb-2"
-                name="options.a.mortgageInterestRate"
-                onChange={this.updateInput}
-                placeholder="Annual Percentage Rate"
-                type="number"
-                value={a.mortgageInterestRate}
-              />
+              <InputGroup className="mb-2">
+                <Input
+                  name="options.a.mortgageInterestRate"
+                  onChange={this.updateInput}
+                  placeholder="Annual Percentage Rate"
+                  type="number"
+                  value={a.mortgageInterestRate}
+                />
+                <InputGroupAddon addonType="append">
+                  <InputGroupText>%</InputGroupText>
+                </InputGroupAddon>
+              </InputGroup>
               <label>What is the term of the first mortgage? (in years)</label>
               <Input
                 className="mb-2"
