@@ -58,14 +58,6 @@ class MainForm extends React.Component {
     this.calculateAll(this.state);
   }
 
-  componentDidMount() {
-    console.log(this.state)
-  }
-
-  componentDidUpdate() {
-    console.log(this.state)
-  }
-
   calculatePMT(o, state) {
     return PMT((o.interestRate - state.inflation) / 100 / COMPOUND_FREQUENCY, o.term * COMPOUND_FREQUENCY, state.loanAmt);
   }
@@ -92,6 +84,8 @@ class MainForm extends React.Component {
     _.set(state, key, value);
     if (!isNaN(value)) {
       this.calculateAll(state);
+    } else {
+      this.setState(state);
     }
   }
 
@@ -181,6 +175,10 @@ class MainForm extends React.Component {
             value={this.state.inflation}
             onChange={this.updateInput}
           />
+        </div>
+
+        <div className="results">
+          <pre>{JSON.stringify(this.state, null, "\t")}</pre>
         </div>
       </div>
     )
