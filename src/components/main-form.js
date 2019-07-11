@@ -42,12 +42,14 @@ class MainForm extends React.Component {
     this.calculatePMT = this.calculatePMT.bind(this)
     this.calculateInterestAmt = this.calculateInterestAmt.bind(this)
     this.calculateFV = this.calculateFV.bind(this)
+    this.calculateOptCost = this.calculateOptCost.bind(this);
     this.updateInput = this.updateInput.bind(this)
     this.calculateAll = this.calculateAll.bind(this);
     this.state = {
       investmentRate: 9,
       loanAmt: 200000,
       inflation: 2,
+      optCost: 0,
       options: {
         o1, o2
       }
@@ -73,6 +75,10 @@ class MainForm extends React.Component {
     } else if (o1.term < o2.term) {
       return FV((state.investmentRate - state.inflation) / 100 / COMPOUND_FREQUENCY, (o2.term - o1.term) * COMPOUND_FREQUENCY, o1.pmt, 0);
     }
+  }
+
+  calculateOptCost(o1, o2) {
+    return (o1.fv + o1.interestAmt) - (o2.fv + o2.interestAmt);
   }
 
   updateInput(e) {
@@ -101,6 +107,8 @@ class MainForm extends React.Component {
 
     o1.fv = this.calculateFV(o1, o2, state);
     o2.fv = this.calculateFV(o2, o1, state);
+
+    state.optCost = this.calculateOptCost(o1, o2);
 
     this.setState(state);
   }
