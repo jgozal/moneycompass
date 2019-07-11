@@ -185,7 +185,7 @@ class MainForm extends React.Component {
           />
         </div>
 
-        <div className="results">
+        <div className="result">
           <pre>{JSON.stringify(this.state, null, "\t")}</pre>
         </div>
       </div>
