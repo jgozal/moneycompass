@@ -24,6 +24,12 @@ const o = {
 let o1 = Object.assign({}, o);
 let o2 = Object.assign({}, o);
 
+o1.interestRate = 4.3;
+o1.term = 30;
+
+o2.interestRate = 4;
+o2.term = 15;
+
 const Row = styled('div')`
   display: flex;
   flex-direction: row;
@@ -37,8 +43,9 @@ class MainForm extends React.Component {
     this.calculateInterestAmt = this.calculateInterestAmt.bind(this)
     this.calculateFV = this.calculateFV.bind(this)
     this.updateInput = this.updateInput.bind(this)
+    this.calculateAll = this.calculateAll.bind(this);
     this.state = {
-      investmentRate: 7,
+      investmentRate: 9,
       loanAmt: 200000,
       inflation: 2,
       options: {
@@ -48,70 +55,69 @@ class MainForm extends React.Component {
   }
 
   componentWillMount() {
-    o1.interestRate = 4.3;
-    o1.term = 30;
-
-    o2.interestRate = 4;
-    o2.term = 15;
+    this.calculateAll(this.state);
   }
 
   componentDidMount() {
-    console.log(o1)
-    console.log(o2)
     console.log(this.state)
   }
 
-  componentWillReceiveProps(nextProps) {
-    console.log(this.calculatePMT(nextProps.state.options.o1))
-    console.log(this.calculatePMT(nextProps.state.options.o2))
-    console.log(this.calculateInterestAmt(nextProps.state.options.o1))
-    console.log(this.calculateInterestAmt(nextProps.state.options.o2))
-    console.log(this.calculateFV(nextProps.state.options.o1, nextProps.state.options.o2))
-    console.log(this.calculateFV(nextProps.state.options.o2, nextProps.state.options.o1))
+  componentDidUpdate() {
+    console.log(this.state)
   }
 
-  calculatePMT(o) {
-    return PMT(o.interestRate / 100 / COMPOUND_FREQUENCY, o.term * COMPOUND_FREQUENCY, this.state.loanAmt);
+  calculatePMT(o, state) {
+    return PMT((o.interestRate - state.inflation) / 100 / COMPOUND_FREQUENCY, o.term * COMPOUND_FREQUENCY, state.loanAmt);
   }
 
-  calculateInterestAmt(o) {
-    return o.pmt * (o.term * COMPOUND_FREQUENCY) + this.state.loanAmt
+  calculateInterestAmt(o, state) {
+    return o.pmt * (o.term * COMPOUND_FREQUENCY) + state.loanAmt;
   }
 
-  calculateFV(o1, o2) {
-     // TODO: what if o1 and o2 are equal?
+  calculateFV(o1, o2, state) {
+    // TODO: what if o1 and o2 are equal?
     if (o1.term > o2.term) {
-      return FV(this.state.investmentRate / 100 / COMPOUND_FREQUENCY, o1.term * COMPOUND_FREQUENCY, o2.pmt - o1.pmt, 0);
+      return FV((state.investmentRate - state.inflation) / 100 / COMPOUND_FREQUENCY, o1.term * COMPOUND_FREQUENCY, o2.pmt - o1.pmt, 0);
     } else if (o1.term < o2.term) {
-      return FV(this.state.investmentRate / 100 / COMPOUND_FREQUENCY, (o1.term - o2.term) * COMPOUND_FREQUENCY, o2.pmt, 0);
-    }   
+      return FV((state.investmentRate - state.inflation) / 100 / COMPOUND_FREQUENCY, (o2.term - o1.term) * COMPOUND_FREQUENCY, o1.pmt, 0);
+    }
   }
-  
-  updateInput(e) {
-    let state = _.cloneDeep(this.state);
-    const key = e.target.name;
 
-    // key and value be explicit
+  updateInput(e) {
+    const state = Object.assign({}, this.state);
+    const key = e.target.name;
 
     const value = parseFloat(e.target.value);
 
     _.set(state, key, value);
     if (!isNaN(value)) {
-      state = this.calculate(state);
+      this.calculateAll(state);
     }
+  }
+
+  calculateAll(state) {
+    o1 = state.options.o1;
+    o2 = state.options.o2;
+
+    o1.pmt = this.calculatePMT(o1, state);
+    o2.pmt = this.calculatePMT(o2, state);
+
+    o1.interestAmt = this.calculateInterestAmt(o1, state);
+    o2.interestAmt = this.calculateInterestAmt(o2, state);
+
+    o1.fv = this.calculateFV(o1, o2, state);
+    o2.fv = this.calculateFV(o2, o1, state);
+
     this.setState(state);
   }
 
   render() {
-    o1 = this.state.options.o1;
-    o2 = this.state.options.o2;
-
     return (
       <div className="main-container">
         <div className="section">
           <h5>Loan Amount</h5>
           <Input
-            name=""
+            name="loanAmt"
             placeholder="Loan Amount"
             type="number"
             value={this.state.loanAmt}
@@ -122,14 +128,14 @@ class MainForm extends React.Component {
           <h5>Loan Term</h5>
           <Row>
             <Input
-              name=""
+              name="options.o1.term"
               placeholder="Loan Term"
               type="number"
               value={o1.term}
               onChange={this.updateInput}
             />
             <Input
-              name=""
+              name="options.o2.term"
               placeholder="Loan Term"
               type="number"
               value={o2.term}
@@ -141,14 +147,14 @@ class MainForm extends React.Component {
           <h5>Interest/APR</h5>
           <Row>
             <Input
-              name=""
+              name="options.o1.interestRate"
               placeholder="APR"
               type="number"
               value={o1.interestRate}
               onChange={this.updateInput}
             />
             <Input
-              name=""
+              name="options.o2.interestRate"
               placeholder="APR"
               type="number"
               value={o2.interestRate}
@@ -159,7 +165,7 @@ class MainForm extends React.Component {
         <div className="section">
           <h5>Return on Investment (ROI)</h5>
           <Input
-            name=""
+            name="investmentRate"
             placeholder="ROI"
             type="number"
             value={this.state.investmentRate}
@@ -169,7 +175,7 @@ class MainForm extends React.Component {
         <div className="section">
           <h5>Inflation</h5>
           <Input
-            name=""
+            name="inflation"
             placeholder="Inflation"
             type="number"
             value={this.state.inflation}
