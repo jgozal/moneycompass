@@ -10,10 +10,11 @@ import styled, { css } from "react-emotion";
 import { Input } from 'reactstrap';
 import { FV, PMT } from 'formulajs/lib/financial';
 
+// DEFAULT VALUES
 
 const COMPOUND_FREQUENCY = 12;
 
-const o = {
+const DEFAULT_OPTION = {
   interestAmt: 0,
   interestRate: 0,
   term: 0,
@@ -21,14 +22,16 @@ const o = {
   fv: 0
 };
 
-let o1 = Object.assign({}, o);
-let o2 = Object.assign({}, o);
+let o1 = Object.assign({}, DEFAULT_OPTION);
+let o2 = Object.assign({}, DEFAULT_OPTION);
 
 o1.interestRate = 4.3;
 o1.term = 30;
 
 o2.interestRate = 4;
 o2.term = 15;
+
+// CSS
 
 const Row = styled('div')`
   display: flex;
@@ -42,7 +45,7 @@ class MainForm extends React.Component {
     this.calculatePMT = this.calculatePMT.bind(this)
     this.calculateInterestAmt = this.calculateInterestAmt.bind(this)
     this.calculateFV = this.calculateFV.bind(this)
-    this.calculateOptCost = this.calculateOptCost.bind(this);
+    this.calculateOpportunityCost = this.calculateOpportunityCost.bind(this);
     this.updateInput = this.updateInput.bind(this)
     this.calculateAll = this.calculateAll.bind(this);
     this.state = {
@@ -57,19 +60,23 @@ class MainForm extends React.Component {
   }
 
   componentWillMount() {
-    this.calculateAll(this.state);
+    // Running all calculations with default values on page load
+    this.setState(this.calculateAll(this.state));
   }
 
+  // Returns monthly payment.
   calculatePMT(o, state) {
     return PMT((o.interestRate - state.inflation) / 100 / COMPOUND_FREQUENCY, o.term * COMPOUND_FREQUENCY, state.loanAmt);
   }
 
+  // Returns interest amount and depends on payment (PMT).
   calculateInterestAmt(o, state) {
     return o.pmt * (o.term * COMPOUND_FREQUENCY) + state.loanAmt;
   }
 
+  // Returns future value dynamically depending on mortgage term length.
   calculateFV(o1, o2, state) {
-    // TODO: what if o1 and o2 are equal?
+    // TODO: what if terms of o1 and o2 are equal?
     if (o1.term > o2.term) {
       return FV((state.investmentRate - state.inflation) / 100 / COMPOUND_FREQUENCY, o1.term * COMPOUND_FREQUENCY, o2.pmt - o1.pmt, 0);
     } else if (o1.term < o2.term) {
@@ -77,24 +84,26 @@ class MainForm extends React.Component {
     }
   }
 
-  calculateOptCost(o1, o2) {
+  // Returns opportunity cost of choosing o1 over o2. Opportunity cost can be positive and negative.
+  calculateOpportunityCost(o1, o2) {
     return (o1.fv + o1.interestAmt) - (o2.fv + o2.interestAmt);
   }
 
+  // Runs every time an input is updated and uses input's name tag to make specific changes in the state
   updateInput(e) {
-    const state = Object.assign({}, this.state);
+    let state = Object.assign({}, this.state);
     const key = e.target.name;
 
     const value = parseFloat(e.target.value);
 
     _.set(state, key, value);
     if (!isNaN(value)) {
-      this.calculateAll(state);
-    } else {
-      this.setState(state);
+      state = this.calculateAll(state);
     }
+    this.setState(state);
   }
 
+  // Runs all calculations and returns a modified state
   calculateAll(state) {
     o1 = state.options.o1;
     o2 = state.options.o2;
@@ -108,9 +117,9 @@ class MainForm extends React.Component {
     o1.fv = this.calculateFV(o1, o2, state);
     o2.fv = this.calculateFV(o2, o1, state);
 
-    state.optCost = this.calculateOptCost(o1, o2);
+    state.optCost = this.calculateOpportunityCost(o1, o2);
 
-    this.setState(state);
+    return state;
   }
 
   render() {
