@@ -1,204 +1,201 @@
 // References:
 // https://www.bankrate.com/calculators/mortgages/new-house-calculator.aspx
 // https://www.nerdwallet.com/mortgages/mortgage-rates/30-year-fixed
+// https://michaelbluejay.com/house/15vs30.html
 
 import _ from 'lodash';
 import React from 'react';
 import numeral from 'numeral';
-import { InputGroup, InputGroupAddon, InputGroupText, Input } from 'reactstrap';
+import styled, { css } from "react-emotion";
+import { Input } from 'reactstrap';
 import { FV, PMT } from 'formulajs/lib/financial';
+
+// DEFAULT VALUES
+
+const COMPOUND_FREQUENCY = 12;
+
+const DEFAULT_OPTION = {
+  interestAmt: 0,
+  interestRate: 0,
+  term: 0,
+  pmt: 0,
+  fv: 0
+};
+
+let option1 = _.cloneDeep(DEFAULT_OPTION);
+let option2 = _.cloneDeep(DEFAULT_OPTION);
+
+option1.interestRate = 4.3;
+option1.term = 30;
+
+option2.interestRate = 4;
+option2.term = 15;
+
+// CSS
+
+const Row = styled('div')`
+  display: flex;
+  flex-direction: row;
+`
 
 class MainForm extends React.Component {
 
   constructor() {
     super();
-
-    this.calculate = this.calculate.bind(this);
-    this.updateInput = this.updateInput.bind(this);
-    this.validateData = this.validateData.bind(this);
-
-    this.state = this.calculate({
-      investmentRate: 7,
-      mortgageAmt: 200000,
+    this.calculatePMT = this.calculatePMT.bind(this)
+    this.calculateInterestAmt = this.calculateInterestAmt.bind(this)
+    this.calculateFV = this.calculateFV.bind(this)
+    this.calculateOpportunityCost = this.calculateOpportunityCost.bind(this);
+    this.updateInput = this.updateInput.bind(this)
+    this.calculateAll = this.calculateAll.bind(this);
+    this.state = {
+      investmentRate: 9,
+      loanAmt: 200000,
+      inflation: 2,
+      optCost: 0,
       options: {
-        a: {
-          fv: 0,
-          interestAmt: 0,
-          mortgageInterestRate: 4.3,
-          mortgageTerm: 30,
-          pmt: 0,
-        },
-        b: {
-          fv: 0,
-          interestAmt: 0,
-          mortgageInterestRate: 4,
-          mortgageTerm: 15,
-          pmt: 0,
-        }
+        option1, option2
       }
-    });
+    }
   }
 
-  updateInput(e) {
-    let state = _.cloneDeep(this.state);
-    const key = e.target.name;
+  componentWillMount() {
+    // Running all calculations with default values on page load
+    this.setState(this.calculateAll(this.state));
+  }
 
-    // key and value be explicit
+  // Returns monthly payment.
+  calculatePMT(o, state) {
+    return PMT((o.interestRate - state.inflation) / 100 / COMPOUND_FREQUENCY, o.term * COMPOUND_FREQUENCY, state.loanAmt);
+  }
+
+  // Returns interest amount and depends on payment (PMT).
+  calculateInterestAmt(o, state) {
+    return o.pmt * (o.term * COMPOUND_FREQUENCY) + state.loanAmt;
+  }
+
+  // Returns future value dynamically depending on mortgage term length.
+  calculateFV(option1, option2, state) {
+    // TODO: what if terms of option1 and option2 are equal?
+    if (option1.term > option2.term) {
+      return FV((state.investmentRate - state.inflation) / 100 / COMPOUND_FREQUENCY, option1.term * COMPOUND_FREQUENCY, option2.pmt - option1.pmt, 0);
+    } else if (option1.term < option2.term) {
+      return FV((state.investmentRate - state.inflation) / 100 / COMPOUND_FREQUENCY, (option2.term - option1.term) * COMPOUND_FREQUENCY, option1.pmt, 0);
+    }
+  }
+
+  // Returns opportunity cost of choosing option1 over option2. Opportunity cost can be positive and negative.
+  calculateOpportunityCost(option1, option2) {
+    return (option1.fv + option1.interestAmt) - (option2.fv + option2.interestAmt);
+  }
+
+  // Runs every time an input is updated and uses input's name tag to make specific changes in the state
+  updateInput(e) {
+    let state = Object.assign({}, this.state);
+    const key = e.target.name;
 
     const value = parseFloat(e.target.value);
 
     _.set(state, key, value);
     if (!isNaN(value)) {
-      state = this.calculate(state);
+      state = this.calculateAll(state);
     }
     this.setState(state);
   }
 
-  validateData(obj) {
-    for (let key in obj)
-      if (typeof obj[key] === 'object') {
-        return this.validateData(obj[key])
-      }
-      else if (!obj[key] && obj[key] !== 0) {
-        return false;
-      }
-    return true;
-  }
+  // Runs all calculations and returns a modified state
+  calculateAll(state) {
+    option1 = state.options.option1;
+    option2 = state.options.option2;
 
-  calculate(state) {
-    const COMPOUND_FREQUENCY = 12;
+    option1.pmt = this.calculatePMT(option1, state);
+    option2.pmt = this.calculatePMT(option2, state);
 
-    const a = state.options.a;
-    const b = state.options.b;
+    option1.interestAmt = this.calculateInterestAmt(option1, state);
+    option2.interestAmt = this.calculateInterestAmt(option2, state);
 
-    if (!a.mortgageTerm || !b.mortgageTerm) {
-      return state;
-    }
+    option1.fv = this.calculateFV(option1, option2, state);
+    option2.fv = this.calculateFV(option2, option1, state);
 
-    a.pmt = PMT(a.mortgageInterestRate / 100 / COMPOUND_FREQUENCY, a.mortgageTerm * COMPOUND_FREQUENCY, state.mortgageAmt);
-    a.interestAmt = a.pmt * (a.mortgageTerm * COMPOUND_FREQUENCY) + state.mortgageAmt;
-
-    b.pmt = PMT(b.mortgageInterestRate / 100 / COMPOUND_FREQUENCY, b.mortgageTerm * COMPOUND_FREQUENCY, state.mortgageAmt);
-    b.interestAmt = b.pmt * (b.mortgageTerm * COMPOUND_FREQUENCY) + state.mortgageAmt;
-
-    a.fv = FV(state.investmentRate / 100 / COMPOUND_FREQUENCY, a.mortgageTerm * COMPOUND_FREQUENCY, b.pmt - a.pmt, 0);
-    b.fv = FV(state.investmentRate / 100 / COMPOUND_FREQUENCY, (a.mortgageTerm - b.mortgageTerm) * COMPOUND_FREQUENCY, b.pmt, 0);
+    state.optCost = this.calculateOpportunityCost(option1, option2);
 
     return state;
   }
 
   render() {
-    const a = this.state.options.a;
-    const b = this.state.options.b;
-
-    let gainForA = a.fv + a.interestAmt;
-    let gainForB = b.fv + b.interestAmt;
-
     return (
-      <div className="row">
-        <div className="col-4 border-right">
-          <div className="row">
-            <div className="col-6">
-              <h4>Mortgage 1</h4>
-              <label>What is the mortgage's APR? (annual percentage rate)</label>
-              <InputGroup className="mb-2">
-                <Input
-                  name="options.a.mortgageInterestRate"
-                  onChange={this.updateInput}
-                  placeholder="Annual Percentage Rate"
-                  type="number"
-                  value={a.mortgageInterestRate}
-                />
-                <InputGroupAddon addonType="append">
-                  <InputGroupText>%</InputGroupText>
-                </InputGroupAddon>
-              </InputGroup>
-              <label>What is the term of the first mortgage?</label>
-              <InputGroup className="mb-2">
-                <Input
-                  name="options.a.mortgageTerm"
-                  onChange={this.updateInput}
-                  placeholder="Number of years"
-                  type="number"
-                  value={a.mortgageTerm}
-                />
-                <InputGroupAddon addonType="append">
-                  <InputGroupText>years</InputGroupText>
-                </InputGroupAddon>
-              </InputGroup>
-            </div>
-            <div className="col-6">
-              <h4>Mortgage 2</h4>
-              <label>What is the mortgage's APR? (annual percentage rate)</label>
-              <InputGroup className="mb-2">
-                <Input
-                  name="options.b.mortgageInterestRate"
-                  onChange={this.updateInput}
-                  placeholder="Annual Percentage Rate"
-                  type="number"
-                  value={b.mortgageInterestRate}
-                />
-                <InputGroupAddon addonType="append">
-                  <InputGroupText>%</InputGroupText>
-                </InputGroupAddon>
-              </InputGroup>
-              <label>What is the term of the second mortgage?</label>
-              <InputGroup className="mb-2">
-                <Input
-                  name="options.b.mortgageTerm"
-                  onChange={this.updateInput}
-                  placeholder="Number of years"
-                  type="number"
-                  value={b.mortgageTerm}
-                />
-                <InputGroupAddon addonType="append">
-                  <InputGroupText>years</InputGroupText>
-                </InputGroupAddon>
-              </InputGroup>
-            </div>
-          </div>
-          <label>What is the size of your loan?</label>
-          <InputGroup class="mb-2">
-            <InputGroupAddon addonType="prepend">
-              <InputGroupText>$</InputGroupText>
-            </InputGroupAddon>
-            <Input
-              name="mortgageAmt"
-              onChange={this.updateInput}
-              placeholder="Mortgage amount"
-              type="number"
-              value={this.state.mortgageAmt}
-            />
-          </InputGroup>
-          <label>What is your expected return if you invest your money?</label>
-          <InputGroup className="mb-2">
-            <Input
-              name="investmentRate"
-              onChange={this.updateInput}
-              placeholder="Expected return for your investments"
-              type="number"
-              value={this.state.investmentRate}
-            />
-            <InputGroupAddon addonType="append">
-              <InputGroupText>%</InputGroupText>
-            </InputGroupAddon>
-          </InputGroup>
+      <div className="main-container">
+        <div className="section">
+          <h5>Loan Amount</h5>
+          <Input
+            name="loanAmt"
+            placeholder="Loan Amount"
+            type="number"
+            value={this.state.loanAmt}
+            onChange={this.updateInput}
+          />
         </div>
-        <div className="col-8">
-          {this.validateData(this.state) ?
-            <div>
-              <p>
-                This is the amount of money you'll have if you invest ${numeral(-1 * (b.pmt - a.pmt).toFixed(0)).format('0,0')} on a monthly basis at a {numeral(this.state.investmentRate).format('0,0')}% annual return rate after {numeral(a.mortgageTerm).format('0,0')} years, minus a total mortgage interest of ${numeral(-1 * a.interestAmt.toFixed(0)).format('0,0')}: <b>${numeral(gainForA.toFixed(0)).format('0,0')}</b>
-              </p>
-              <p>
-                This is the amount of money you'll have if you invest ${numeral(-1 * b.pmt.toFixed(0)).format('0,0')} on a monthly basis at a {numeral(this.state.investmentRate).format('0,0')}% annual return rate after {numeral(a.mortgageTerm - b.mortgageTerm).format('0,0')} years, minus a total mortgage interest of ${numeral(-1 * b.interestAmt.toFixed(0)).format('0,0')}: <b>${numeral(gainForB.toFixed(0)).format('0,0')}</b>
-              </p>
-              <p>
-                Opportunity cost (the amount of money gained/lost by going with a {numeral(a.mortgageTerm).format('0,0')} year mortgage): <b>${numeral((gainForA - gainForB).toFixed(0)).format('0,0')}</b>
-              </p>
-            </div>
-            : <p>Please fill out all the inputs/fields on the left.</p>
-          }
+        <div className="section">
+          <h5>Loan Term</h5>
+          <Row>
+            <Input
+              name="options.option1.term"
+              placeholder="Loan Term"
+              type="number"
+              value={option1.term}
+              onChange={this.updateInput}
+            />
+            <Input
+              name="options.option2.term"
+              placeholder="Loan Term"
+              type="number"
+              value={option2.term}
+              onChange={this.updateInput}
+            />
+          </Row>
+        </div>
+        <div className="section">
+          <h5>Interest/APR</h5>
+          <Row>
+            <Input
+              name="options.option1.interestRate"
+              placeholder="APR"
+              type="number"
+              value={option1.interestRate}
+              onChange={this.updateInput}
+            />
+            <Input
+              name="options.option2.interestRate"
+              placeholder="APR"
+              type="number"
+              value={option2.interestRate}
+              onChange={this.updateInput}
+            />
+          </Row>
+        </div>
+        <div className="section">
+          <h5>Return on Investment (ROI)</h5>
+          <Input
+            name="investmentRate"
+            placeholder="ROI"
+            type="number"
+            value={this.state.investmentRate}
+            onChange={this.updateInput}
+          />
+        </div>
+        <div className="section">
+          <h5>Inflation</h5>
+          <Input
+            name="inflation"
+            placeholder="Inflation"
+            type="number"
+            value={this.state.inflation}
+            onChange={this.updateInput}
+          />
+        </div>
+
+        <div className="result">
+          <pre>{JSON.stringify(this.state, null, "\t")}</pre>
         </div>
       </div>
     )
