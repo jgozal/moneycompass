@@ -22,14 +22,14 @@ const DEFAULT_OPTION = {
   fv: 0
 };
 
-let o1 = Object.assign({}, DEFAULT_OPTION);
-let o2 = Object.assign({}, DEFAULT_OPTION);
+let option1 = _.cloneDeep(DEFAULT_OPTION);
+let option2 = _.cloneDeep(DEFAULT_OPTION);
 
-o1.interestRate = 4.3;
-o1.term = 30;
+option1.interestRate = 4.3;
+option1.term = 30;
 
-o2.interestRate = 4;
-o2.term = 15;
+option2.interestRate = 4;
+option2.term = 15;
 
 // CSS
 
@@ -54,7 +54,7 @@ class MainForm extends React.Component {
       inflation: 2,
       optCost: 0,
       options: {
-        o1, o2
+        option1, option2
       }
     }
   }
@@ -75,18 +75,18 @@ class MainForm extends React.Component {
   }
 
   // Returns future value dynamically depending on mortgage term length.
-  calculateFV(o1, o2, state) {
-    // TODO: what if terms of o1 and o2 are equal?
-    if (o1.term > o2.term) {
-      return FV((state.investmentRate - state.inflation) / 100 / COMPOUND_FREQUENCY, o1.term * COMPOUND_FREQUENCY, o2.pmt - o1.pmt, 0);
-    } else if (o1.term < o2.term) {
-      return FV((state.investmentRate - state.inflation) / 100 / COMPOUND_FREQUENCY, (o2.term - o1.term) * COMPOUND_FREQUENCY, o1.pmt, 0);
+  calculateFV(option1, option2, state) {
+    // TODO: what if terms of option1 and option2 are equal?
+    if (option1.term > option2.term) {
+      return FV((state.investmentRate - state.inflation) / 100 / COMPOUND_FREQUENCY, option1.term * COMPOUND_FREQUENCY, option2.pmt - option1.pmt, 0);
+    } else if (option1.term < option2.term) {
+      return FV((state.investmentRate - state.inflation) / 100 / COMPOUND_FREQUENCY, (option2.term - option1.term) * COMPOUND_FREQUENCY, option1.pmt, 0);
     }
   }
 
-  // Returns opportunity cost of choosing o1 over o2. Opportunity cost can be positive and negative.
-  calculateOpportunityCost(o1, o2) {
-    return (o1.fv + o1.interestAmt) - (o2.fv + o2.interestAmt);
+  // Returns opportunity cost of choosing option1 over option2. Opportunity cost can be positive and negative.
+  calculateOpportunityCost(option1, option2) {
+    return (option1.fv + option1.interestAmt) - (option2.fv + option2.interestAmt);
   }
 
   // Runs every time an input is updated and uses input's name tag to make specific changes in the state
@@ -105,19 +105,19 @@ class MainForm extends React.Component {
 
   // Runs all calculations and returns a modified state
   calculateAll(state) {
-    o1 = state.options.o1;
-    o2 = state.options.o2;
+    option1 = state.options.option1;
+    option2 = state.options.option2;
 
-    o1.pmt = this.calculatePMT(o1, state);
-    o2.pmt = this.calculatePMT(o2, state);
+    option1.pmt = this.calculatePMT(option1, state);
+    option2.pmt = this.calculatePMT(option2, state);
 
-    o1.interestAmt = this.calculateInterestAmt(o1, state);
-    o2.interestAmt = this.calculateInterestAmt(o2, state);
+    option1.interestAmt = this.calculateInterestAmt(option1, state);
+    option2.interestAmt = this.calculateInterestAmt(option2, state);
 
-    o1.fv = this.calculateFV(o1, o2, state);
-    o2.fv = this.calculateFV(o2, o1, state);
+    option1.fv = this.calculateFV(option1, option2, state);
+    option2.fv = this.calculateFV(option2, option1, state);
 
-    state.optCost = this.calculateOpportunityCost(o1, o2);
+    state.optCost = this.calculateOpportunityCost(option1, option2);
 
     return state;
   }
@@ -139,17 +139,17 @@ class MainForm extends React.Component {
           <h5>Loan Term</h5>
           <Row>
             <Input
-              name="options.o1.term"
+              name="options.option1.term"
               placeholder="Loan Term"
               type="number"
-              value={o1.term}
+              value={option1.term}
               onChange={this.updateInput}
             />
             <Input
-              name="options.o2.term"
+              name="options.option2.term"
               placeholder="Loan Term"
               type="number"
-              value={o2.term}
+              value={option2.term}
               onChange={this.updateInput}
             />
           </Row>
@@ -158,17 +158,17 @@ class MainForm extends React.Component {
           <h5>Interest/APR</h5>
           <Row>
             <Input
-              name="options.o1.interestRate"
+              name="options.option1.interestRate"
               placeholder="APR"
               type="number"
-              value={o1.interestRate}
+              value={option1.interestRate}
               onChange={this.updateInput}
             />
             <Input
-              name="options.o2.interestRate"
+              name="options.option2.interestRate"
               placeholder="APR"
               type="number"
-              value={o2.interestRate}
+              value={option2.interestRate}
               onChange={this.updateInput}
             />
           </Row>
