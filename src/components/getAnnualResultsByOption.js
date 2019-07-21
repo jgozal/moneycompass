@@ -2,6 +2,21 @@ import { FV, PMT } from 'formulajs/lib/financial'
 
 const COMPOUND_FREQUENCY = 12
 
+/**
+ * @param {number} option.loanAmount How much money the loan is
+ * @param {number} option.investmentRate Market return rate (in decimals)
+ * @param {object} option.shorterOption
+ *   @property {number} mortgageRate Mortgage APR (in decimals)
+ *   @property {number} mortgageTerm Mortgage term (in years)
+ * @param {object} option.longerOption
+ *
+ * @return {object}
+ *   @property {object[]} shorter
+ *     @property {number} pmt Monthly payment amount (for that year)
+ *     @property {number} loanAmount Remaining loan amount
+ *     @property {number} investmentAmount How much money in investments
+ *   @property {object[]} longer
+ */
 export function getAnnualResultsByOption ({
   loanAmount,
   investmentRate,
@@ -43,12 +58,14 @@ export function getAnnualResultsByOption ({
   // payment may change
   let currentShorterOptionPMT = shorterOptionPMT
 
-  for (let i = 1; i <= longerOption.mortgageTerm; i++) {
-    const lastShorterOptionResult = annualResultsByOption.shorter[i - 1]
-    const lastLongerOptionResult = annualResultsByOption.longer[i - 1]
+  for (let year = 1; year <= longerOption.mortgageTerm; year++) {
+    const lastShorterOptionResult = annualResultsByOption.shorter[year - 1]
 
     // We we get close to paying off the shorter term mortgage, we reduce our
     // payment until the mortgage becomes 0
+    //
+    // TODO 2019-07-21: There's probably a bug here, since the PMT is monthly
+    //   and we are doing annual calculations here
     if (lastShorterOptionResult.loanAmount < -1 * budget) {
       currentShorterOptionPMT = Math.min(
         -1 * lastShorterOptionResult.loanAmount,
@@ -71,7 +88,7 @@ export function getAnnualResultsByOption ({
         longerOptionPMT,
         longerOption.mortgageRate,
         investmentRate,
-        lastLongerOptionResult
+        annualResultsByOption.longer[year - 1]
       )
     )
   }
