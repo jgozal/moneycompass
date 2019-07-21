@@ -8,7 +8,7 @@ export function getAnnualResultsByOption ({
   shorterOption,
   longerOption
 }) {
-  let shorterOptionPMT = PMT(
+  const shorterOptionPMT = PMT(
     shorterOption.mortgageRate / COMPOUND_FREQUENCY,
     shorterOption.mortgageTerm * COMPOUND_FREQUENCY,
     loanAmount
@@ -19,8 +19,6 @@ export function getAnnualResultsByOption ({
     longerOption.mortgageTerm * COMPOUND_FREQUENCY,
     loanAmount
   )
-
-  const budget = Math.min(shorterOptionPMT, longerOptionPMT)
 
   const annualResultsByOption = {
     shorter: [
@@ -37,20 +35,31 @@ export function getAnnualResultsByOption ({
     ]
   }
 
+  // Both options spend the same amount of money monthly, depending on which
+  // mortgage payment is higher
+  const budget = shorterOptionPMT
+
+  // Since we'll shift our budget to investment for the shorter plan, this
+  // payment may change
+  let currentShorterOptionPMT = shorterOptionPMT
+
   for (let i = 1; i <= longerOption.mortgageTerm; i++) {
     const lastShorterOptionResult = annualResultsByOption.shorter[i - 1]
     const lastLongerOptionResult = annualResultsByOption.longer[i - 1]
 
-    // We we get close to paying off the shorter term mortgage, we reduce our payment until the
-    // mortgage becomes 0
+    // We we get close to paying off the shorter term mortgage, we reduce our
+    // payment until the mortgage becomes 0
     if (lastShorterOptionResult.loanAmount < -1 * budget) {
-      shorterOptionPMT = Math.min(-1 * lastShorterOptionResult.loanAmount, 0)
+      currentShorterOptionPMT = Math.min(
+        -1 * lastShorterOptionResult.loanAmount,
+        0
+      )
     }
 
     annualResultsByOption.shorter.push(
       getAnnualResult(
         budget,
-        shorterOptionPMT,
+        currentShorterOptionPMT,
         shorterOption.mortgageRate,
         investmentRate,
         lastShorterOptionResult
