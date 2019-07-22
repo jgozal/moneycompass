@@ -1,3 +1,4 @@
+import * as _ from 'lodash'
 import { FV, PMT } from 'formulajs/lib/financial'
 
 const COMPOUND_FREQUENCY = 12
@@ -5,6 +6,7 @@ const COMPOUND_FREQUENCY = 12
 /**
  * @param {number} option.loanAmount How much money the loan is
  * @param {number} option.investmentRate Market return rate (in decimals)
+ * @param {number} option.inflationRate Annual inflation rate (in decimals)
  * @param {object} option.shorterOption
  *   @property {number} mortgageRate Mortgage APR (in decimals)
  *   @property {number} mortgageTerm Mortgage term (in years)
@@ -20,6 +22,7 @@ const COMPOUND_FREQUENCY = 12
 export function getAnnualResultsByOption ({
   loanAmount,
   investmentRate,
+  inflationRate,
   shorterOption,
   longerOption
 }) {
@@ -38,56 +41,38 @@ export function getAnnualResultsByOption ({
   const annualResultsByOption = {
     shorter: [
       {
+        budget: shorterOptionPMT,
+        pmt: shorterOptionPMT,
         loanAmount: loanAmount,
         investmentAmount: 0
       }
     ],
     longer: [
       {
+        budget: shorterOptionPMT,
+        pmt: longerOptionPMT,
         loanAmount: loanAmount,
         investmentAmount: 0
       }
     ]
   }
 
-  // Both options spend the same amount of money monthly, depending on which
-  // mortgage payment is higher
-  const budget = shorterOptionPMT
-
-  // Since we'll shift our budget to investment for the shorter plan, this
-  // payment may change
-  let currentShorterOptionPMT = shorterOptionPMT
-
   for (let year = 1; year <= longerOption.mortgageTerm; year++) {
     const lastShorterOptionResult = annualResultsByOption.shorter[year - 1]
 
-    // We we get close to paying off the shorter term mortgage, we reduce our
-    // payment until the mortgage becomes 0
-    //
-    // TODO 2019-07-21: There's probably a bug here, since the PMT is monthly
-    //   and we are doing annual calculations here
-    if (lastShorterOptionResult.loanAmount < -1 * budget) {
-      currentShorterOptionPMT = Math.min(
-        -1 * lastShorterOptionResult.loanAmount,
-        0
-      )
-    }
-
     annualResultsByOption.shorter.push(
       getAnnualResult(
-        budget,
-        currentShorterOptionPMT,
         shorterOption.mortgageRate,
         investmentRate,
+        inflationRate,
         lastShorterOptionResult
       )
     )
     annualResultsByOption.longer.push(
       getAnnualResult(
-        budget,
-        longerOptionPMT,
         longerOption.mortgageRate,
         investmentRate,
+        inflationRate,
         annualResultsByOption.longer[year - 1]
       )
     )
@@ -96,24 +81,73 @@ export function getAnnualResultsByOption ({
   return annualResultsByOption
 }
 
-function getAnnualResult (budget, pmt, mortgageRate, investmentRate, result) {
-  return {
-    pmt,
+function getAnnualResult (
+  mortgageRate,
+  investmentRate,
+  inflationRate,
+  lastResult
+) {
+  let pmt = lastResult.pmt
+
+  if (
+    lastResult.loanAmount <
+    FV(mortgageRate / COMPOUND_FREQUENCY, COMPOUND_FREQUENCY, pmt, 0)
+  ) {
+    pmt = PMT(
+      mortgageRate / COMPOUND_FREQUENCY,
+      COMPOUND_FREQUENCY,
+      lastResult.loanAmount
+    )
+  }
+
+  console.log(
+    'investmentPMT',
+    FV(
+      investmentRate / COMPOUND_FREQUENCY,
+      COMPOUND_FREQUENCY,
+      lastResult.budget - pmt,
+      0
+    )
+  )
+
+  const resultBeforeInflation = {
+    budget: lastResult.budget,
+    pmt: pmt,
     loanAmount:
       -1 *
       FV(
         mortgageRate / COMPOUND_FREQUENCY,
         COMPOUND_FREQUENCY,
         pmt,
-        result.loanAmount
+        lastResult.loanAmount
       ),
     investmentAmount:
       -1 *
       FV(
         investmentRate / COMPOUND_FREQUENCY,
         COMPOUND_FREQUENCY,
-        budget - pmt,
-        result.investmentAmount
+        lastResult.budget - pmt,
+        lastResult.investmentAmount
       )
   }
+
+  const resultAfterInflation = {}
+
+  _.forOwn(
+    resultBeforeInflation,
+    (value, key) =>
+      (resultAfterInflation[key] = getAnnualValueAfterInflation(
+        value,
+        inflationRate
+      ))
+  )
+
+  return resultAfterInflation
+}
+
+function getAnnualValueAfterInflation (value, inflationRate) {
+  return (
+    -1 *
+    FV((-1 * inflationRate) / COMPOUND_FREQUENCY, COMPOUND_FREQUENCY, 0, value)
+  )
 }

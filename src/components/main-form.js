@@ -125,6 +125,7 @@ class MainForm extends React.Component {
     state.annualResultsByOption = getAnnualResultsByOption({
       loanAmount: state.loanAmt,
       investmentRate: state.investmentRate / 100,
+      inflationRate: state.inflation / 100,
       shorterOption: {
         mortgageRate: shorter.interestRate / 100,
         mortgageTerm: shorter.term
