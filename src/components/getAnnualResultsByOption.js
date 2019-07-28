@@ -100,15 +100,15 @@ function getAnnualResult (
     )
   }
 
-  console.log(
-    'investmentPMT',
-    FV(
-      investmentRate / COMPOUND_FREQUENCY,
-      COMPOUND_FREQUENCY,
-      lastResult.budget - pmt,
-      0
-    )
-  )
+  // console.log(
+  //   'investmentPMT',
+  //   FV(
+  //     investmentRate / COMPOUND_FREQUENCY,
+  //     COMPOUND_FREQUENCY,
+  //     lastResult.budget - pmt,
+  //     0
+  //   )
+  // )
 
   const resultBeforeInflation = {
     budget: lastResult.budget,
@@ -130,6 +130,8 @@ function getAnnualResult (
         lastResult.investmentAmount
       )
   }
+
+  // console.log(resultBeforeInflation)
 
   const resultAfterInflation = {}
 

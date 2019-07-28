@@ -72,7 +72,10 @@ class MainForm extends React.Component {
 
   // Returns interest amount and depends on payment (PMT).
   calculateInterestAmt(o, state) {
-    return o.pmt * (o.term * COMPOUND_FREQUENCY) + state.loanAmt;
+    // console.log('test', (-1 * FV(-1 * (state.inflation / 100 / COMPOUND_FREQUENCY), COMPOUND_FREQUENCY * o.term, 0, state.loanAmt)))
+    // return o.pmt * (o.term * COMPOUND_FREQUENCY) + (-1 * FV(-1 * (state.inflation / 100 / COMPOUND_FREQUENCY), COMPOUND_FREQUENCY * o.term, 0, state.loanAmt));
+    return FV((o.interestRate - state.inflation) / 100 / COMPOUND_FREQUENCY, o.term * COMPOUND_FREQUENCY, o.pmt, 0) + FV(state.inflation / 100 / COMPOUND_FREQUENCY, COMPOUND_FREQUENCY * o.term, 0, state.loanAmt)
+    // return FV((o.interestRate - state.inflation) / 100 / COMPOUND_FREQUENCY, o.term * COMPOUND_FREQUENCY, o.pmt, 0) - state.loanAmt
   }
 
   // Returns future value dynamically depending on mortgage term length.
@@ -210,13 +213,38 @@ class MainForm extends React.Component {
             onChange={this.updateInput}
           />
         </div>
-
         <div className="result">
           <pre>{JSON.stringify(this.state, null, "\t")}</pre>
+        </div>
+        <div className='row'>
+          <div className='col'>
+            {this.state.annualResultsByOption.shorter.map((_v, year) => {
+              return <div className='row'>{year}</div>
+            })}
+          </div>
+          <div className='col'>
+            {this.state.annualResultsByOption.shorter.map(getOptionResultView)}
+          </div>
+          <div className='col'>
+            {this.state.annualResultsByOption.longer.map(getOptionResultView)}
+          </div>
         </div>
       </div>
     )
   }
+}
+
+function getOptionResultView (result) {
+  return (
+    <div className='row'>
+      <div className='col'>{formatMoney(result.loanAmount)}</div>
+      <div className='col'>{formatMoney(result.investmentAmount)}</div>
+    </div>
+  )
+}
+
+function formatMoney (value) {
+  return numeral(value).format('$0,0.00')
 }
 
 export default MainForm;
