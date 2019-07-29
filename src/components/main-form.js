@@ -9,7 +9,7 @@ import numeral from 'numeral';
 import styled, { css } from "react-emotion";
 import { Input } from 'reactstrap';
 import { FV, PMT } from 'formulajs/lib/financial';
-import { getAnnualResultsByOption } from './getAnnualResultsByOption'
+import { getMonthlyResultsByOption } from './getMonthlyResultsByOption'
 
 // DEFAULT VALUES
 
@@ -125,7 +125,10 @@ class MainForm extends React.Component {
 
     const [shorter, longer] = _.sortBy([option1, option2], 'term')
 
-    state.annualResultsByOption = getAnnualResultsByOption({
+    state.longerOption = longer
+    state.shorterOption = shorter
+
+    state.monthlyResultsByOption = getMonthlyResultsByOption({
       loanAmount: state.loanAmt,
       investmentRate: state.investmentRate / 100,
       inflationRate: state.inflation / 100,
@@ -213,34 +216,40 @@ class MainForm extends React.Component {
             onChange={this.updateInput}
           />
         </div>
+        <div className='row'>
+          <div className='col font-weight-bold'>Month</div>
+          <div className='col font-weight-bold'>{this.state.shorterOption.term} Yr Mortgage Payment</div>
+          <div className='col font-weight-bold'>{this.state.shorterOption.term} Yr Investment Payment</div>
+          <div className='col font-weight-bold'>{this.state.shorterOption.term} Yr Loan Amount</div>
+          <div className='col font-weight-bold'>{this.state.shorterOption.term} Yr Investment Amount</div>
+          <div className='col font-weight-bold'>{this.state.longerOption.term} Yr Mortgage Payment</div>
+          <div className='col font-weight-bold'>{this.state.longerOption.term} Yr Investment Payment</div>
+          <div className='col font-weight-bold'>{this.state.longerOption.term} Yr Loan Amount</div>
+          <div className='col font-weight-bold'>{this.state.longerOption.term} Yr Investment Amount</div>
+        </div>
+        {this.state.monthlyResultsByOption.shorter.map((_r, month) => {
+          const shorter = this.state.monthlyResultsByOption.shorter[month]
+          const longer = this.state.monthlyResultsByOption.longer[month]
+          return (
+            <div className='row'>
+              <div className='col'>{month}</div>
+              <div className='col'>{formatMoney(shorter.pmt)}</div>
+              <div className='col'>{formatMoney(shorter.investmentPMT)}</div>
+              <div className='col'>{formatMoney(shorter.loanAmount)}</div>
+              <div className='col'>{formatMoney(shorter.investmentAmount)}</div>
+              <div className='col'>{formatMoney(longer.pmt)}</div>
+              <div className='col'>{formatMoney(longer.investmentPMT)}</div>
+              <div className='col'>{formatMoney(longer.loanAmount)}</div>
+              <div className='col'>{formatMoney(longer.investmentAmount)}</div>
+            </div>
+          )
+        })}
         <div className="result">
           <pre>{JSON.stringify(this.state, null, "\t")}</pre>
-        </div>
-        <div className='row'>
-          <div className='col'>
-            {this.state.annualResultsByOption.shorter.map((_v, year) => {
-              return <div className='row'>{year}</div>
-            })}
-          </div>
-          <div className='col'>
-            {this.state.annualResultsByOption.shorter.map(getOptionResultView)}
-          </div>
-          <div className='col'>
-            {this.state.annualResultsByOption.longer.map(getOptionResultView)}
-          </div>
         </div>
       </div>
     )
   }
-}
-
-function getOptionResultView (result) {
-  return (
-    <div className='row'>
-      <div className='col'>{formatMoney(result.loanAmount)}</div>
-      <div className='col'>{formatMoney(result.investmentAmount)}</div>
-    </div>
-  )
 }
 
 function formatMoney (value) {
