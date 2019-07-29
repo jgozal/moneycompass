@@ -9,6 +9,7 @@ import numeral from 'numeral';
 import styled, { css } from "react-emotion";
 import { Input } from 'reactstrap';
 import { FV, PMT } from 'formulajs/lib/financial';
+import { getAnnualResultsByOption } from './getAnnualResultsByOption'
 
 // DEFAULT VALUES
 
@@ -118,6 +119,21 @@ class MainForm extends React.Component {
     option2.fv = this.calculateFV(option2, option1, state);
 
     state.optCost = this.calculateOpportunityCost(option1, option2);
+
+    const [shorter, longer] = _.sortBy([option1, option2], 'term')
+
+    state.annualResultsByOption = getAnnualResultsByOption({
+      loanAmount: state.loanAmt,
+      investmentRate: state.investmentRate / 100,
+      shorterOption: {
+        mortgageRate: shorter.interestRate / 100,
+        mortgageTerm: shorter.term
+      },
+      longerOption: {
+        mortgageRate: longer.interestRate / 100,
+        mortgageTerm: longer.term
+      }
+    })
 
     return state;
   }
