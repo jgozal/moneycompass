@@ -9,7 +9,7 @@ import numeral from 'numeral';
 import styled, { css } from "react-emotion";
 import { Input } from 'reactstrap';
 import { FV, PMT } from 'formulajs/lib/financial';
-import { getMonthlyResultsByOption } from './getMonthlyResultsByOption'
+import { getMonthlyResultsByOption } from '../utils/getMonthlyResultsByOption'
 
 // DEFAULT VALUES
 
