@@ -91,12 +91,15 @@ function getMonthlyResult (
 ) {
   let pmt = lastResult.pmt
 
+  // If the loan is less than the monthly payment, only pay what's remaining in
+  // the loan amount
   if (
     lastResult.loanAmount < FV(mortgageRate / COMPOUND_FREQUENCY, 1, pmt, 0)
   ) {
     pmt = PMT(mortgageRate / COMPOUND_FREQUENCY, 1, lastResult.loanAmount)
   }
 
+  // Everything else can be invested
   const investmentPMT = lastResult.budget - pmt
 
   const resultBeforeInflation = {
