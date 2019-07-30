@@ -4,11 +4,12 @@
 // https://michaelbluejay.com/house/15vs30.html
 
 import _ from 'lodash';
-import React from 'react';
-import numeral from 'numeral';
-import styled, { css } from "react-emotion";
-import { Input } from 'reactstrap';
+import { Col, Row } from 'reactstrap'
 import { FV, PMT } from 'formulajs/lib/financial';
+import { Input } from 'reactstrap';
+import numeral from 'numeral';
+import React from 'react';
+import styled, { css } from "react-emotion";
 import { getMonthlyResultsByOption } from '../utils/getMonthlyResultsByOption'
 
 // DEFAULT VALUES
@@ -34,9 +35,8 @@ option2.term = 15;
 
 // CSS
 
-const Row = styled('div')`
-  display: flex;
-  flex-direction: row;
+const ColHeader = styled(Col)`
+  font-weight: bold;
 `
 
 class MainForm extends React.Component {
@@ -213,32 +213,32 @@ class MainForm extends React.Component {
             onChange={this.updateInput}
           />
         </div>
-        <div className='row'>
-          <div className='col font-weight-bold'>Month</div>
-          <div className='col font-weight-bold'>{this.state.shorterOption.term} Yr Mortgage Payment</div>
-          <div className='col font-weight-bold'>{this.state.shorterOption.term} Yr Investment Payment</div>
-          <div className='col font-weight-bold'>{this.state.shorterOption.term} Yr Loan Amount</div>
-          <div className='col font-weight-bold'>{this.state.shorterOption.term} Yr Investment Amount</div>
-          <div className='col font-weight-bold'>{this.state.longerOption.term} Yr Mortgage Payment</div>
-          <div className='col font-weight-bold'>{this.state.longerOption.term} Yr Investment Payment</div>
-          <div className='col font-weight-bold'>{this.state.longerOption.term} Yr Loan Amount</div>
-          <div className='col font-weight-bold'>{this.state.longerOption.term} Yr Investment Amount</div>
-        </div>
+        <Row>
+          <ColHeader>Month</ColHeader>
+          <ColHeader>{this.state.shorterOption.term} Yr Mortgage Payment</ColHeader>
+          <ColHeader>{this.state.shorterOption.term} Yr Investment Payment</ColHeader>
+          <ColHeader>{this.state.shorterOption.term} Yr Loan Amount</ColHeader>
+          <ColHeader>{this.state.shorterOption.term} Yr Investment Amount</ColHeader>
+          <ColHeader>{this.state.longerOption.term} Yr Mortgage Payment</ColHeader>
+          <ColHeader>{this.state.longerOption.term} Yr Investment Payment</ColHeader>
+          <ColHeader>{this.state.longerOption.term} Yr Loan Amount</ColHeader>
+          <ColHeader>{this.state.longerOption.term} Yr Investment Amount</ColHeader>
+        </Row>
         {this.state.monthlyResultsByOption.shorter.map((_r, month) => {
           const shorter = this.state.monthlyResultsByOption.shorter[month]
           const longer = this.state.monthlyResultsByOption.longer[month]
           return (
-            <div className='row'>
-              <div className='col'>{month}</div>
-              <div className='col'>{formatMoney(shorter.pmt)}</div>
-              <div className='col'>{formatMoney(shorter.investmentPMT)}</div>
-              <div className='col'>{formatMoney(shorter.loanAmount)}</div>
-              <div className='col'>{formatMoney(shorter.investmentAmount)}</div>
-              <div className='col'>{formatMoney(longer.pmt)}</div>
-              <div className='col'>{formatMoney(longer.investmentPMT)}</div>
-              <div className='col'>{formatMoney(longer.loanAmount)}</div>
-              <div className='col'>{formatMoney(longer.investmentAmount)}</div>
-            </div>
+            <Row>
+              <Col>{month}</Col>
+              <Col>{formatMoney(shorter.pmt)}</Col>
+              <Col>{formatMoney(shorter.investmentPMT)}</Col>
+              <Col>{formatMoney(shorter.loanAmount)}</Col>
+              <Col>{formatMoney(shorter.investmentAmount)}</Col>
+              <Col>{formatMoney(longer.pmt)}</Col>
+              <Col>{formatMoney(longer.investmentPMT)}</Col>
+              <Col>{formatMoney(longer.loanAmount)}</Col>
+              <Col>{formatMoney(longer.investmentAmount)}</Col>
+            </Row>
           )
         })}
         <div className="result">
