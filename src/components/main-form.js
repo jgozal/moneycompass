@@ -4,9 +4,8 @@
 // https://michaelbluejay.com/house/15vs30.html
 
 import _ from 'lodash';
-import { Col, Row } from 'reactstrap'
+import { Col, Input, Row } from 'reactstrap'
 import { FV, PMT } from 'formulajs/lib/financial';
-import { Input } from 'reactstrap';
 import numeral from 'numeral';
 import React from 'react';
 import styled, { css } from "react-emotion";
