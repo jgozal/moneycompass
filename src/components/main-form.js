@@ -4,13 +4,14 @@
 // https://michaelbluejay.com/house/15vs30.html
 
 import React from 'react';
-import { Input, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap';
+import { Input, InputGroup, InputGroupAddon, InputGroupText, Col, Row } from 'reactstrap';
 import Accordion from './accordion';
 
 import _ from 'lodash';
 import numeral from 'numeral';
 import { FV, PMT } from 'formulajs/lib/financial';
 import styled, { css } from "react-emotion";
+import { getMonthlyResultsByOption } from '../utils/getMonthlyResultsByOption'
 
 // DEFAULT VALUES
 
@@ -24,27 +25,28 @@ const DEFAULT_OPTION = {
   fv: 0
 };
 
-let o1 = Object.assign({}, DEFAULT_OPTION);
-let o2 = Object.assign({}, DEFAULT_OPTION);
+let option1 = _.cloneDeep(DEFAULT_OPTION);
+let option2 = _.cloneDeep(DEFAULT_OPTION);
 
-o1.interestRate = 4.3;
-o1.term = 30;
+option1.interestRate = 4.3;
+option1.term = 30;
 
-o2.interestRate = 4;
-o2.term = 15;
+option2.interestRate = 4;
+option2.term = 15;
 
 // CSS
 
 const MainContainer = styled('div')`
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
 `
 const Sections = styled('div')`
   width: 40%;
 `
 
 const Result = styled('div')`
-  width: 60%;
+  width: 55%;
 `
 
 const Info = styled('p')`
@@ -71,14 +73,18 @@ const InputContainer = styled('div')`
 `
 
 const InputWrapper = styled('div')`
-  display: flex;
-  flex-direction: column;
+display: flex;
+flex - direction: column;
 
-  label {
-    font-size: 12px;
-    font-weight: 600;
-    margin-left: 2px;
-  }
+label {
+  font - size: 12px;
+  font - weight: 600;
+  margin - left: 2px;
+}
+`
+
+const ColHeader = styled(Col)`
+font - weight: bold;
 `
 
 class MainForm extends React.Component {
@@ -97,7 +103,7 @@ class MainForm extends React.Component {
       inflation: 2,
       optCost: 0,
       options: {
-        o1, o2
+        option1, option2
       }
     }
   }
@@ -118,18 +124,18 @@ class MainForm extends React.Component {
   }
 
   // Returns future value dynamically depending on mortgage term length.
-  calculateFV(o1, o2, state) {
-    // TODO: what if terms of o1 and o2 are equal?
-    if (o1.term > o2.term) {
-      return FV((state.investmentRate - state.inflation) / 100 / COMPOUND_FREQUENCY, o1.term * COMPOUND_FREQUENCY, o2.pmt - o1.pmt, 0);
-    } else if (o1.term < o2.term) {
-      return FV((state.investmentRate - state.inflation) / 100 / COMPOUND_FREQUENCY, (o2.term - o1.term) * COMPOUND_FREQUENCY, o1.pmt, 0);
+  calculateFV(option1, option2, state) {
+    // TODO: what if terms of option1 and option2 are equal?
+    if (option1.term > option2.term) {
+      return FV((state.investmentRate - state.inflation) / 100 / COMPOUND_FREQUENCY, option1.term * COMPOUND_FREQUENCY, option2.pmt - option1.pmt, 0);
+    } else if (option1.term < option2.term) {
+      return FV((state.investmentRate - state.inflation) / 100 / COMPOUND_FREQUENCY, (option2.term - option1.term) * COMPOUND_FREQUENCY, option1.pmt, 0);
     }
   }
 
-  // Returns opportunity cost of choosing o1 over o2. Opportunity cost can be positive and negative.
-  calculateOpportunityCost(o1, o2) {
-    return (o1.fv + o1.interestAmt) - (o2.fv + o2.interestAmt);
+  // Returns opportunity cost of choosing option1 over option2. Opportunity cost can be positive and negative.
+  calculateOpportunityCost(option1, option2) {
+    return (option1.fv + option1.interestAmt) - (option2.fv + option2.interestAmt);
   }
 
   // Runs every time an input is updated and uses input's name tag to make specific changes in the state
@@ -148,25 +154,45 @@ class MainForm extends React.Component {
 
   // Runs all calculations and returns a modified state
   calculateAll(state) {
-    o1 = state.options.o1;
-    o2 = state.options.o2;
+    option1 = state.options.option1;
+    option2 = state.options.option2;
 
-    o1.pmt = this.calculatePMT(o1, state);
-    o2.pmt = this.calculatePMT(o2, state);
+    option1.pmt = this.calculatePMT(option1, state);
+    option2.pmt = this.calculatePMT(option2, state);
 
-    o1.interestAmt = this.calculateInterestAmt(o1, state);
-    o2.interestAmt = this.calculateInterestAmt(o2, state);
+    option1.interestAmt = this.calculateInterestAmt(option1, state);
+    option2.interestAmt = this.calculateInterestAmt(option2, state);
 
-    o1.fv = this.calculateFV(o1, o2, state);
-    o2.fv = this.calculateFV(o2, o1, state);
+    option1.fv = this.calculateFV(option1, option2, state);
+    option2.fv = this.calculateFV(option2, option1, state);
 
-    state.optCost = this.calculateOpportunityCost(o1, o2);
+    state.optCost = this.calculateOpportunityCost(option1, option2);
+
+    const [shorter, longer] = _.sortBy([option1, option2], 'term')
+
+    state.longerOption = longer
+    state.shorterOption = shorter
+
+    state.monthlyResultsByOption = getMonthlyResultsByOption({
+      loanAmount: state.loanAmt,
+      investmentRate: state.investmentRate / 100,
+      inflationRate: state.inflation / 100,
+      shorterOption: {
+        mortgageRate: shorter.interestRate / 100,
+        mortgageTerm: shorter.term
+      },
+      longerOption: {
+        mortgageRate: longer.interestRate / 100,
+        mortgageTerm: longer.term
+      }
+    })
 
     return state;
   }
 
   render() {
     return (
+
       <MainContainer>
         <Sections>
           <Section>
@@ -198,10 +224,10 @@ class MainForm extends React.Component {
                 <label>Mortgage Option 1</label>
                 <InputGroup>
                   <Input
-                    name="options.o1.term"
+                    name="options.option1.term"
                     placeholder="Loan Term"
                     type="number"
-                    value={o1.term}
+                    value={option1.term}
                     onChange={this.updateInput}
                   />
                   <InputGroupAddon addonType="append">
@@ -213,10 +239,10 @@ class MainForm extends React.Component {
                 <label>Mortgage Option 2</label>
                 <InputGroup>
                   <Input
-                    name="options.o2.term"
+                    name="options.option2.term"
                     placeholder="Loan Term"
                     type="number"
-                    value={o2.term}
+                    value={option2.term}
                     onChange={this.updateInput}
                   />
                   <InputGroupAddon addonType="append">
@@ -247,10 +273,10 @@ class MainForm extends React.Component {
                 <label>Mortgage Option 1</label>
                 <InputGroup>
                   <Input
-                    name="options.o1.interestRate"
+                    name="options.option1.interestRate"
                     placeholder="APR"
                     type="number"
-                    value={o1.interestRate}
+                    value={option1.interestRate}
                     onChange={this.updateInput}
                   />
                   <InputGroupAddon addonType="append">
@@ -262,10 +288,10 @@ class MainForm extends React.Component {
                 <label>Mortgage Option 2</label>
                 <InputGroup>
                   <Input
-                    name="options.o2.interestRate"
+                    name="options.option2.interestRate"
                     placeholder="APR"
                     type="number"
-                    value={o2.interestRate}
+                    value={option2.interestRate}
                     onChange={this.updateInput}
                   />
                   <InputGroupAddon addonType="append">
@@ -352,12 +378,44 @@ class MainForm extends React.Component {
         </Sections>
 
         <Result>
+          <Row>
+            <ColHeader>Month</ColHeader>
+            <ColHeader>{this.state.shorterOption.term} Yr Mortgage Payment</ColHeader>
+            <ColHeader>{this.state.shorterOption.term} Yr Investment Payment</ColHeader>
+            <ColHeader>{this.state.shorterOption.term} Yr Loan Amount</ColHeader>
+            <ColHeader>{this.state.shorterOption.term} Yr Investment Amount</ColHeader>
+            <ColHeader>{this.state.longerOption.term} Yr Mortgage Payment</ColHeader>
+            <ColHeader>{this.state.longerOption.term} Yr Investment Payment</ColHeader>
+            <ColHeader>{this.state.longerOption.term} Yr Loan Amount</ColHeader>
+            <ColHeader>{this.state.longerOption.term} Yr Investment Amount</ColHeader>
+          </Row>
+          {this.state.monthlyResultsByOption.shorter.map((_r, month) => {
+            const shorter = this.state.monthlyResultsByOption.shorter[month]
+            const longer = this.state.monthlyResultsByOption.longer[month]
+            return (
+              <Row>
+                <Col>{month}</Col>
+                <Col>{formatMoney(shorter.pmt)}</Col>
+                <Col>{formatMoney(shorter.investmentPMT)}</Col>
+                <Col>{formatMoney(shorter.loanAmount)}</Col>
+                <Col>{formatMoney(shorter.investmentAmount)}</Col>
+                <Col>{formatMoney(longer.pmt)}</Col>
+                <Col>{formatMoney(longer.investmentPMT)}</Col>
+                <Col>{formatMoney(longer.loanAmount)}</Col>
+                <Col>{formatMoney(longer.investmentAmount)}</Col>
+              </Row>
+            )
+          })}
           <pre>{JSON.stringify(this.state, null, 4).replace(/[{}]/g, '')}</pre>
         </Result>
 
       </MainContainer>
     )
   }
+}
+
+function formatMoney(value) {
+  return numeral(value).format('$0,0.00')
 }
 
 export default MainForm;
