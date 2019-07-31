@@ -1,5 +1,6 @@
 {
   "editor.formatOnSave": true,
   "editor.rulers": [80],
-  "editor.wordWrapColumn": 80
+  "editor.wordWrapColumn": 80,
+  "standard.autoFixOnSave": true
 }
