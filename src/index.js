@@ -1,25 +1,20 @@
-import 'bootstrap/dist/css/bootstrap.css';
-import React from "react";
-import ReactDOM from "react-dom";
+import 'bootstrap/dist/css/bootstrap.css'
+import React from 'react'
+import ReactDOM from 'react-dom'
 
-import MainForm from "./components/main-form";
+import MainForm from './components/main-form'
 
 class App extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
+  render () {
     // TODO 018.12.09: Include an intro paragraph
     return (
-      <div className="container-fluid">
+      <div className='container-fluid'>
         <MainForm />
       </div>
-    );
+    )
   }
 }
 
-const wrapper = document.getElementById("app-container");
-wrapper ? ReactDOM.render(<App />, wrapper) : false;
+ReactDOM.render(<App />, document.getElementById('app-container'))
 
-export default App;
+export default App

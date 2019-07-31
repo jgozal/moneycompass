@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import { Collapse, Button, CardBody, Card } from 'reactstrap';
-import styled from "react-emotion";
+import React, { Component } from 'react'
+import { Collapse, Button, CardBody, Card } from 'reactstrap'
+import styled from 'react-emotion'
 
 // CSS
 
@@ -18,30 +18,30 @@ const XCardBody = styled(CardBody)`
 `
 
 class Accordion extends Component {
-  constructor(props) {
-    super(props);
-    this.toggle = this.toggle.bind(this);
-    this.state = { collapse: false };
+  constructor (props) {
+    super(props)
+    this.toggle = this.toggle.bind(this)
+    this.state = { collapse: false }
   }
 
-  toggle() {
-    this.setState(state => ({ collapse: !state.collapse }));
+  toggle () {
+    this.setState(state => ({ collapse: !state.collapse }))
   }
 
-  render() {
+  render () {
     return (
       <div>
-        <XButton color="link" onClick={this.toggle}>{this.props.title}</XButton>
+        <XButton color='link' onClick={this.toggle}>
+          {this.props.title}
+        </XButton>
         <Collapse isOpen={this.state.collapse}>
           <XCard>
-            <XCardBody>
-              {this.props.body}
-            </XCardBody>
+            <XCardBody>{this.props.body}</XCardBody>
           </XCard>
         </Collapse>
       </div>
-    );
+    )
   }
 }
 
-export default Accordion;
+export default Accordion
