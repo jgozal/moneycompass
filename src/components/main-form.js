@@ -79,17 +79,17 @@ const InputContainer = styled('div')`
 
 const InputWrapper = styled('div')`
 display: flex;
-flex - direction: column;
+flex-direction: column;
 
 label {
-  font - size: 12px;
-  font - weight: 600;
-  margin - left: 2px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-left: 2px;
 }
 `
 
 const ColHeader = styled(Col)`
-font - weight: bold;
+font-weight: bold;
 `
 
 class MainForm extends React.Component {
