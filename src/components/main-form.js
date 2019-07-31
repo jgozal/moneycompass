@@ -3,6 +3,11 @@
 // https://www.nerdwallet.com/mortgages/mortgage-rates/30-year-fixed
 // https://michaelbluejay.com/house/15vs30.html
 
+// TODO
+// 1. JSLinter
+// 2. Add in content/text
+// 3. Styling Results
+
 import React from 'react';
 import { Input, InputGroup, InputGroupAddon, InputGroupText, Col, Row } from 'reactstrap';
 import Accordion from './accordion';

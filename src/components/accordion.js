@@ -1,19 +1,19 @@
 import React, { Component } from 'react';
 import { Collapse, Button, CardBody, Card } from 'reactstrap';
-import styled, { css } from "react-emotion";
+import styled from "react-emotion";
 
 // CSS
 
-const StyledButton = styled(Button)`
+const XButton = styled(Button)`
   font-size: 14px;
 `
 
-const StyledCard = styled(Card)`
+const XCard = styled(Card)`
   font-size: 13px;
   border-width: 3px;
 `
 
-const StyledCardBody = styled(CardBody)`
+const XCardBody = styled(CardBody)`
   padding: 10px;
 `
 
@@ -31,13 +31,13 @@ class Accordion extends Component {
   render() {
     return (
       <div>
-        <StyledButton color="link" onClick={this.toggle}>{this.props.title}</StyledButton>
+        <XButton color="link" onClick={this.toggle}>{this.props.title}</XButton>
         <Collapse isOpen={this.state.collapse}>
-          <StyledCard>
-            <StyledCardBody>
+          <XCard>
+            <XCardBody>
               {this.props.body}
-            </StyledCardBody>
-          </StyledCard>
+            </XCardBody>
+          </XCard>
         </Collapse>
       </div>
     );
