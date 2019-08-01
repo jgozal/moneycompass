@@ -99,7 +99,7 @@ const ColHeader = styled(Col)`
 `
 
 class MainForm extends React.Component {
-  constructor() {
+  constructor () {
     super()
     this.calculatePMT = this.calculatePMT.bind(this)
     this.calculateInterestAmt = this.calculateInterestAmt.bind(this)
@@ -119,13 +119,13 @@ class MainForm extends React.Component {
     }
   }
 
-  componentWillMount() {
+  componentWillMount () {
     // Running all calculations with default values on page load
     this.setState(this.calculateAll(this.state))
   }
 
   // Returns monthly payment.
-  calculatePMT(o, state) {
+  calculatePMT (o, state) {
     return PMT(
       (o.interestRate - state.inflation) / 100 / COMPOUND_FREQUENCY,
       o.term * COMPOUND_FREQUENCY,
@@ -134,12 +134,12 @@ class MainForm extends React.Component {
   }
 
   // Returns interest amount and depends on payment (PMT).
-  calculateInterestAmt(o, state) {
+  calculateInterestAmt (o, state) {
     return o.pmt * (o.term * COMPOUND_FREQUENCY) + state.loanAmt
   }
 
   // Returns future value dynamically depending on mortgage term length.
-  calculateFV(option1, option2, state) {
+  calculateFV (option1, option2, state) {
     // TODO: what if terms of option1 and option2 are equal?
     if (option1.term > option2.term) {
       return FV(
@@ -159,12 +159,12 @@ class MainForm extends React.Component {
   }
 
   // Returns opportunity cost of choosing option1 over option2. Opportunity cost can be positive and negative.
-  calculateOpportunityCost(option1, option2) {
+  calculateOpportunityCost (option1, option2) {
     return option1.fv + option1.interestAmt - (option2.fv + option2.interestAmt)
   }
 
   // Runs every time an input is updated and uses input's name tag to make specific changes in the state
-  updateInput(e) {
+  updateInput (e) {
     let state = Object.assign({}, this.state)
     const key = e.target.name
 
@@ -178,7 +178,7 @@ class MainForm extends React.Component {
   }
 
   // Runs all calculations and returns a modified state
-  calculateAll(state) {
+  calculateAll (state) {
     option1 = state.options.option1
     option2 = state.options.option2
 
@@ -215,7 +215,7 @@ class MainForm extends React.Component {
     return state
   }
 
-  render() {
+  render () {
     return (
       <MainContainer>
         <Sections>
@@ -459,7 +459,7 @@ class MainForm extends React.Component {
   }
 }
 
-function formatMoney(value) {
+function formatMoney (value) {
   return numeral(value).format('$0,0.00')
 }
 
