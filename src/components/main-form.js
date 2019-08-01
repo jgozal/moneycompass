@@ -21,7 +21,7 @@ import Accordion from './accordion'
 import _ from 'lodash'
 import numeral from 'numeral'
 import { FV, PMT } from 'formulajs/lib/financial'
-import styled, { css } from 'react-emotion'
+import styled from 'react-emotion'
 import { getMonthlyResultsByOption } from '../utils/getMonthlyResultsByOption'
 
 // DEFAULT VALUES
