@@ -99,7 +99,7 @@ const InputWrapper = styled('div')`
 const AmortizationTable = styled(Table)`
   margin-top: 30px; 
 
-  th {
+  th, tbody {
     text-align: center;
   }
 
