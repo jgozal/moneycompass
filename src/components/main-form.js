@@ -65,7 +65,7 @@ const Result = styled('div')`
 const Info = styled('p')`
   font-size: 14px;
   margin-bottom: 10px;
-  tdor: grey;
+  color: grey;
 `
 
 const Section = styled('div')`
@@ -87,7 +87,7 @@ const InputContainer = styled('div')`
 
 const InputWrapper = styled('div')`
   display: flex;
-  flex-direction: tdumn;
+  flex-direction: column;
 
   label {
     font-size: 12px;
@@ -98,7 +98,7 @@ const InputWrapper = styled('div')`
 
 const AmortizationTable = styled(Table)`
   margin-top: 30px; 
-  
+
   th {
     text-align: center;
   }
