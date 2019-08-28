@@ -103,11 +103,10 @@ const AmortizationTable = styled(Table)`
     text-align: center;
   }
 
-  tr:first-child {
-    th:first-of-type {
-      border: 0;
-    }
+  th:first-of-type {
+    border: 0;
   }
+
 `
 
 const tableHighlighter = css`
@@ -453,7 +452,7 @@ class MainForm extends React.Component {
                 <th colSpan='4'>{this.state.longerOption.term} year</th>
               </tr>
               <tr>
-                <th>Year</th>
+                <th colSpan='1' />
                 <th>Mortgage Payment</th>
                 <th>Investment Payment</th>
                 <th>Loan Amount</th>
@@ -474,7 +473,7 @@ class MainForm extends React.Component {
                   }
                 >
                   <tr>
-                    <td>{year + 1}</td>
+                    <td>Year {year + 1}</td>
                     <td>{formatMoney(shorter.pmt)}</td>
                     <td>{formatMoney(shorter.investmentPMT)}</td>
                     <td>{formatMoney(shorter.loanAmount)}</td>
