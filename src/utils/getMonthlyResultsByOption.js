@@ -83,6 +83,31 @@ export function getMonthlyResultsByOption ({
   return monthlyResultsByOption
 }
 
+export function getYearlyResultsByOption (arr) {
+  const finalArr = []
+
+  let pmtResult = 0
+  let investmentPMTResult = 0
+
+  arr.forEach((item, index) => {
+    pmtResult += item.pmt
+    investmentPMTResult += item.investmentPMT
+    if ((index + 1) % 12 === 0) {
+      finalArr.push({
+        pmt: pmtResult || 0,
+        investmentPMT: investmentPMTResult || 0,
+        loanAmount: item.loanAmount || 0,
+        investmentAmount: item.investmentAmount || 0
+      })
+
+      pmtResult = 0
+      investmentPMTResult = 0
+    }
+  })
+
+  return finalArr
+}
+
 function getMonthlyResult (
   mortgageRate,
   investmentRate,

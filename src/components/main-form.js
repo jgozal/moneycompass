@@ -13,16 +13,18 @@ import {
   InputGroup,
   InputGroupAddon,
   InputGroupText,
-  Col,
-  Row
+  Table
 } from 'reactstrap'
 import Accordion from './accordion'
 
 import _ from 'lodash'
-import numeral from 'numeral'
+import numbro from 'numbro'
 import { FV, PMT } from 'formulajs/lib/financial'
-import styled from 'react-emotion'
-import { getMonthlyResultsByOption } from '../utils/getMonthlyResultsByOption'
+import styled, { css } from 'react-emotion'
+import {
+  getMonthlyResultsByOption,
+  getYearlyResultsByOption
+} from '../utils/getMonthlyResultsByOption'
 
 // DEFAULT VALUES
 
@@ -63,7 +65,7 @@ const Result = styled('div')`
 const Info = styled('p')`
   font-size: 14px;
   margin-bottom: 10px;
-  color: grey;
+  tdor: grey;
 `
 
 const Section = styled('div')`
@@ -85,7 +87,7 @@ const InputContainer = styled('div')`
 
 const InputWrapper = styled('div')`
   display: flex;
-  flex-direction: column;
+  flex-direction: tdumn;
 
   label {
     font-size: 12px;
@@ -94,8 +96,28 @@ const InputWrapper = styled('div')`
   }
 `
 
-const ColHeader = styled(Col)`
-  font-weight: bold;
+const AmortizationTable = styled(Table)`
+  margin-top: 30px; 
+  
+  th {
+    text-align: center;
+  }
+
+  tr:first-child {
+    th:first-of-type {
+      border: 0;
+    }
+  }
+`
+
+const tableHighlighter = css`
+  td:nth-child(n + 2):nth-child(-n + 5) {
+    background-color: rgb(189, 189, 189, 0.5);
+  }
+
+  td:nth-child(n + 6):nth-child(-n + 9) {
+    background-color: rgb(75, 181, 67, 0.5);
+  }
 `
 
 class MainForm extends React.Component {
@@ -115,7 +137,11 @@ class MainForm extends React.Component {
       options: {
         option1,
         option2
-      }
+      },
+      shorterOption: {},
+      longerOption: {},
+      monthlyResultsByOption: [],
+      yearlyResultsByOption: []
     }
   }
 
@@ -211,6 +237,15 @@ class MainForm extends React.Component {
         mortgageTerm: longer.term
       }
     })
+
+    state.yearlyResultsByOption = {
+      shorter: getYearlyResultsByOption(
+        this.state.monthlyResultsByOption.shorter
+      ),
+      longer: getYearlyResultsByOption(
+        this.state.monthlyResultsByOption.longer
+      )
+    }
 
     return state
   }
@@ -410,48 +445,49 @@ class MainForm extends React.Component {
         </Sections>
 
         <Result>
-          <Row>
-            <ColHeader>Month</ColHeader>
-            <ColHeader>
-              {this.state.shorterOption.term} Yr Mortgage Payment
-            </ColHeader>
-            <ColHeader>
-              {this.state.shorterOption.term} Yr Investment Payment
-            </ColHeader>
-            <ColHeader>
-              {this.state.shorterOption.term} Yr Loan Amount
-            </ColHeader>
-            <ColHeader>
-              {this.state.shorterOption.term} Yr Investment Amount
-            </ColHeader>
-            <ColHeader>
-              {this.state.longerOption.term} Yr Mortgage Payment
-            </ColHeader>
-            <ColHeader>
-              {this.state.longerOption.term} Yr Investment Payment
-            </ColHeader>
-            <ColHeader>{this.state.longerOption.term} Yr Loan Amount</ColHeader>
-            <ColHeader>
-              {this.state.longerOption.term} Yr Investment Amount
-            </ColHeader>
-          </Row>
-          {this.state.monthlyResultsByOption.shorter.map((_r, month) => {
-            const shorter = this.state.monthlyResultsByOption.shorter[month]
-            const longer = this.state.monthlyResultsByOption.longer[month]
-            return (
-              <Row>
-                <Col>{month}</Col>
-                <Col>{formatMoney(shorter.pmt)}</Col>
-                <Col>{formatMoney(shorter.investmentPMT)}</Col>
-                <Col>{formatMoney(shorter.loanAmount)}</Col>
-                <Col>{formatMoney(shorter.investmentAmount)}</Col>
-                <Col>{formatMoney(longer.pmt)}</Col>
-                <Col>{formatMoney(longer.investmentPMT)}</Col>
-                <Col>{formatMoney(longer.loanAmount)}</Col>
-                <Col>{formatMoney(longer.investmentAmount)}</Col>
-              </Row>
-            )
-          })}
+          <AmortizationTable bordered responsive hover>
+            <thead>
+              <tr>
+                <th colSpan='1' />
+                <th colSpan='4'>{this.state.shorterOption.term} year</th>
+                <th colSpan='4'>{this.state.longerOption.term} year</th>
+              </tr>
+              <tr>
+                <th>Year</th>
+                <th>Mortgage Payment</th>
+                <th>Investment Payment</th>
+                <th>Loan Amount</th>
+                <th>Investment Amount</th>
+                <th>Mortgage Payment</th>
+                <th>Investment Payment</th>
+                <th>Loan Amount</th>
+                <th>Investment Amount</th>
+              </tr>
+            </thead>
+            {this.state.yearlyResultsByOption.shorter.map((_r, year) => {
+              const shorter = this.state.yearlyResultsByOption.shorter[year]
+              const longer = this.state.yearlyResultsByOption.longer[year]
+              return (
+                <tbody
+                  className={
+                    (year + 1 === 30 || year + 1 === 15) && tableHighlighter
+                  }
+                >
+                  <tr>
+                    <td>{year + 1}</td>
+                    <td>{formatMoney(shorter.pmt)}</td>
+                    <td>{formatMoney(shorter.investmentPMT)}</td>
+                    <td>{formatMoney(shorter.loanAmount)}</td>
+                    <td>{formatMoney(shorter.investmentAmount)}</td>
+                    <td>{formatMoney(longer.pmt)}</td>
+                    <td>{formatMoney(longer.investmentPMT)}</td>
+                    <td>{formatMoney(longer.loanAmount)}</td>
+                    <td>{formatMoney(longer.investmentAmount)}</td>
+                  </tr>
+                </tbody>
+              )
+            })}
+          </AmortizationTable>
           <pre>{JSON.stringify(this.state, null, 4).replace(/[{}]/g, '')}</pre>
         </Result>
       </MainContainer>
@@ -460,7 +496,7 @@ class MainForm extends React.Component {
 }
 
 function formatMoney (value) {
-  return numeral(value).format('$0,0.00')
+  return numbro(value).format('$0,0.00')
 }
 
 export default MainForm
