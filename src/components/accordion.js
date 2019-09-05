@@ -1,20 +1,11 @@
 import React, { Component } from 'react'
-import { Collapse, Button, CardBody, Card } from 'reactstrap'
+import { Collapse, Button } from 'reactstrap'
 import styled from 'react-emotion'
 
 // CSS
 
 const XButton = styled(Button)`
   font-size: 14px;
-`
-
-const XCard = styled(Card)`
-  font-size: 13px;
-  border-width: 3px;
-`
-
-const XCardBody = styled(CardBody)`
-  padding: 10px;
 `
 
 class Accordion extends Component {
@@ -31,14 +22,10 @@ class Accordion extends Component {
   render () {
     return (
       <div>
-        <XButton color='link' onClick={this.toggle}>
+        <a tabIndex='0' onClick={this.toggle}>
           {this.props.title}
-        </XButton>
-        <Collapse isOpen={this.state.collapse}>
-          <XCard>
-            <XCardBody>{this.props.body}</XCardBody>
-          </XCard>
-        </Collapse>
+        </a>
+        <Collapse isOpen={this.state.collapse}>{this.props.body}</Collapse>
       </div>
     )
   }

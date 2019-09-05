@@ -9,11 +9,12 @@
 
 import React from 'react'
 import {
+  Card,
+  Col,
   Input,
   InputGroup,
   InputGroupAddon,
   InputGroupText,
-  Col,
   Row
 } from 'reactstrap'
 import Accordion from './accordion'
@@ -51,9 +52,15 @@ const MainContainer = styled('div')`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+
+  .card {
+    max-width: 50%;
+  }
 `
-const Sections = styled('div')`
-  width: 40%;
+
+const InputCard = styled(Card)`
+  max-height: min-content;
+  padding: 16px;
 `
 
 const Result = styled('div')`
@@ -66,17 +73,7 @@ const Info = styled('p')`
   color: grey;
 `
 
-const Section = styled('div')`
-  margin-bottom: 40px;
-  border-left: 6px solid red;
-  padding-left: 25px;
-
-  .input-group {
-    width: 80%;
-    margin-right: 25px;
-    margin-bottom: 15px;
-  }
-`
+const Section = styled('div')``
 
 const InputContainer = styled('div')`
   display: flex;
@@ -218,13 +215,9 @@ class MainForm extends React.Component {
   render () {
     return (
       <MainContainer>
-        <Sections>
+        <InputCard>
           <Section>
-            <h6>Loan Amount</h6>
-            <Info>
-              The total amount that you promise to pay back. This is the amount
-              after the down payment has been paid.
-            </Info>
+            <h6>How much is your loan?</h6>
             <InputGroup>
               <InputGroupAddon addonType='prepend'>
                 <InputGroupText>$</InputGroupText>
@@ -407,7 +400,7 @@ class MainForm extends React.Component {
               body='Some quick explanation for what this is'
             />
           </Section>
-        </Sections>
+        </InputCard>
 
         <Result>
           <Row>
