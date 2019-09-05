@@ -230,15 +230,19 @@ class MainForm extends React.Component {
                 onChange={this.updateInput}
               />
             </InputGroup>
-            <Accordion
-              title='How to determine the budget/ Income, etc'
-              body='Some quick explanation for what this is'
-            />
+            <Accordion title='How much can I afford?'>
+              Most financial advisers agree that people should spend no more
+              than <b>28 percent</b> of their gross monthly income on housing
+              expenses and no more than <b>36 percent</b> on total debt.{' '}
+              <a href='https://www.bankrate.com/calculators/mortgages/new-house-calculator.aspx'>
+                Bankrate
+              </a>{' '}
+              has a great tool to help you determine how much you can afford.
+            </Accordion>
           </Section>
 
           <Section>
             <h6>Loan Term</h6>
-            <Info>The time that you have to repay the loan.</Info>
             <InputContainer>
               <InputWrapper>
                 <label>Mortgage Option 1</label>
@@ -271,28 +275,17 @@ class MainForm extends React.Component {
                 </InputGroup>
               </InputWrapper>
             </InputContainer>
-            <Accordion
-              title='Fixed vs. Variable (vs Adjusted)'
-              body='Some quick explanation for what this is'
-            />
-            <Accordion
-              title='Pros and Cons 30 vs 15'
-              body='Some quick explanation for what this is'
-            />
-            <Accordion
-              title='What happens after the shorter term runs out'
-              body='Some quick explanation for what this is'
-            />
+            <Accordion title='Pros and Cons 30 vs 15'>
+              <a href='https://thelendersnetwork.com/15-year-mortgage-vs-30-year-mortgage-rates/'>
+                The Lender’s Network
+              </a>{' '}
+              has an excellent article which outlines the pros and cons of
+              15-year versus 30-year mortgages.
+            </Accordion>
           </Section>
 
           <Section>
             <h6>Annual Percentage Rate (APR) & Interest</h6>
-            <Info>
-              The cost of credit, including the interest and fees, expressed as
-              an interest rate. APR was created to make it easier for consumers
-              to compare loans with different rates and costs, and by law it
-              must be disclosed in all advertising.
-            </Info>
             <InputContainer>
               <InputWrapper>
                 <label>Mortgage Option 1</label>
@@ -325,15 +318,10 @@ class MainForm extends React.Component {
                 </InputGroup>
               </InputWrapper>
             </InputContainer>
-            <Accordion
-              title='What is an APR, what it includes (Mortgage interest rate)'
-              body='Some quick explanation for what this is'
-            />
           </Section>
 
           <Section>
             <h6>Return on Investment (ROI)</h6>
-            <Info>Some quick explanation for what this is</Info>
             <InputGroup>
               <Input
                 name='investmentRate'
@@ -346,35 +334,10 @@ class MainForm extends React.Component {
                 <InputGroupText>%</InputGroupText>
               </InputGroupAddon>
             </InputGroup>
-            <Accordion
-              title='How to invest (talk about brokers)'
-              body='Some quick explanation for what this is'
-            />
-            <Accordion
-              title='What is an asset and types of assets'
-              body='Some quick explanation for what this is'
-            />
-            <Accordion
-              title='Expected/Average returns by asset'
-              body='Some quick explanation for what this is'
-            />
-            <Accordion
-              title='Volatility/Risk and Diversification'
-              body='Some quick explanation for what this is'
-            />
-            <Accordion
-              title='Long term vs short term'
-              body='Some quick explanation for what this is'
-            />
-            <Accordion
-              title='Retirement accounts vs brokerage accounts'
-              body='Some quick explanation for what this is'
-            />
           </Section>
 
           <Section>
             <h6>Inflation</h6>
-            <Info>Some quick explanation for what this is</Info>
             <InputGroup>
               <Input
                 name='inflation'
@@ -387,18 +350,6 @@ class MainForm extends React.Component {
                 <InputGroupText>%</InputGroupText>
               </InputGroupAddon>
             </InputGroup>
-            <Accordion
-              title='What is inflation'
-              body='Some quick explanation for what this is'
-            />
-            <Accordion
-              title='How do you determine inflation'
-              body='Some quick explanation for what this is'
-            />
-            <Accordion
-              title='How inflation affects your mortgage and investments'
-              body='Some quick explanation for what this is'
-            />
           </Section>
         </InputCard>
 

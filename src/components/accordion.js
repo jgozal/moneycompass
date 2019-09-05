@@ -25,7 +25,7 @@ class Accordion extends Component {
         <a tabIndex='0' onClick={this.toggle}>
           {this.props.title}
         </a>
-        <Collapse isOpen={this.state.collapse}>{this.props.body}</Collapse>
+        <Collapse isOpen={this.state.collapse}>{this.props.children}</Collapse>
       </div>
     )
   }
