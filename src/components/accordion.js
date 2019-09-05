@@ -1,12 +1,5 @@
 import React, { Component } from 'react'
-import { Collapse, Button } from 'reactstrap'
-import styled from 'react-emotion'
-
-// CSS
-
-const XButton = styled(Button)`
-  font-size: 14px;
-`
+import { Collapse } from 'reactstrap'
 
 class Accordion extends Component {
   constructor (props) {
@@ -23,7 +16,13 @@ class Accordion extends Component {
     return (
       <div>
         <a tabIndex='0' onClick={this.toggle}>
-          {this.props.title}
+          {this.state.collapse ? (
+            <small className='text-dark'>
+              <b>{this.props.title}</b>
+            </small>
+          ) : (
+            <small className='text-muted'>{this.props.title}</small>
+          )}
         </a>
         <Collapse isOpen={this.state.collapse}>{this.props.children}</Collapse>
       </div>
