@@ -275,7 +275,7 @@ class MainForm extends React.Component {
                 </InputGroup>
               </InputWrapper>
             </InputContainer>
-            <Accordion title='Pros and Cons 30 vs 15'>
+            <Accordion title='Pros and Cons'>
               <a href='https://thelendersnetwork.com/15-year-mortgage-vs-30-year-mortgage-rates/'>
                 The Lender’s Network
               </a>{' '}
