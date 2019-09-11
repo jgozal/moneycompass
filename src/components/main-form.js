@@ -150,7 +150,7 @@ class MainForm extends React.Component {
   // Returns monthly payment.
   calculatePMT (o, state) {
     return PMT(
-      (o.interestRate - state.inflation) / 100 / COMPOUND_FREQUENCY,
+      o.interestRate / 100 / COMPOUND_FREQUENCY,
       o.term * COMPOUND_FREQUENCY,
       state.loanAmt
     )
