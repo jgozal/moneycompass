@@ -23,7 +23,7 @@ import { FV, PMT } from 'formulajs/lib/financial'
 import styled, { css } from 'react-emotion'
 import { getYearly } from '../utils/timeSeriesResultsByOption'
 
-import { GRAY, GREEN } from '../assets/colors'
+import { LIGHT_GRAY, GREEN } from '../assets/colors'
 
 // DEFAULT VALUES
 
@@ -108,16 +108,54 @@ const AmortizationTable = styled(Table)`
   }
 `
 
-const tableHighlighter = (fv1, fv2) => {
-  return css`
-    td:nth-child(n + 2):nth-child(-n + 5) {
-      background-color: ${fv1 > fv2 ? GREEN : GRAY};
-    }
+const hoverTableCells = year => {
+  // grab table cells depending on year
+  const tableCells = Array.from(
+    document.getElementsByTagName('tbody')[0].children[year].children
+  )
 
-    td:nth-child(n + 6):nth-child(-n + 9) {
-      background-color: ${fv2 > fv1 ? GREEN : GRAY};
+  const hover = (color, brightness, cell, index) => {
+    const nextCells = tableCells[index + 4]
+    const prevCells = tableCells[index - 4]
+
+    cell.style.backgroundColor = index !== 0 && color
+    cell.style.filter = `brightness(${brightness}%)`
+    if (typeof nextCells !== 'undefined' && index !== 0) {
+      nextCells.style.backgroundColor = color
+      nextCells.style.filter = `brightness(${brightness}%)`
     }
-  `
+    if (typeof prevCells !== 'undefined' && index !== 4) {
+      prevCells.style.backgroundColor = color
+      prevCells.style.filter = `brightness(${brightness}%)`
+    }
+  }
+
+  // iterate over all cells in row and set appropriate color depending on mouse event
+  tableCells.forEach((cell, index) => {
+    // do not set background color for rows that already have a background color
+    if ((year + 1) % 15 === 0) {
+      cell.addEventListener('mouseover', () => hover(null, 80, cell, index))
+      cell.addEventListener('mouseleave', () => hover(null, 100, cell, index))
+    } else {
+      cell.addEventListener('mouseover', () => hover(LIGHT_GRAY, 80, cell, index))
+      cell.addEventListener('mouseleave', () => hover('white', 100, cell, index))
+    }
+  })
+}
+
+const highlightTableCells = (year, fv1, fv2) => {
+  return (
+    (year + 1) % 15 === 0 &&
+    css`
+      td:nth-child(n + 2):nth-child(-n + 5) {
+        background-color: ${fv1 > fv2 ? GREEN : LIGHT_GRAY};
+      }
+
+      td:nth-child(n + 6):nth-child(-n + 9) {
+        background-color: ${fv2 > fv1 ? GREEN : LIGHT_GRAY};
+      }
+    `
+  )
 }
 
 class MainForm extends React.Component {
@@ -430,7 +468,7 @@ class MainForm extends React.Component {
         </Sections>
 
         <Result>
-          <AmortizationTable bordered responsive hover>
+          <AmortizationTable bordered responsive>
             <thead>
               <tr>
                 <th colSpan='1' />
@@ -449,17 +487,21 @@ class MainForm extends React.Component {
                 <th>Investment Amount</th>
               </tr>
             </thead>
-            {this.state.yearlyResultsByOption.shorter.map((_r, year) => {
-              const shorter = this.state.yearlyResultsByOption.shorter[year]
-              const longer = this.state.yearlyResultsByOption.longer[year]
-              return (
-                <tbody
-                  className={
-                    (year + 1) % 15 === 0 &&
-                    tableHighlighter(option1.fv, option2.fv)
-                  }
-                >
-                  <tr>
+            <tbody>
+              {this.state.yearlyResultsByOption.shorter.map((_r, year) => {
+                const shorter = this.state.yearlyResultsByOption.shorter[year]
+                const longer = this.state.yearlyResultsByOption.longer[year]
+
+                return (
+                  <tr
+                    key={'row' + year}
+                    className={highlightTableCells(
+                      year,
+                      option1.fv,
+                      option2.fv
+                    )}
+                    onMouseOver={() => hoverTableCells(year)}
+                  >
                     <td>Year {year + 1}</td>
                     <td>{formatMoney(shorter.pmt)}</td>
                     <td>{formatMoney(shorter.investmentPMT)}</td>
@@ -470,9 +512,9 @@ class MainForm extends React.Component {
                     <td>{formatMoney(longer.loanAmount)}</td>
                     <td>{formatMoney(longer.investmentAmount)}</td>
                   </tr>
-                </tbody>
-              )
-            })}
+                )
+              })}
+            </tbody>
           </AmortizationTable>
           <pre>{JSON.stringify(this.state, null, 4).replace(/[{}]/g, '')}</pre>
         </Result>
