@@ -20,7 +20,7 @@ import { FV, PMT } from 'formulajs/lib/financial'
 import styled, { css } from 'react-emotion'
 import { getYearly } from '../utils/timeSeriesResultsByOption'
 
-import { LIGHT_GRAY, GREEN } from '../assets/colors'
+import { LIGHT_GRAY, DARK_GRAY, GREEN } from '../assets/colors'
 
 // DEFAULT VALUES
 
@@ -104,11 +104,17 @@ const AmortizationTable = styled(Table)`
   th:first-of-type {
     border: 0;
   }
+
+  th:nth-child(6),
+  td:nth-child(6) {
+    border-left-width: thick;
+    border-left-color: ${DARK_GRAY}};
+  }
 `
 
 const centered = css`
   margin: 0 auto;
-  display:block;
+  display: block;
 `
 
 const highlightTableCells = (year, fv1, fv2) => {
