@@ -20,7 +20,7 @@ import { FV, PMT } from 'formulajs/lib/financial'
 import styled, { css } from 'react-emotion'
 import { getYearly } from '../utils/timeSeriesResultsByOption'
 
-import { LIGHT_GRAY, DARK_GRAY, GREEN } from '../assets/colors'
+import { LIGHT_GRAY, GRAY, LIGHT_GREEN } from '../assets/colors'
 
 // DEFAULT VALUES
 
@@ -108,7 +108,7 @@ const AmortizationTable = styled(Table)`
   th:nth-child(6),
   td:nth-child(6) {
     border-left-width: thick;
-    border-left-color: ${DARK_GRAY}};
+    border-left-color: ${GRAY}};
   }
 `
 
@@ -126,11 +126,11 @@ const highlightTableCells = (year, option1, option2) => {
     checkLoanTerms(year, option1, option2) &&
     css`
       td:nth-child(n + 2):nth-child(-n + 5) {
-        background-color: ${option1.fv > option2.fv ? GREEN : LIGHT_GRAY};
+        background-color: ${option1.fv > option2.fv ? LIGHT_GREEN : LIGHT_GRAY};
       }
 
       td:nth-child(n + 6):nth-child(-n + 9) {
-        background-color: ${option2.fv > option1.fv ? GREEN : LIGHT_GRAY};
+        background-color: ${option2.fv > option1.fv ? LIGHT_GREEN : LIGHT_GRAY};
       }
     `
   )
