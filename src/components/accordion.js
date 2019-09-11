@@ -1,5 +1,7 @@
-import React, { Component } from 'react'
 import { Collapse } from 'reactstrap'
+import { faCaretDown, faCaretRight } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import React, { Component } from 'react'
 
 class Accordion extends Component {
   constructor (props) {
@@ -18,10 +20,14 @@ class Accordion extends Component {
         <a tabIndex='0' onClick={this.toggle}>
           {this.state.collapse ? (
             <small className='text-dark'>
+              <FontAwesomeIcon icon={faCaretDown} className='mr-1' />
               <b>{this.props.title}</b>
             </small>
           ) : (
-            <small className='text-muted'>{this.props.title}</small>
+            <small className='text-muted'>
+              <FontAwesomeIcon icon={faCaretRight} className='mr-1' />
+              {this.props.title}
+            </small>
           )}
         </a>
         <Collapse isOpen={this.state.collapse}>{this.props.children}</Collapse>

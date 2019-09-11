@@ -431,7 +431,7 @@ class MainForm extends React.Component {
                 <InputGroupText>%</InputGroupText>
               </InputGroupAddon>
             </InputGroup>
-            <Accordion title=''>
+            <Accordion title='What is Inflation?'>
               Prices generally increase as time passes. The average home price
               in the US during the 1960s was roughly $20,000. The average home
               price today is roughly{' '}
