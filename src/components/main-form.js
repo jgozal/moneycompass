@@ -112,6 +112,8 @@ const AmortizationTable = styled(Table)`
   }
 `
 
+const Summary = styled('div')``
+
 const centered = css`
   margin: 0 auto;
   display: block;
@@ -489,6 +491,21 @@ class MainForm extends React.Component {
         </Sections>
 
         <Result>
+          {/*
+          <Summary>
+            <ol>
+              <li>With the {Math.min(option1.term, option2.term)} mortgage you pay </li>
+              <li>d</li>
+              <li>d</li>
+              <li>d</li>
+            </ol>
+            <ol>
+              <li>d</li>
+              <li>d</li>
+              <li>d</li>
+              <li>d</li>
+            </ol>
+          </Summary>*/}
           <Button
             className={centered}
             outline
