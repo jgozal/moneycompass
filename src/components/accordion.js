@@ -5,7 +5,7 @@ import styled from 'react-emotion'
 // CSS
 
 const XButton = styled(Button)`
-  font-size: 14px;
+  font-size: ;
 `
 
 const XCard = styled(Card)`

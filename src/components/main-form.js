@@ -21,10 +21,9 @@ import _ from 'lodash'
 import numbro from 'numbro'
 import { FV, PMT } from 'formulajs/lib/financial'
 import styled, { css } from 'react-emotion'
-import {
-  getMonthlyResultsByOption,
-  getYearlyResultsByOption
-} from '../utils/getMonthlyResultsByOption'
+import { getYearly } from '../utils/timeSeriesResultsByOption'
+
+import { GRAY, GREEN } from '../assets/colors'
 
 // DEFAULT VALUES
 
@@ -41,11 +40,11 @@ const DEFAULT_OPTION = {
 let option1 = _.cloneDeep(DEFAULT_OPTION)
 let option2 = _.cloneDeep(DEFAULT_OPTION)
 
-option1.interestRate = 4.3
-option1.term = 30
+option1.interestRate = 4
+option1.term = 15
 
-option2.interestRate = 4
-option2.term = 15
+option2.interestRate = 4.3
+option2.term = 30
 
 // CSS
 
@@ -97,27 +96,29 @@ const InputWrapper = styled('div')`
 `
 
 const AmortizationTable = styled(Table)`
-  margin-top: 30px; 
+  margin-top: 30px;
 
-  th, tbody {
+  th,
+  tbody {
     text-align: center;
   }
 
   th:first-of-type {
     border: 0;
   }
-
 `
 
-const tableHighlighter = css`
-  td:nth-child(n + 2):nth-child(-n + 5) {
-    background-color: rgb(189, 189, 189, 0.5);
-  }
+const tableHighlighter = (fv1, fv2) => {
+  return css`
+    td:nth-child(n + 2):nth-child(-n + 5) {
+      background-color: ${fv1 > fv2 ? GREEN : GRAY};
+    }
 
-  td:nth-child(n + 6):nth-child(-n + 9) {
-    background-color: rgb(75, 181, 67, 0.5);
-  }
-`
+    td:nth-child(n + 6):nth-child(-n + 9) {
+      background-color: ${fv2 > fv1 ? GREEN : GRAY};
+    }
+  `
+}
 
 class MainForm extends React.Component {
   constructor () {
@@ -137,9 +138,6 @@ class MainForm extends React.Component {
         option1,
         option2
       },
-      shorterOption: {},
-      longerOption: {},
-      monthlyResultsByOption: [],
       yearlyResultsByOption: []
     }
   }
@@ -185,7 +183,7 @@ class MainForm extends React.Component {
 
   // Returns opportunity cost of choosing option1 over option2. Opportunity cost can be positive and negative.
   calculateOpportunityCost (option1, option2) {
-    return option1.fv + option1.interestAmt - (option2.fv + option2.interestAmt)
+    return Math.abs(option1.fv - option2.fv)
   }
 
   // Runs every time an input is updated and uses input's name tag to make specific changes in the state
@@ -220,10 +218,7 @@ class MainForm extends React.Component {
 
     const [shorter, longer] = _.sortBy([option1, option2], 'term')
 
-    state.longerOption = longer
-    state.shorterOption = shorter
-
-    state.monthlyResultsByOption = getMonthlyResultsByOption({
+    state.yearlyResultsByOption = getYearly({
       loanAmount: state.loanAmt,
       investmentRate: state.investmentRate / 100,
       inflationRate: state.inflation / 100,
@@ -236,15 +231,6 @@ class MainForm extends React.Component {
         mortgageTerm: longer.term
       }
     })
-
-    state.yearlyResultsByOption = {
-      shorter: getYearlyResultsByOption(
-        this.state.monthlyResultsByOption.shorter
-      ),
-      longer: getYearlyResultsByOption(
-        this.state.monthlyResultsByOption.longer
-      )
-    }
 
     return state
   }
@@ -448,8 +434,8 @@ class MainForm extends React.Component {
             <thead>
               <tr>
                 <th colSpan='1' />
-                <th colSpan='4'>{this.state.shorterOption.term} year</th>
-                <th colSpan='4'>{this.state.longerOption.term} year</th>
+                <th colSpan='4'>{Math.min(option1.term, option2.term)} year</th>
+                <th colSpan='4'>{Math.max(option1.term, option2.term)} year</th>
               </tr>
               <tr>
                 <th colSpan='1' />
@@ -469,7 +455,8 @@ class MainForm extends React.Component {
               return (
                 <tbody
                   className={
-                    (year + 1 === 30 || year + 1 === 15) && tableHighlighter
+                    (year + 1) % 15 === 0 &&
+                    tableHighlighter(option1.fv, option2.fv)
                   }
                 >
                   <tr>
