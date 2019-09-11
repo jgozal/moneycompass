@@ -120,10 +120,12 @@ const hoverTableCells = year => {
 
     cell.style.backgroundColor = index !== 0 && color
     cell.style.filter = `brightness(${brightness}%)`
+
     if (typeof nextCells !== 'undefined' && index !== 0) {
       nextCells.style.backgroundColor = color
       nextCells.style.filter = `brightness(${brightness}%)`
     }
+
     if (typeof prevCells !== 'undefined' && index !== 4) {
       prevCells.style.backgroundColor = color
       prevCells.style.filter = `brightness(${brightness}%)`
