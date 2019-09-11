@@ -117,22 +117,26 @@ const centered = css`
   display: block;
 `
 
-const highlightTableCells = (year, fv1, fv2) => {
+const checkLoanTerms = (year, option1, option2) => {
+  return year + 1 === option1.term || year + 1 === option2.term
+}
+
+const highlightTableCells = (year, option1, option2) => {
   return (
-    (year + 1) % 15 === 0 &&
+    checkLoanTerms(year, option1, option2) &&
     css`
       td:nth-child(n + 2):nth-child(-n + 5) {
-        background-color: ${fv1 > fv2 ? GREEN : LIGHT_GRAY};
+        background-color: ${option1.fv > option2.fv ? GREEN : LIGHT_GRAY};
       }
 
       td:nth-child(n + 6):nth-child(-n + 9) {
-        background-color: ${fv2 > fv1 ? GREEN : LIGHT_GRAY};
+        background-color: ${option2.fv > option1.fv ? GREEN : LIGHT_GRAY};
       }
     `
   )
 }
 
-const hoverTableCells = year => {
+const hoverTableCells = (year, option1, option2) => {
   // grab table cells depending on year
   const tableCells = Array.from(
     document.getElementsByTagName('tbody')[0].children[year].children
@@ -159,7 +163,7 @@ const hoverTableCells = year => {
   // iterate over all cells in row and set appropriate color depending on mouse event
   tableCells.forEach((cell, index) => {
     // do not set background color for rows that already have a background color
-    if ((year + 1) % 15 === 0) {
+    if (checkLoanTerms(year, option1, option2)) {
       cell.addEventListener('mouseover', () => hover(null, 80, cell, index))
       cell.addEventListener('mouseleave', () => hover(null, 100, cell, index))
     } else {
@@ -530,12 +534,10 @@ class MainForm extends React.Component {
                   return (
                     <tr
                       key={'row' + year}
-                      className={highlightTableCells(
-                        year,
-                        option1.fv,
-                        option2.fv
-                      )}
-                      onMouseOver={() => hoverTableCells(year)}
+                      className={highlightTableCells(year, option1, option2)}
+                      onMouseOver={() =>
+                        hoverTableCells(year, option1, option2)
+                      }
                     >
                       <td>Year {year + 1}</td>
                       <td>{formatMoney(shorter.pmt)}</td>
