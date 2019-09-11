@@ -109,11 +109,6 @@ const AmortizationTable = styled(Table)`
   }
 `
 
-const centered = css`
-  margin: 0 auto;
-  display: block;
-`
-
 const checkLoanTerms = (year, option1, option2) => {
   return year + 1 === option1.term || year + 1 === option2.term
 }
@@ -491,7 +486,7 @@ class MainForm extends React.Component {
 
         <Result>
           <Button
-            className={centered}
+            className='d-block mx-auto'
             outline
             color='info'
             size='lg'
