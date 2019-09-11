@@ -20,7 +20,7 @@ import { FV, PMT } from 'formulajs/lib/financial'
 import styled, { css } from 'react-emotion'
 import { getYearly } from '../utils/timeSeriesResultsByOption'
 
-import { LIGHT_GRAY, DARK_GRAY, GREEN } from '../assets/colors'
+import { LIGHT_GRAY, GRAY, LIGHT_GREEN } from '../assets/colors'
 
 // DEFAULT VALUES
 
@@ -49,7 +49,6 @@ const MainContainer = styled('div')`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin-top: 30px;
 `
 const Sections = styled('div')`
   width: 40%;
@@ -94,8 +93,6 @@ const InputWrapper = styled('div')`
 `
 
 const AmortizationTable = styled(Table)`
-  margin-top: 30px;
-
   th,
   tbody {
     text-align: center;
@@ -108,33 +105,32 @@ const AmortizationTable = styled(Table)`
   th:nth-child(6),
   td:nth-child(6) {
     border-left-width: thick;
-    border-left-color: ${DARK_GRAY}};
+    border-left-color: ${GRAY}};
   }
 `
 
 const Summary = styled('div')``
 
-const centered = css`
-  margin: 0 auto;
-  display: block;
-`
+const checkLoanTerms = (year, option1, option2) => {
+  return year + 1 === option1.term || year + 1 === option2.term
+}
 
-const highlightTableCells = (year, fv1, fv2) => {
+const highlightTableCells = (year, option1, option2) => {
   return (
-    (year + 1) % 15 === 0 &&
+    checkLoanTerms(year, option1, option2) &&
     css`
       td:nth-child(n + 2):nth-child(-n + 5) {
-        background-color: ${fv1 > fv2 ? GREEN : LIGHT_GRAY};
+        background-color: ${option1.fv > option2.fv ? LIGHT_GREEN : LIGHT_GRAY};
       }
 
       td:nth-child(n + 6):nth-child(-n + 9) {
-        background-color: ${fv2 > fv1 ? GREEN : LIGHT_GRAY};
+        background-color: ${option2.fv > option1.fv ? LIGHT_GREEN : LIGHT_GRAY};
       }
     `
   )
 }
 
-const hoverTableCells = year => {
+const hoverTableCells = (year, option1, option2) => {
   // grab table cells depending on year
   const tableCells = Array.from(
     document.getElementsByTagName('tbody')[0].children[year].children
@@ -161,12 +157,12 @@ const hoverTableCells = year => {
   // iterate over all cells in row and set appropriate color depending on mouse event
   tableCells.forEach((cell, index) => {
     // do not set background color for rows that already have a background color
-    if ((year + 1) % 15 === 0) {
-      cell.addEventListener('mouseover', () => hover(null, 80, cell, index))
+    if (checkLoanTerms(year, option1, option2)) {
+      cell.addEventListener('mouseover', () => hover(null, 85, cell, index))
       cell.addEventListener('mouseleave', () => hover(null, 100, cell, index))
     } else {
       cell.addEventListener('mouseover', () =>
-        hover(LIGHT_GRAY, 80, cell, index)
+        hover(LIGHT_GRAY, 85, cell, index)
       )
       cell.addEventListener('mouseleave', () =>
         hover('white', 100, cell, index)
@@ -298,7 +294,7 @@ class MainForm extends React.Component {
 
   render () {
     return (
-      <MainContainer>
+      <MainContainer className='mt-4'>
         <Sections>
           <Section>
             <h6>Loan Amount</h6>
@@ -491,10 +487,11 @@ class MainForm extends React.Component {
         </Sections>
 
         <Result>
-          {/*
           <Summary>
             <ol>
-              <li>With the {Math.min(option1.term, option2.term)} mortgage you pay </li>
+              <li>
+                With the {Math.min(option1.term, option2.term)} mortgage you pay{' '}
+              </li>
               <li>d</li>
               <li>d</li>
               <li>d</li>
@@ -505,9 +502,9 @@ class MainForm extends React.Component {
               <li>d</li>
               <li>d</li>
             </ol>
-          </Summary>*/}
+          </Summary>
           <Button
-            className={centered}
+            className='d-block mx-auto'
             outline
             color='info'
             size='lg'
@@ -516,7 +513,7 @@ class MainForm extends React.Component {
             {this.state.showTable ? 'Hide' : 'See'} Yearly Breakdown
           </Button>
           {this.state.showTable && (
-            <AmortizationTable bordered responsive>
+            <AmortizationTable bordered responsive className='mt-5'>
               <thead>
                 <tr>
                   <th colSpan='1' />
@@ -547,12 +544,10 @@ class MainForm extends React.Component {
                   return (
                     <tr
                       key={'row' + year}
-                      className={highlightTableCells(
-                        year,
-                        option1.fv,
-                        option2.fv
-                      )}
-                      onMouseOver={() => hoverTableCells(year)}
+                      className={highlightTableCells(year, option1, option2)}
+                      onMouseOver={() =>
+                        hoverTableCells(year, option1, option2)
+                      }
                     >
                       <td>Year {year + 1}</td>
                       <td>{formatMoney(shorter.pmt)}</td>

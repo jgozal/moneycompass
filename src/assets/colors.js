@@ -1,3 +1,3 @@
-export const LIGHT_GRAY = 'rgba(189, 189, 189, 0.4)'
-export const DARK_GRAY = 'rgba(189, 189, 189, 1)'
-export const GREEN = 'rgba(75, 181, 67, 0.5)'
+export const LIGHT_GRAY = '#E0E0E0'
+export const GRAY = '#9E9E9E'
+export const LIGHT_GREEN = '#81C784'
