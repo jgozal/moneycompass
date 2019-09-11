@@ -17,7 +17,7 @@ import {
   InputGroup,
   InputGroupAddon,
   InputGroupText,
-  Row,
+  Row
 } from 'reactstrap'
 import Accordion from './accordion'
 
@@ -175,6 +175,7 @@ class MainForm extends React.Component {
     return (
       <Row>
         <Col className='col-4'>
+          {/* TODO 2019-09-11: We could probably pull this out into its own component */}
           <Card className='p-4'>
             <Form>
               <FormGroup>
