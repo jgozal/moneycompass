@@ -3,26 +3,24 @@
 // https://www.nerdwallet.com/mortgages/mortgage-rates/30-year-fixed
 // https://michaelbluejay.com/house/15vs30.html
 
-// TODO
-// 1. Add in content/text
-// 2. Styling Results
-
 import React from 'react'
 import {
   Input,
   InputGroup,
   InputGroupAddon,
   InputGroupText,
-  Col,
-  Row
+  Table,
+  Button
 } from 'reactstrap'
 import Accordion from './accordion'
 
 import _ from 'lodash'
-import numeral from 'numeral'
+import numbro from 'numbro'
 import { FV, PMT } from 'formulajs/lib/financial'
-import styled from 'react-emotion'
-import { getMonthlyResultsByOption } from '../utils/getMonthlyResultsByOption'
+import styled, { css } from 'react-emotion'
+import { getYearly } from '../utils/timeSeriesResultsByOption'
+
+import { LIGHT_GRAY, GRAY, LIGHT_GREEN } from '../assets/colors'
 
 // DEFAULT VALUES
 
@@ -39,11 +37,11 @@ const DEFAULT_OPTION = {
 let option1 = _.cloneDeep(DEFAULT_OPTION)
 let option2 = _.cloneDeep(DEFAULT_OPTION)
 
-option1.interestRate = 4.3
-option1.term = 30
+option1.interestRate = 4
+option1.term = 15
 
-option2.interestRate = 4
-option2.term = 15
+option2.interestRate = 4.3
+option2.term = 30
 
 // CSS
 
@@ -94,13 +92,87 @@ const InputWrapper = styled('div')`
   }
 `
 
-const ColHeader = styled(Col)`
-  font-weight: bold;
+const AmortizationTable = styled(Table)`
+  th,
+  tbody {
+    text-align: center;
+  }
+
+  th:first-of-type {
+    border: 0;
+  }
+
+  th:nth-child(6),
+  td:nth-child(6) {
+    border-left-width: thick;
+    border-left-color: ${GRAY}};
+  }
 `
+
+const checkLoanTerms = (year, option1, option2) => {
+  return year + 1 === option1.term || year + 1 === option2.term
+}
+
+const highlightTableCells = (year, option1, option2) => {
+  return (
+    checkLoanTerms(year, option1, option2) &&
+    css`
+      td:nth-child(n + 2):nth-child(-n + 5) {
+        background-color: ${option1.fv > option2.fv ? LIGHT_GREEN : LIGHT_GRAY};
+      }
+
+      td:nth-child(n + 6):nth-child(-n + 9) {
+        background-color: ${option2.fv > option1.fv ? LIGHT_GREEN : LIGHT_GRAY};
+      }
+    `
+  )
+}
+
+const hoverTableCells = (year, option1, option2) => {
+  // grab table cells depending on year
+  const tableCells = Array.from(
+    document.getElementsByTagName('tbody')[0].children[year].children
+  )
+
+  const hover = (color, brightness, cell, index) => {
+    const nextCells = tableCells[index + 4]
+    const prevCells = tableCells[index - 4]
+
+    cell.style.backgroundColor = index !== 0 && color
+    cell.style.filter = `brightness(${brightness}%)`
+
+    if (typeof nextCells !== 'undefined' && index !== 0) {
+      nextCells.style.backgroundColor = color
+      nextCells.style.filter = `brightness(${brightness}%)`
+    }
+
+    if (typeof prevCells !== 'undefined' && index !== 4) {
+      prevCells.style.backgroundColor = color
+      prevCells.style.filter = `brightness(${brightness}%)`
+    }
+  }
+
+  // iterate over all cells in row and set appropriate color depending on mouse event
+  tableCells.forEach((cell, index) => {
+    // do not set background color for rows that already have a background color
+    if (checkLoanTerms(year, option1, option2)) {
+      cell.addEventListener('mouseover', () => hover(null, 85, cell, index))
+      cell.addEventListener('mouseleave', () => hover(null, 100, cell, index))
+    } else {
+      cell.addEventListener('mouseover', () =>
+        hover(LIGHT_GRAY, 85, cell, index)
+      )
+      cell.addEventListener('mouseleave', () =>
+        hover('white', 100, cell, index)
+      )
+    }
+  })
+}
 
 class MainForm extends React.Component {
   constructor () {
     super()
+    this.toggleShowTable = this.toggleShowTable.bind(this)
     this.calculatePMT = this.calculatePMT.bind(this)
     this.calculateInterestAmt = this.calculateInterestAmt.bind(this)
     this.calculateFV = this.calculateFV.bind(this)
@@ -115,7 +187,9 @@ class MainForm extends React.Component {
       options: {
         option1,
         option2
-      }
+      },
+      yearlyResultsByOption: [],
+      showTable: false
     }
   }
 
@@ -124,10 +198,14 @@ class MainForm extends React.Component {
     this.setState(this.calculateAll(this.state))
   }
 
+  toggleShowTable () {
+    this.setState({ showTable: !this.state.showTable })
+  }
+
   // Returns monthly payment.
   calculatePMT (o, state) {
     return PMT(
-      (o.interestRate - state.inflation) / 100 / COMPOUND_FREQUENCY,
+      o.interestRate / 100 / COMPOUND_FREQUENCY,
       o.term * COMPOUND_FREQUENCY,
       state.loanAmt
     )
@@ -160,7 +238,7 @@ class MainForm extends React.Component {
 
   // Returns opportunity cost of choosing option1 over option2. Opportunity cost can be positive and negative.
   calculateOpportunityCost (option1, option2) {
-    return option1.fv + option1.interestAmt - (option2.fv + option2.interestAmt)
+    return Math.abs(option1.fv - option2.fv)
   }
 
   // Runs every time an input is updated and uses input's name tag to make specific changes in the state
@@ -195,10 +273,7 @@ class MainForm extends React.Component {
 
     const [shorter, longer] = _.sortBy([option1, option2], 'term')
 
-    state.longerOption = longer
-    state.shorterOption = shorter
-
-    state.monthlyResultsByOption = getMonthlyResultsByOption({
+    state.yearlyResultsByOption = getYearly({
       loanAmount: state.loanAmt,
       investmentRate: state.investmentRate / 100,
       inflationRate: state.inflation / 100,
@@ -217,7 +292,7 @@ class MainForm extends React.Component {
 
   render () {
     return (
-      <MainContainer>
+      <MainContainer className='mt-4'>
         <Sections>
           <Section>
             <h6>Loan Amount</h6>
@@ -410,48 +485,67 @@ class MainForm extends React.Component {
         </Sections>
 
         <Result>
-          <Row>
-            <ColHeader>Month</ColHeader>
-            <ColHeader>
-              {this.state.shorterOption.term} Yr Mortgage Payment
-            </ColHeader>
-            <ColHeader>
-              {this.state.shorterOption.term} Yr Investment Payment
-            </ColHeader>
-            <ColHeader>
-              {this.state.shorterOption.term} Yr Loan Amount
-            </ColHeader>
-            <ColHeader>
-              {this.state.shorterOption.term} Yr Investment Amount
-            </ColHeader>
-            <ColHeader>
-              {this.state.longerOption.term} Yr Mortgage Payment
-            </ColHeader>
-            <ColHeader>
-              {this.state.longerOption.term} Yr Investment Payment
-            </ColHeader>
-            <ColHeader>{this.state.longerOption.term} Yr Loan Amount</ColHeader>
-            <ColHeader>
-              {this.state.longerOption.term} Yr Investment Amount
-            </ColHeader>
-          </Row>
-          {this.state.monthlyResultsByOption.shorter.map((_r, month) => {
-            const shorter = this.state.monthlyResultsByOption.shorter[month]
-            const longer = this.state.monthlyResultsByOption.longer[month]
-            return (
-              <Row>
-                <Col>{month}</Col>
-                <Col>{formatMoney(shorter.pmt)}</Col>
-                <Col>{formatMoney(shorter.investmentPMT)}</Col>
-                <Col>{formatMoney(shorter.loanAmount)}</Col>
-                <Col>{formatMoney(shorter.investmentAmount)}</Col>
-                <Col>{formatMoney(longer.pmt)}</Col>
-                <Col>{formatMoney(longer.investmentPMT)}</Col>
-                <Col>{formatMoney(longer.loanAmount)}</Col>
-                <Col>{formatMoney(longer.investmentAmount)}</Col>
-              </Row>
-            )
-          })}
+          <Button
+            className='d-block mx-auto'
+            outline
+            color='info'
+            size='lg'
+            onClick={this.toggleShowTable}
+          >
+            {this.state.showTable ? 'Hide' : 'See'} Yearly Breakdown
+          </Button>
+          {this.state.showTable && (
+            <AmortizationTable bordered responsive className='mt-5'>
+              <thead>
+                <tr>
+                  <th colSpan='1' />
+                  <th colSpan='4'>
+                    {Math.min(option1.term, option2.term)} year
+                  </th>
+                  <th colSpan='4'>
+                    {Math.max(option1.term, option2.term)} year
+                  </th>
+                </tr>
+                <tr>
+                  <th colSpan='1' />
+                  <th>Mortgage Payment</th>
+                  <th>Investment Payment</th>
+                  <th>Loan Amount</th>
+                  <th>Investment Amount</th>
+                  <th>Mortgage Payment</th>
+                  <th>Investment Payment</th>
+                  <th>Loan Amount</th>
+                  <th>Investment Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                {this.state.yearlyResultsByOption.shorter.map((_r, year) => {
+                  const shorter = this.state.yearlyResultsByOption.shorter[year]
+                  const longer = this.state.yearlyResultsByOption.longer[year]
+
+                  return (
+                    <tr
+                      key={'row' + year}
+                      className={highlightTableCells(year, option1, option2)}
+                      onMouseOver={() =>
+                        hoverTableCells(year, option1, option2)
+                      }
+                    >
+                      <td>Year {year + 1}</td>
+                      <td>{formatMoney(shorter.pmt)}</td>
+                      <td>{formatMoney(shorter.investmentPMT)}</td>
+                      <td>{formatMoney(shorter.loanAmount)}</td>
+                      <td>{formatMoney(shorter.investmentAmount)}</td>
+                      <td>{formatMoney(longer.pmt)}</td>
+                      <td>{formatMoney(longer.investmentPMT)}</td>
+                      <td>{formatMoney(longer.loanAmount)}</td>
+                      <td>{formatMoney(longer.investmentAmount)}</td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </AmortizationTable>
+          )}
           <pre>{JSON.stringify(this.state, null, 4).replace(/[{}]/g, '')}</pre>
         </Result>
       </MainContainer>
@@ -460,7 +554,7 @@ class MainForm extends React.Component {
 }
 
 function formatMoney (value) {
-  return numeral(value).format('$0,0.00')
+  return numbro(value).format('$0,0.00')
 }
 
 export default MainForm
