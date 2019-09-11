@@ -3,17 +3,14 @@
 // https://www.nerdwallet.com/mortgages/mortgage-rates/30-year-fixed
 // https://michaelbluejay.com/house/15vs30.html
 
-// TODO
-// 1. Add in content/text
-// 2. Styling Results
-
 import React from 'react'
 import {
   Input,
   InputGroup,
   InputGroupAddon,
   InputGroupText,
-  Table
+  Table,
+  Button
 } from 'reactstrap'
 import Accordion from './accordion'
 
@@ -52,6 +49,7 @@ const MainContainer = styled('div')`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  margin-top: 30px;
 `
 const Sections = styled('div')`
   width: 40%;
@@ -108,6 +106,26 @@ const AmortizationTable = styled(Table)`
   }
 `
 
+const centered = css`
+  margin: 0 auto;
+  display:block;
+`
+
+const highlightTableCells = (year, fv1, fv2) => {
+  return (
+    (year + 1) % 15 === 0 &&
+    css`
+      td:nth-child(n + 2):nth-child(-n + 5) {
+        background-color: ${fv1 > fv2 ? GREEN : LIGHT_GRAY};
+      }
+
+      td:nth-child(n + 6):nth-child(-n + 9) {
+        background-color: ${fv2 > fv1 ? GREEN : LIGHT_GRAY};
+      }
+    `
+  )
+}
+
 const hoverTableCells = year => {
   // grab table cells depending on year
   const tableCells = Array.from(
@@ -139,30 +157,20 @@ const hoverTableCells = year => {
       cell.addEventListener('mouseover', () => hover(null, 80, cell, index))
       cell.addEventListener('mouseleave', () => hover(null, 100, cell, index))
     } else {
-      cell.addEventListener('mouseover', () => hover(LIGHT_GRAY, 80, cell, index))
-      cell.addEventListener('mouseleave', () => hover('white', 100, cell, index))
+      cell.addEventListener('mouseover', () =>
+        hover(LIGHT_GRAY, 80, cell, index)
+      )
+      cell.addEventListener('mouseleave', () =>
+        hover('white', 100, cell, index)
+      )
     }
   })
-}
-
-const highlightTableCells = (year, fv1, fv2) => {
-  return (
-    (year + 1) % 15 === 0 &&
-    css`
-      td:nth-child(n + 2):nth-child(-n + 5) {
-        background-color: ${fv1 > fv2 ? GREEN : LIGHT_GRAY};
-      }
-
-      td:nth-child(n + 6):nth-child(-n + 9) {
-        background-color: ${fv2 > fv1 ? GREEN : LIGHT_GRAY};
-      }
-    `
-  )
 }
 
 class MainForm extends React.Component {
   constructor () {
     super()
+    this.toggleShowTable = this.toggleShowTable.bind(this)
     this.calculatePMT = this.calculatePMT.bind(this)
     this.calculateInterestAmt = this.calculateInterestAmt.bind(this)
     this.calculateFV = this.calculateFV.bind(this)
@@ -178,13 +186,18 @@ class MainForm extends React.Component {
         option1,
         option2
       },
-      yearlyResultsByOption: []
+      yearlyResultsByOption: [],
+      showTable: false
     }
   }
 
   componentWillMount () {
     // Running all calculations with default values on page load
     this.setState(this.calculateAll(this.state))
+  }
+
+  toggleShowTable () {
+    this.setState({ showTable: !this.state.showTable })
   }
 
   // Returns monthly payment.
@@ -470,54 +483,69 @@ class MainForm extends React.Component {
         </Sections>
 
         <Result>
-          <AmortizationTable bordered responsive>
-            <thead>
-              <tr>
-                <th colSpan='1' />
-                <th colSpan='4'>{Math.min(option1.term, option2.term)} year</th>
-                <th colSpan='4'>{Math.max(option1.term, option2.term)} year</th>
-              </tr>
-              <tr>
-                <th colSpan='1' />
-                <th>Mortgage Payment</th>
-                <th>Investment Payment</th>
-                <th>Loan Amount</th>
-                <th>Investment Amount</th>
-                <th>Mortgage Payment</th>
-                <th>Investment Payment</th>
-                <th>Loan Amount</th>
-                <th>Investment Amount</th>
-              </tr>
-            </thead>
-            <tbody>
-              {this.state.yearlyResultsByOption.shorter.map((_r, year) => {
-                const shorter = this.state.yearlyResultsByOption.shorter[year]
-                const longer = this.state.yearlyResultsByOption.longer[year]
+          <Button
+            className={centered}
+            outline
+            color='info'
+            size='lg'
+            onClick={this.toggleShowTable}
+          >
+            See Yearly Breakdown
+          </Button>
+          {this.state.showTable && (
+            <AmortizationTable bordered responsive>
+              <thead>
+                <tr>
+                  <th colSpan='1' />
+                  <th colSpan='4'>
+                    {Math.min(option1.term, option2.term)} year
+                  </th>
+                  <th colSpan='4'>
+                    {Math.max(option1.term, option2.term)} year
+                  </th>
+                </tr>
+                <tr>
+                  <th colSpan='1' />
+                  <th>Mortgage Payment</th>
+                  <th>Investment Payment</th>
+                  <th>Loan Amount</th>
+                  <th>Investment Amount</th>
+                  <th>Mortgage Payment</th>
+                  <th>Investment Payment</th>
+                  <th>Loan Amount</th>
+                  <th>Investment Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                {this.state.yearlyResultsByOption.shorter.map((_r, year) => {
+                  const shorter = this.state.yearlyResultsByOption.shorter[year]
+                  const longer = this.state.yearlyResultsByOption.longer[year]
 
-                return (
-                  <tr
-                    key={'row' + year}
-                    className={highlightTableCells(
-                      year,
-                      option1.fv,
-                      option2.fv
-                    )}
-                    onMouseOver={() => hoverTableCells(year)}
-                  >
-                    <td>Year {year + 1}</td>
-                    <td>{formatMoney(shorter.pmt)}</td>
-                    <td>{formatMoney(shorter.investmentPMT)}</td>
-                    <td>{formatMoney(shorter.loanAmount)}</td>
-                    <td>{formatMoney(shorter.investmentAmount)}</td>
-                    <td>{formatMoney(longer.pmt)}</td>
-                    <td>{formatMoney(longer.investmentPMT)}</td>
-                    <td>{formatMoney(longer.loanAmount)}</td>
-                    <td>{formatMoney(longer.investmentAmount)}</td>
-                  </tr>
-                )
-              })}
-            </tbody>
-          </AmortizationTable>
+                  return (
+                    <tr
+                      key={'row' + year}
+                      className={highlightTableCells(
+                        year,
+                        option1.fv,
+                        option2.fv
+                      )}
+                      onMouseOver={() => hoverTableCells(year)}
+                    >
+                      <td>Year {year + 1}</td>
+                      <td>{formatMoney(shorter.pmt)}</td>
+                      <td>{formatMoney(shorter.investmentPMT)}</td>
+                      <td>{formatMoney(shorter.loanAmount)}</td>
+                      <td>{formatMoney(shorter.investmentAmount)}</td>
+                      <td>{formatMoney(longer.pmt)}</td>
+                      <td>{formatMoney(longer.investmentPMT)}</td>
+                      <td>{formatMoney(longer.loanAmount)}</td>
+                      <td>{formatMoney(longer.investmentAmount)}</td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </AmortizationTable>
+          )}
           <pre>{JSON.stringify(this.state, null, 4).replace(/[{}]/g, '')}</pre>
         </Result>
       </MainContainer>
