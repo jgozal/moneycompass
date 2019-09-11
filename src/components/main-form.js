@@ -164,11 +164,11 @@ const hoverTableCells = (year, option1, option2) => {
   tableCells.forEach((cell, index) => {
     // do not set background color for rows that already have a background color
     if (checkLoanTerms(year, option1, option2)) {
-      cell.addEventListener('mouseover', () => hover(null, 80, cell, index))
+      cell.addEventListener('mouseover', () => hover(null, 85, cell, index))
       cell.addEventListener('mouseleave', () => hover(null, 100, cell, index))
     } else {
       cell.addEventListener('mouseover', () =>
-        hover(LIGHT_GRAY, 80, cell, index)
+        hover(LIGHT_GRAY, 85, cell, index)
       )
       cell.addEventListener('mouseleave', () =>
         hover('white', 100, cell, index)
