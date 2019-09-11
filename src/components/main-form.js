@@ -49,7 +49,6 @@ const MainContainer = styled('div')`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin-top: 30px;
 `
 const Sections = styled('div')`
   width: 40%;
@@ -94,8 +93,6 @@ const InputWrapper = styled('div')`
 `
 
 const AmortizationTable = styled(Table)`
-  margin-top: 30px;
-
   th,
   tbody {
     text-align: center;
@@ -300,7 +297,7 @@ class MainForm extends React.Component {
 
   render () {
     return (
-      <MainContainer>
+      <MainContainer className='mt-4'>
         <Sections>
           <Section>
             <h6>Loan Amount</h6>
@@ -503,7 +500,7 @@ class MainForm extends React.Component {
             {this.state.showTable ? 'Hide' : 'See'} Yearly Breakdown
           </Button>
           {this.state.showTable && (
-            <AmortizationTable bordered responsive>
+            <AmortizationTable bordered responsive className='mt-5'>
               <thead>
                 <tr>
                   <th colSpan='1' />
