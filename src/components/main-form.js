@@ -496,7 +496,7 @@ class MainForm extends React.Component {
             size='lg'
             onClick={this.toggleShowTable}
           >
-            See Yearly Breakdown
+            {this.state.showTable ? 'Hide' : 'See'} Yearly Breakdown
           </Button>
           {this.state.showTable && (
             <AmortizationTable bordered responsive>
