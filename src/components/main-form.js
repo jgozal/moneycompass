@@ -451,7 +451,7 @@ class MainForm extends React.Component {
                   a <b>higher tax burden</b> than long term investments.{' '}
                   <a href='https://www.edwardjones.ca/financial-focus/investment-topics/short-term-vs-long-term-investments.html'>
                     Edward Jones
-                  </a>
+                  </a>{' '}
                   provides some info about the distinctions between a long term
                   and short term investment.
                 </Accordion>
