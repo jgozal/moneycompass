@@ -5,12 +5,17 @@
 
 import React from 'react'
 import {
+  Button,
+  Card,
+  Col,
+  Form,
+  FormGroup,
   Input,
   InputGroup,
   InputGroupAddon,
   InputGroupText,
-  Table,
-  Button
+  Row,
+  Table
 } from 'reactstrap'
 import Accordion from './accordion'
 
@@ -45,53 +50,6 @@ option2.term = 30
 
 // CSS
 
-const MainContainer = styled('div')`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-`
-const Sections = styled('div')`
-  width: 40%;
-`
-
-const Result = styled('div')`
-  width: 55%;
-`
-
-const Info = styled('p')`
-  font-size: 14px;
-  margin-bottom: 10px;
-  color: grey;
-`
-
-const Section = styled('div')`
-  margin-bottom: 40px;
-  border-left: 6px solid red;
-  padding-left: 25px;
-
-  .input-group {
-    width: 80%;
-    margin-right: 25px;
-    margin-bottom: 15px;
-  }
-`
-
-const InputContainer = styled('div')`
-  display: flex;
-  flex-direction: row;
-`
-
-const InputWrapper = styled('div')`
-  display: flex;
-  flex-direction: column;
-
-  label {
-    font-size: 12px;
-    font-weight: 600;
-    margin-left: 2px;
-  }
-`
-
 const AmortizationTable = styled(Table)`
   th,
   tbody {
@@ -108,8 +66,6 @@ const AmortizationTable = styled(Table)`
     border-left-color: ${GRAY}};
   }
 `
-
-const Summary = styled('div')``
 
 const checkLoanTerms = (year, option1, option2) => {
   return year + 1 === option1.term || year + 1 === option2.term
@@ -190,6 +146,8 @@ class MainForm extends React.Component {
         option1,
         option2
       },
+      shorterOption: '',
+      longerOption: '',
       yearlyResultsByOption: [],
       showTable: false
     }
@@ -274,6 +232,8 @@ class MainForm extends React.Component {
     state.optCost = this.calculateOpportunityCost(option1, option2)
 
     const [shorter, longer] = _.sortBy([option1, option2], 'term')
+    state.shorterOption = shorter.term === option1.term ? 'option1' : 'option2'
+    state.longerOption = longer.term === option1.term ? 'option1' : 'option2'
 
     state.yearlyResultsByOption = getYearly({
       loanAmount: state.loanAmt,
@@ -293,216 +253,311 @@ class MainForm extends React.Component {
   }
 
   render () {
+    const shorterOption = this.state.options[this.state.shorterOption]
+    const longerOption = this.state.options[this.state.longerOption]
+
     return (
-      <MainContainer className='mt-4'>
-        <Sections>
-          <Section>
-            <h6>Loan Amount</h6>
-            <Info>
-              The total amount that you promise to pay back. This is the amount
-              after the down payment has been paid.
-            </Info>
-            <InputGroup>
-              <InputGroupAddon addonType='prepend'>
-                <InputGroupText>$</InputGroupText>
-              </InputGroupAddon>
-              <Input
-                name='loanAmt'
-                placeholder='Loan Amount'
-                type='number'
-                value={this.state.loanAmt}
-                onChange={this.updateInput}
-              />
-            </InputGroup>
-            <Accordion
-              title='How to determine the budget/ Income, etc'
-              body='Some quick explanation for what this is'
-            />
-          </Section>
-
-          <Section>
-            <h6>Loan Term</h6>
-            <Info>The time that you have to repay the loan.</Info>
-            <InputContainer>
-              <InputWrapper>
-                <label>Mortgage Option 1</label>
+      <Row>
+        <Col xs='4'>
+          {/* TODO 2019-09-11: We could probably pull this out into its own component */}
+          <Card className='p-4'>
+            <Form>
+              <FormGroup>
+                <label>How much is your loan?</label>
                 <InputGroup>
+                  <InputGroupAddon addonType='prepend'>
+                    <InputGroupText>$</InputGroupText>
+                  </InputGroupAddon>
                   <Input
-                    name='options.option1.term'
-                    placeholder='Loan Term'
+                    name='loanAmt'
+                    placeholder='Loan Amount'
                     type='number'
-                    value={option1.term}
+                    value={this.state.loanAmt}
                     onChange={this.updateInput}
                   />
-                  <InputGroupAddon addonType='append'>
-                    <InputGroupText>years</InputGroupText>
-                  </InputGroupAddon>
                 </InputGroup>
-              </InputWrapper>
-              <InputWrapper>
-                <label>Mortgage Option 2</label>
+                <Accordion title='How much can I afford?'>
+                  Most financial advisers agree that people should spend no more
+                  than <b>28 percent</b> of their gross monthly income on
+                  housing expenses and no more than <b>36 percent</b> on total
+                  debt.{' '}
+                  <a href='https://www.bankrate.com/calculators/mortgages/new-house-calculator.aspx'>
+                    Bankrate
+                  </a>{' '}
+                  has a great tool to help you determine how much you can
+                  afford.
+                </Accordion>
+              </FormGroup>
+              <FormGroup>
+                <label>Loan Term</label>
+                <Row form>
+                  <Col>
+                    <small>Mortgage Option 1</small>
+                    <InputGroup>
+                      <Input
+                        name='options.option1.term'
+                        placeholder='Loan Term'
+                        type='number'
+                        value={option1.term}
+                        onChange={this.updateInput}
+                      />
+                      <InputGroupAddon addonType='append'>
+                        <InputGroupText>years</InputGroupText>
+                      </InputGroupAddon>
+                    </InputGroup>
+                  </Col>
+                  <Col>
+                    <small>Mortgage Option 2</small>
+                    <InputGroup>
+                      <Input
+                        name='options.option2.term'
+                        placeholder='Loan Term'
+                        type='number'
+                        value={option2.term}
+                        onChange={this.updateInput}
+                      />
+                      <InputGroupAddon addonType='append'>
+                        <InputGroupText>years</InputGroupText>
+                      </InputGroupAddon>
+                    </InputGroup>
+                  </Col>
+                </Row>
+                <Accordion title='Pros and Cons'>
+                  <a href='https://thelendersnetwork.com/15-year-mortgage-vs-30-year-mortgage-rates/'>
+                    The Lender’s Network
+                  </a>{' '}
+                  has an excellent article which outlines the pros and cons of
+                  15-year versus 30-year mortgages.
+                </Accordion>
+                <Accordion
+                  title={`What happens when after you’re done paying off the ${_.min(
+                    [option1.term, option2.term]
+                  )}-year mortgage?`}
+                >
+                  This tool assumes that you’ll invest the difference between
+                  the payment of the {shorterOption.term}-year and
+                  the {longerOption.term}-year mortgages. If you had
+                  to make monthly payments of{' '}
+                  {formatMoney(-1 * shorterOption.pmt)} for your{' '}
+                  {shorterOption.term}-year mortgage versus{' '}
+                  {formatMoney(-1 * longerOption.pmt)} for your{' '}
+                  {longerOption.term}-year mortgage, you would invest
+                  the difference (
+                  {formatMoney(
+                    -1 *
+                      (shorterOption.pmt -
+                        longerOption.pmt)
+                  )}
+                  ) monthly after paying off your{' '}
+                  {shorterOption.term}-year mortgage.
+                </Accordion>
+              </FormGroup>
+              <FormGroup>
+                <label>Annual Percentage Rate (APR) & Interest</label>
+                <Row form>
+                  <Col>
+                    <small>Mortgage Option 1</small>
+                    <InputGroup>
+                      <Input
+                        name='options.option1.interestRate'
+                        placeholder='APR'
+                        type='number'
+                        value={option1.interestRate}
+                        onChange={this.updateInput}
+                      />
+                      <InputGroupAddon addonType='append'>
+                        <InputGroupText>%</InputGroupText>
+                      </InputGroupAddon>
+                    </InputGroup>
+                  </Col>
+                  <Col>
+                    <small>Mortgage Option 2</small>
+                    <InputGroup>
+                      <Input
+                        name='options.option2.interestRate'
+                        placeholder='APR'
+                        type='number'
+                        value={option2.interestRate}
+                        onChange={this.updateInput}
+                      />
+                      <InputGroupAddon addonType='append'>
+                        <InputGroupText>%</InputGroupText>
+                      </InputGroupAddon>
+                    </InputGroup>
+                  </Col>
+                </Row>
+                <Accordion title='What is the annual percentage rate (APR)?'>
+                  APR measures how much it costs to borrow money.{' '}
+                  <a href='https://www.bankrate.com/glossary/a/apr/'>
+                    Bankrate
+                  </a>{' '}
+                  provides a more in-depth explanation.
+                </Accordion>
+                <Accordion title='Fixed vs Variable Interest Rates'>
+                  This tool assumes your mortgage interest rate is fixed.{' '}
+                  <a href='https://www.valuepenguin.com/loans/fixed-vs-variable-interest-rates'>
+                    Value Penguin
+                  </a>{' '}
+                  has a great article about how fixed and variable rates work.
+                </Accordion>
+              </FormGroup>
+              <FormGroup>
+                <label>Return on Investment (ROI)</label>
                 <InputGroup>
                   <Input
-                    name='options.option2.term'
-                    placeholder='Loan Term'
+                    name='investmentRate'
+                    placeholder='ROI'
                     type='number'
-                    value={option2.term}
-                    onChange={this.updateInput}
-                  />
-                  <InputGroupAddon addonType='append'>
-                    <InputGroupText>years</InputGroupText>
-                  </InputGroupAddon>
-                </InputGroup>
-              </InputWrapper>
-            </InputContainer>
-            <Accordion
-              title='Fixed vs. Variable (vs Adjusted)'
-              body='Some quick explanation for what this is'
-            />
-            <Accordion
-              title='Pros and Cons 30 vs 15'
-              body='Some quick explanation for what this is'
-            />
-            <Accordion
-              title='What happens after the shorter term runs out'
-              body='Some quick explanation for what this is'
-            />
-          </Section>
-
-          <Section>
-            <h6>Annual Percentage Rate (APR) & Interest</h6>
-            <Info>
-              The cost of credit, including the interest and fees, expressed as
-              an interest rate. APR was created to make it easier for consumers
-              to compare loans with different rates and costs, and by law it
-              must be disclosed in all advertising.
-            </Info>
-            <InputContainer>
-              <InputWrapper>
-                <label>Mortgage Option 1</label>
-                <InputGroup>
-                  <Input
-                    name='options.option1.interestRate'
-                    placeholder='APR'
-                    type='number'
-                    value={option1.interestRate}
+                    value={this.state.investmentRate}
                     onChange={this.updateInput}
                   />
                   <InputGroupAddon addonType='append'>
                     <InputGroupText>%</InputGroupText>
                   </InputGroupAddon>
                 </InputGroup>
-              </InputWrapper>
-              <InputWrapper>
-                <label>Mortgage Option 2</label>
+                <Accordion title='How do I invest?'>
+                  Investing refers to the process of allocating money to
+                  something that you expect to generate income from or/and that
+                  you hope will appreciate (increase in value). You can invest
+                  in anything: real estate, index funds, stocks, bonds etc. Most
+                  times, you will need a brokerage account to invest.{' '}
+                  <a href='https://investor.vanguard.com/home/'>Vanguard</a>, an{' '}
+                  <a href='https://about.vanguard.com/what-sets-vanguard-apart/why-ownership-matters/'>
+                    investor-owned
+                  </a>{' '}
+                  fund company, offers great mutual funds and ETFs with very low
+                  fees.
+                </Accordion>
+                <Accordion title='Return on Investment (ROI)'>
+                  Return on investment (ROI) is the gain or loss generated on
+                  your investment relative to the amount of money invested
+                  (expressed as a percentage). This tool defaults to a 9% ROI
+                  because that is roughly the average historical annual return
+                  for the S&P 500.{' '}
+                  <a href='https://www.investopedia.com/ask/answers/042415/what-average-annual-return-sp-500.asp'>
+                    Investopedia
+                  </a>{' '}
+                  provides a little more background on this.
+                </Accordion>
+                <Accordion title='Risk and Diversification'>
+                  Diversification is about not putting all your eggs in one
+                  basket to mitigate risk (how volatile is your investment). We
+                  recommend you invest in a variety of low-cost index funds to
+                  diversify as best as possible.{' '}
+                  <a href='https://www.thebalance.com/the-importance-of-diversification-3025567'>
+                    The Balance
+                  </a>{' '}
+                  has a great article on diversification.
+                </Accordion>
+                <Accordion title='Long Term vs. Short Term Investments'>
+                  Long term investments are those you hold for longer than a
+                  year. In contrast, short term investments are usually held for
+                  a year or less. Note that short term investments usually have
+                  a <b>higher tax burden</b> than long term investments.{' '}
+                  <a href='https://www.edwardjones.ca/financial-focus/investment-topics/short-term-vs-long-term-investments.html'>
+                    Edward Jones
+                  </a>{' '}
+                  provides some info about the distinctions between a long term
+                  and short term investment.
+                </Accordion>
+                <Accordion title='Taxable Accounts vs. Retirement Accounts'>
+                  This tool assumes you invest your money through a retirement
+                  account. When opening a brokerage account, you have the option
+                  to invest through a taxable account, or a retirement account.
+                  Taxable accounts are accounts which are subject to capital
+                  gains taxes (you will have to pay taxes on your profit).
+                  Retirement accounts (IRA, 401k, 403b, etc) in contrast, are
+                  tax-sheltered, but the caveat is that your money suffers from
+                  some withdrawal restrictions.{' '}
+                  <a href='https://www.sofi.com/learn/content/what-is-a-taxable-account/'>
+                    SoFi
+                  </a>{' '}
+                  provides a more in-depth analysis on this topic.
+                </Accordion>
+              </FormGroup>
+              <FormGroup>
+                <label>Inflation</label>
                 <InputGroup>
                   <Input
-                    name='options.option2.interestRate'
-                    placeholder='APR'
+                    name='inflation'
+                    placeholder='Inflation'
                     type='number'
-                    value={option2.interestRate}
+                    value={this.state.inflation}
                     onChange={this.updateInput}
                   />
                   <InputGroupAddon addonType='append'>
                     <InputGroupText>%</InputGroupText>
                   </InputGroupAddon>
                 </InputGroup>
-              </InputWrapper>
-            </InputContainer>
-            <Accordion
-              title='What is an APR, what it includes (Mortgage interest rate)'
-              body='Some quick explanation for what this is'
-            />
-          </Section>
-
-          <Section>
-            <h6>Return on Investment (ROI)</h6>
-            <Info>Some quick explanation for what this is</Info>
-            <InputGroup>
-              <Input
-                name='investmentRate'
-                placeholder='ROI'
-                type='number'
-                value={this.state.investmentRate}
-                onChange={this.updateInput}
-              />
-              <InputGroupAddon addonType='append'>
-                <InputGroupText>%</InputGroupText>
-              </InputGroupAddon>
-            </InputGroup>
-            <Accordion
-              title='How to invest (talk about brokers)'
-              body='Some quick explanation for what this is'
-            />
-            <Accordion
-              title='What is an asset and types of assets'
-              body='Some quick explanation for what this is'
-            />
-            <Accordion
-              title='Expected/Average returns by asset'
-              body='Some quick explanation for what this is'
-            />
-            <Accordion
-              title='Volatility/Risk and Diversification'
-              body='Some quick explanation for what this is'
-            />
-            <Accordion
-              title='Long term vs short term'
-              body='Some quick explanation for what this is'
-            />
-            <Accordion
-              title='Retirement accounts vs brokerage accounts'
-              body='Some quick explanation for what this is'
-            />
-          </Section>
-
-          <Section>
-            <h6>Inflation</h6>
-            <Info>Some quick explanation for what this is</Info>
-            <InputGroup>
-              <Input
-                name='inflation'
-                placeholder='Inflation'
-                type='number'
-                value={this.state.inflation}
-                onChange={this.updateInput}
-              />
-              <InputGroupAddon addonType='append'>
-                <InputGroupText>%</InputGroupText>
-              </InputGroupAddon>
-            </InputGroup>
-            <Accordion
-              title='What is inflation'
-              body='Some quick explanation for what this is'
-            />
-            <Accordion
-              title='How do you determine inflation'
-              body='Some quick explanation for what this is'
-            />
-            <Accordion
-              title='How inflation affects your mortgage and investments'
-              body='Some quick explanation for what this is'
-            />
-          </Section>
-        </Sections>
-
-        <Result>
-          <Summary>
-            <ol>
-              <li>
-                With the {Math.min(option1.term, option2.term)} mortgage you pay{' '}
-              </li>
-              <li>d</li>
-              <li>d</li>
-              <li>d</li>
-            </ol>
-            <ol>
-              <li>d</li>
-              <li>d</li>
-              <li>d</li>
-              <li>d</li>
-            </ol>
-          </Summary>
+                <Accordion title='What is Inflation?'>
+                  Prices generally increase as time passes. The average home
+                  price in the US during the 1960s was roughly $20,000. The
+                  average home price today is roughly{' '}
+                  <a href='https://www.census.gov/construction/nrs/pdf/uspricemon.pdf'>
+                    $370,000
+                  </a>
+                  . Because prices increase, your purchasing power decreases. If
+                  you had $370,000 to buy a house today and you just left the
+                  money in your bank account for 10 years, it is unlikely you
+                  would be able to buy the same house for that price again 10
+                  years later. That is inflation, and that is why investing is
+                  so important, to protect your purchasing power against it.{' '}
+                  <a href='https://www.khanacademy.org/economics-finance-domain/core-finance/inflation-tutorial/inflation-basics-tutorial/v/what-is-inflation'>
+                    Khan Academy
+                  </a>{' '}
+                  has a great video about inflation.
+                </Accordion>
+                <Accordion title='How do you determine inflation?'>
+                  The Fed sets a target inflation rate of 2%. Inflation in the
+                  US is determined by the{' '}
+                  <a href='https://www.bls.gov/cpi/'>
+                    Consumer Price Index (CPI)
+                  </a>
+                  . Other countries have a similar way to measure inflation.{' '}
+                  <a href='https://www.khanacademy.org/economics-finance-domain/core-finance/inflation-tutorial/inflation-basics-tutorial/v/inflation-data'>
+                    Khan Academy
+                  </a>{' '}
+                  has a brief video that talks about the data behind the CPI.
+                </Accordion>
+                <Accordion title='How inflation affects your mortgage and investments'>
+                  As time passes, inflation makes your mortgage payments cheaper
+                  and your return on investment lower. We factor all of this
+                  automatically so the final result you see on your right is not
+                  the actual money you will have gained/lost in{' '}
+                  {this.state.longerOption.term} years, but rather, the money
+                  you will have gained/lost in {this.state.longerOption.term}{' '}
+                  years adjusted to today’s purchasing power. If you’re curious
+                  about what the actual number would be, give inflation a value
+                  of 0%. But remember that everything will be a lot more
+                  expensive in {this.state.longerOption.term} years, and that is
+                  why we need to include inflation.
+                </Accordion>
+              </FormGroup>
+            </Form>
+          </Card>
+        </Col>
+        <Col xs='8'>
+          <Row>
+            <Col>
+              <ol>
+                <li>
+                  With the {Math.min(option1.term, option2.term)} mortgage you
+                  pay{' '}
+                </li>
+                <li>d</li>
+                <li>d</li>
+                <li>d</li>
+              </ol>
+            </Col>
+            <Col>
+              <ol>
+                <li>d</li>
+                <li>d</li>
+                <li>d</li>
+                <li>d</li>
+              </ol>
+            </Col>
+          </Row>
           <Button
             className='d-block mx-auto'
             outline
@@ -565,8 +620,8 @@ class MainForm extends React.Component {
             </AmortizationTable>
           )}
           <pre>{JSON.stringify(this.state, null, 4).replace(/[{}]/g, '')}</pre>
-        </Result>
-      </MainContainer>
+        </Col>
+      </Row>
     )
   }
 }

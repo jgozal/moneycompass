@@ -1,21 +1,7 @@
+import { Collapse } from 'reactstrap'
+import { faCaretDown, faCaretRight } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { Component } from 'react'
-import { Collapse, Button, CardBody, Card } from 'reactstrap'
-import styled from 'react-emotion'
-
-// CSS
-
-const XButton = styled(Button)`
-  font-size: 14px;
-`
-
-const XCard = styled(Card)`
-  font-size: 13px;
-  border-width: 3px;
-`
-
-const XCardBody = styled(CardBody)`
-  padding: 10px;
-`
 
 class Accordion extends Component {
   constructor (props) {
@@ -31,13 +17,21 @@ class Accordion extends Component {
   render () {
     return (
       <div>
-        <XButton color='link' onClick={this.toggle}>
-          {this.props.title}
-        </XButton>
-        <Collapse isOpen={this.state.collapse}>
-          <XCard>
-            <XCardBody>{this.props.body}</XCardBody>
-          </XCard>
+        <a tabIndex='0' onClick={this.toggle}>
+          {this.state.collapse ? (
+            <small className='text-dark'>
+              <FontAwesomeIcon icon={faCaretDown} className='mr-2' />
+              <b>{this.props.title}</b>
+            </small>
+          ) : (
+            <small className='text-muted'>
+              <FontAwesomeIcon icon={faCaretRight} className='mr-2' />
+              {this.props.title}
+            </small>
+          )}
+        </a>
+        <Collapse className='pl-3 py-2' isOpen={this.state.collapse}>
+          {this.props.children}
         </Collapse>
       </div>
     )
