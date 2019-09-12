@@ -256,7 +256,7 @@ class MainForm extends React.Component {
           <Card className='p-4'>
             <Form>
               <FormGroup>
-                <h6>How much is your loan?</h6>
+                <label>How much is your loan?</label>
                 <InputGroup>
                   <InputGroupAddon addonType='prepend'>
                     <InputGroupText>$</InputGroupText>
@@ -282,10 +282,10 @@ class MainForm extends React.Component {
                 </Accordion>
               </FormGroup>
               <FormGroup>
-                <h6>Loan Term</h6>
+                <label>Loan Term</label>
                 <Row>
                   <Col>
-                    <label>Mortgage Option 1</label>
+                    <small>Mortgage Option 1</small>
                     <InputGroup>
                       <Input
                         name='options.option1.term'
@@ -300,7 +300,7 @@ class MainForm extends React.Component {
                     </InputGroup>
                   </Col>
                   <Col>
-                    <label>Mortgage Option 2</label>
+                    <small>Mortgage Option 2</small>
                     <InputGroup>
                       <Input
                         name='options.option2.term'
@@ -337,10 +337,10 @@ class MainForm extends React.Component {
                 </Accordion>
               </FormGroup>
               <FormGroup>
-                <h6>Annual Percentage Rate (APR) & Interest</h6>
+                <label>Annual Percentage Rate (APR) & Interest</label>
                 <Row>
                   <Col>
-                    <label>Mortgage Option 1</label>
+                    <small>Mortgage Option 1</small>
                     <InputGroup>
                       <Input
                         name='options.option1.interestRate'
@@ -355,7 +355,7 @@ class MainForm extends React.Component {
                     </InputGroup>
                   </Col>
                   <Col>
-                    <label>Mortgage Option 2</label>
+                    <small>Mortgage Option 2</small>
                     <InputGroup>
                       <Input
                         name='options.option2.interestRate'
@@ -386,7 +386,7 @@ class MainForm extends React.Component {
                 </Accordion>
               </FormGroup>
               <FormGroup>
-                <h6>Return on Investment (ROI)</h6>
+                <label>Return on Investment (ROI)</label>
                 <InputGroup>
                   <Input
                     name='investmentRate'
@@ -459,7 +459,7 @@ class MainForm extends React.Component {
                 </Accordion>
               </FormGroup>
               <FormGroup>
-                <h6>Inflation</h6>
+                <label>Inflation</label>
                 <InputGroup>
                   <Input
                     name='inflation'
