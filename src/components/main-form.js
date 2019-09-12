@@ -524,12 +524,12 @@ class MainForm extends React.Component {
                   and your return on investment lower. We factor all of this
                   automatically so the final result you see on your right is not
                   the actual money you will have gained/lost in{' '}
-                  {this.state.longerOption.term} years, but rather, the money
-                  you will have gained/lost in {this.state.longerOption.term}{' '}
+                  {longerOption.term} years, but rather, the money
+                  you will have gained/lost in {longerOption.term}{' '}
                   years adjusted to today’s purchasing power. If you’re curious
                   about what the actual number would be, give inflation a value
                   of 0%. But remember that everything will be a lot more
-                  expensive in {this.state.longerOption.term} years, and that is
+                  expensive in {longerOption.term} years, and that is
                   why we need to include inflation.
                 </Accordion>
               </FormGroup>
@@ -541,7 +541,7 @@ class MainForm extends React.Component {
             <Col>
               <ol>
                 <li>
-                  With the {Math.min(option1.term, option2.term)} mortgage you
+                  With the {shorterOption.term} mortgage you
                   pay{' '}
                 </li>
                 <li>d</li>
@@ -573,10 +573,10 @@ class MainForm extends React.Component {
                 <tr>
                   <th colSpan='1' />
                   <th colSpan='4'>
-                    {Math.min(option1.term, option2.term)} year
+                    {shorterOption.term} year
                   </th>
                   <th colSpan='4'>
-                    {Math.max(option1.term, option2.term)} year
+                    {longerOption.term} year
                   </th>
                 </tr>
                 <tr>
