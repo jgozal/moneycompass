@@ -230,6 +230,8 @@ class MainForm extends React.Component {
     state.optCost = this.calculateOpportunityCost(option1, option2)
 
     const [shorter, longer] = _.sortBy([option1, option2], 'term')
+    state.shorterOption = shorter
+    state.longerOption = longer
 
     state.yearlyResultsByOption = getYearly({
       loanAmount: state.loanAmt,
@@ -327,13 +329,22 @@ class MainForm extends React.Component {
                     [option1.term, option2.term]
                   )}-year mortgage?`}
                 >
-                  {/* TODO: Convert to dynamic numbers */}
                   This tool assumes that you’ll invest the difference between
-                  the payment of the 15-year and the 30-year mortgages. If you
-                  had to make monthly payments of $1,479.38 for your 15-year
-                  mortgage versus $989.74 for your 30 year mortgage, you would
-                  invest the difference ($489.64) monthly after paying off your
-                  15-year mortgage.
+                  the payment of the {this.state.shorterOption.term}-year and
+                  the {this.state.longerOption.term}-year mortgages. If you had
+                  to make monthly payments of{' '}
+                  {formatMoney(-1 * this.state.shorterOption.pmt)} for your{' '}
+                  {this.state.shorterOption.term}-year mortgage versus{' '}
+                  {formatMoney(-1 * this.state.longerOption.pmt)} for your{' '}
+                  {this.state.longerOption.term}-year mortgage, you would invest
+                  the difference (
+                  {formatMoney(
+                    -1 *
+                      (this.state.shorterOption.pmt -
+                        this.state.longerOption.pmt)
+                  )}
+                  ) monthly after paying off your{' '}
+                  {this.state.shorterOption.term}-year mortgage.
                 </Accordion>
               </FormGroup>
               <FormGroup>
