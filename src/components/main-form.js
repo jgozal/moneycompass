@@ -251,7 +251,7 @@ class MainForm extends React.Component {
   render () {
     return (
       <Row>
-        <Col className='col-4'>
+        <Col xs='4'>
           {/* TODO 2019-09-11: We could probably pull this out into its own component */}
           <Card className='p-4'>
             <Form>
@@ -283,7 +283,7 @@ class MainForm extends React.Component {
               </FormGroup>
               <FormGroup>
                 <label>Loan Term</label>
-                <Row>
+                <Row form>
                   <Col>
                     <small>Mortgage Option 1</small>
                     <InputGroup>
@@ -338,7 +338,7 @@ class MainForm extends React.Component {
               </FormGroup>
               <FormGroup>
                 <label>Annual Percentage Rate (APR) & Interest</label>
-                <Row>
+                <Row form>
                   <Col>
                     <small>Mortgage Option 1</small>
                     <InputGroup>
@@ -517,8 +517,7 @@ class MainForm extends React.Component {
             </Form>
           </Card>
         </Col>
-
-        <Col className='col-8'>
+        <Col xs='8'>
           <Button
             className='d-block mx-auto'
             outline
