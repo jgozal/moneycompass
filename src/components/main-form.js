@@ -518,12 +518,14 @@ class MainForm extends React.Component {
                   As time passes, inflation makes your mortgage payments cheaper
                   and your return on investment lower. We factor all of this
                   automatically so the final result you see on your right is not
-                  the actual money you will have gained/lost in 30 years, but
-                  rather, the money you will have gained/lost in 30 years
-                  adjusted to today’s purchasing power. If you’re curious about
-                  what the actual number would be, give inflation a value of 0%.
-                  But remember that everything will be a lot more expensive in
-                  30 years, and that is why we need to include inflation.
+                  the actual money you will have gained/lost in{' '}
+                  {this.state.longerOption.term} years, but rather, the money
+                  you will have gained/lost in {this.state.longerOption.term}{' '}
+                  years adjusted to today’s purchasing power. If you’re curious
+                  about what the actual number would be, give inflation a value
+                  of 0%. But remember that everything will be a lot more
+                  expensive in {this.state.longerOption.term} years, and that is
+                  why we need to include inflation.
                 </Accordion>
               </FormGroup>
             </Form>
