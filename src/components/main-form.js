@@ -99,12 +99,12 @@ const hoverTableCells = (year, option1, option2) => {
     cell.style.backgroundColor = index !== 0 && color
     cell.style.filter = `brightness(${brightness}%)`
 
-    if (typeof nextCells !== 'undefined' && index !== 0) {
+    if (nextCells !== undefined && index !== 0) {
       nextCells.style.backgroundColor = color
       nextCells.style.filter = `brightness(${brightness}%)`
     }
 
-    if (typeof prevCells !== 'undefined' && index !== 4) {
+    if (prevCells !== undefined && index !== 4) {
       prevCells.style.backgroundColor = color
       prevCells.style.filter = `brightness(${brightness}%)`
     }
@@ -236,7 +236,7 @@ class MainForm extends React.Component {
     state.longerOption = longer.term === option1.term ? 'option1' : 'option2'
 
     state.yearlyResultsByOption = getYearly({
-      loanAmount: state.loanAmt,
+      loanAmt: state.loanAmt,
       investmentRate: state.investmentRate / 100,
       inflationRate: state.inflation / 100,
       shorterOption: {
@@ -335,21 +335,16 @@ class MainForm extends React.Component {
                   )}-year mortgage?`}
                 >
                   This tool assumes that you’ll invest the difference between
-                  the payment of the {shorterOption.term}-year and
-                  the {longerOption.term}-year mortgages. If you had
-                  to make monthly payments of{' '}
-                  {formatMoney(-1 * shorterOption.pmt)} for your{' '}
+                  the payment of the {shorterOption.term}-year and the{' '}
+                  {longerOption.term}-year mortgages. If you had to make monthly
+                  payments of {formatMoney(-1 * shorterOption.pmt)} for your{' '}
                   {shorterOption.term}-year mortgage versus{' '}
                   {formatMoney(-1 * longerOption.pmt)} for your{' '}
-                  {longerOption.term}-year mortgage, you would invest
-                  the difference (
-                  {formatMoney(
-                    -1 *
-                      (shorterOption.pmt -
-                        longerOption.pmt)
-                  )}
-                  ) monthly after paying off your{' '}
-                  {shorterOption.term}-year mortgage.
+                  {longerOption.term}-year mortgage, you would invest the
+                  difference (
+                  {formatMoney(-1 * (shorterOption.pmt - longerOption.pmt))})
+                  monthly after paying off your {shorterOption.term}-year
+                  mortgage.
                 </Accordion>
               </FormGroup>
               <FormGroup>
@@ -524,13 +519,13 @@ class MainForm extends React.Component {
                   and your return on investment lower. We factor all of this
                   automatically so the final result you see on your right is not
                   the actual money you will have gained/lost in{' '}
-                  {longerOption.term} years, but rather, the money
-                  you will have gained/lost in {longerOption.term}{' '}
-                  years adjusted to today’s purchasing power. If you’re curious
-                  about what the actual number would be, give inflation a value
-                  of 0%. But remember that everything will be a lot more
-                  expensive in {longerOption.term} years, and that is
-                  why we need to include inflation.
+                  {longerOption.term} years, but rather, the money you will have
+                  gained/lost in {longerOption.term} years adjusted to today’s
+                  purchasing power. If you’re curious about what the actual
+                  number would be, give inflation a value of 0%. But remember
+                  that everything will be a lot more expensive in{' '}
+                  {longerOption.term} years, and that is why we need to include
+                  inflation.
                 </Accordion>
               </FormGroup>
             </Form>
@@ -538,23 +533,59 @@ class MainForm extends React.Component {
         </Col>
         <Col xs='8'>
           <Row>
+            <h3>Explanation</h3>
+            {this.state.optCost} is the difference between your{' '}
+            {shorterOption.term} year investment total ({shorterOption.fv}) and your{' '}
+            {longerOption.term} year investment total ({longerOption.fv}).
             <Col>
+              <h5>{shorterOption.term} year scenario</h5>
               <ol>
                 <li>
-                  With the {shorterOption.term} mortgage you
-                  pay{' '}
+                  With the {shorterOption.term} year mortgage you pay{' '}
+                  {shorterOption.pmt} monthly for {shorterOption.term} years.
                 </li>
-                <li>d</li>
-                <li>d</li>
-                <li>d</li>
+                <li>
+                  After the house is paid, you invest {shorterOption.pmt} monthly
+                  with an ROI of {this.state.investmentRate}% at an inflation rate of{' '}
+                  {this.state.inflation}%.
+                </li>
+                <li>
+                  After {longerOption.term} years, your investments are worth{' '}
+                  {shorterOption.fv}.
+                </li>
               </ol>
             </Col>
             <Col>
+              <h5>{longerOption.term} year scenario</h5>
               <ol>
-                <li>d</li>
-                <li>d</li>
-                <li>d</li>
-                <li>d</li>
+                <li>
+                  With the {longerOption.term} year mortgage you pay{' '}
+                  {longerOption.pmt} monthly for {longerOption.term} years.
+                </li>
+                <li>
+                  You also invest {shorterOption.pmt - longerOption.pmt} every
+                  month, making your total expenditure ({shorterOption.pmt}) the
+                  same as the {shorterOption.term} year mortgage.
+                </li>
+                <li>
+                  After {shorterOption.term} years you have{' '}
+                  {
+                    this.state.yearlyResultsByOption.longer[
+                      shorterOption.term + 1
+                    ].loanAmt
+                  }{' '}
+                  left to pay on your house, but your investments are worth{' '}
+                  {
+                    this.state.yearlyResultsByOption.longer[
+                      shorterOption.term + 1
+                    ].investmentAmount
+                  }
+                  .
+                </li>
+                <li>
+                  After {longerOption.term} years you pay off your house, and
+                  your investments are worth {longerOption.fv}.
+                </li>
               </ol>
             </Col>
           </Row>
@@ -572,12 +603,8 @@ class MainForm extends React.Component {
               <thead>
                 <tr>
                   <th colSpan='1' />
-                  <th colSpan='4'>
-                    {shorterOption.term} year
-                  </th>
-                  <th colSpan='4'>
-                    {longerOption.term} year
-                  </th>
+                  <th colSpan='4'>{shorterOption.term} year</th>
+                  <th colSpan='4'>{longerOption.term} year</th>
                 </tr>
                 <tr>
                   <th colSpan='1' />
@@ -607,11 +634,11 @@ class MainForm extends React.Component {
                       <td>Year {year + 1}</td>
                       <td>{formatMoney(shorter.pmt)}</td>
                       <td>{formatMoney(shorter.investmentPMT)}</td>
-                      <td>{formatMoney(shorter.loanAmount)}</td>
+                      <td>{formatMoney(shorter.loanAmt)}</td>
                       <td>{formatMoney(shorter.investmentAmount)}</td>
                       <td>{formatMoney(longer.pmt)}</td>
                       <td>{formatMoney(longer.investmentPMT)}</td>
-                      <td>{formatMoney(longer.loanAmount)}</td>
+                      <td>{formatMoney(longer.loanAmt)}</td>
                       <td>{formatMoney(longer.investmentAmount)}</td>
                     </tr>
                   )

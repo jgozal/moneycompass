@@ -4,7 +4,7 @@ import { FV, PMT } from 'formulajs/lib/financial'
 const COMPOUND_FREQUENCY = 12
 
 /**
- * @param {number} option.loanAmount How much money the loan is
+ * @param {number} option.loanAmt How much money the loan is
  * @param {number} option.investmentRate Market return rate (in decimals)
  * @param {number} option.inflationRate Annual inflation rate (in decimals)
  * @param {object} option.shorterOption
@@ -15,12 +15,12 @@ const COMPOUND_FREQUENCY = 12
  * @return {object}
  *   @property {object[]} shorter
  *     @property {number} pmt Monthly payment amount (for that year)
- *     @property {number} loanAmount Remaining loan amount
+ *     @property {number} loanAmt Remaining loan amount
  *     @property {number} investmentAmount How much money in investments
  *   @property {object[]} longer
  */
 export function getMonthly ({
-  loanAmount,
+  loanAmt,
   investmentRate,
   inflationRate,
   shorterOption,
@@ -29,13 +29,13 @@ export function getMonthly ({
   const shorterOptionPMT = PMT(
     shorterOption.mortgageRate / COMPOUND_FREQUENCY,
     shorterOption.mortgageTerm * COMPOUND_FREQUENCY,
-    loanAmount
+    loanAmt
   )
 
   const longerOptionPMT = PMT(
     longerOption.mortgageRate / COMPOUND_FREQUENCY,
     longerOption.mortgageTerm * COMPOUND_FREQUENCY,
-    loanAmount
+    loanAmt
   )
 
   const monthlyResultsByOption = {
@@ -43,7 +43,7 @@ export function getMonthly ({
       {
         budget: shorterOptionPMT,
         pmt: shorterOptionPMT,
-        loanAmount: loanAmount + shorterOptionPMT,
+        loanAmt: loanAmt + shorterOptionPMT,
         investmentAmount: 0
       }
     ],
@@ -52,7 +52,7 @@ export function getMonthly ({
         budget: shorterOptionPMT,
         pmt: longerOptionPMT,
         investmentPMT: -1 * (longerOptionPMT - shorterOptionPMT),
-        loanAmount: loanAmount + longerOptionPMT,
+        loanAmt: loanAmt + longerOptionPMT,
         investmentAmount: -1 * (longerOptionPMT - shorterOptionPMT)
       }
     ]
@@ -94,10 +94,8 @@ function getMonthlyResult (
 
   // If the loan is less than the monthly payment, only pay what's remaining in
   // the loan amount
-  if (
-    lastResult.loanAmount < FV(mortgageRate / COMPOUND_FREQUENCY, 1, pmt, 0)
-  ) {
-    pmt = PMT(mortgageRate / COMPOUND_FREQUENCY, 1, lastResult.loanAmount)
+  if (lastResult.loanAmt < FV(mortgageRate / COMPOUND_FREQUENCY, 1, pmt, 0)) {
+    pmt = PMT(mortgageRate / COMPOUND_FREQUENCY, 1, lastResult.loanAmt)
   }
 
   // Everything else can be invested
@@ -107,8 +105,8 @@ function getMonthlyResult (
     budget: lastResult.budget,
     pmt: pmt,
     investmentPMT: investmentPMT,
-    loanAmount:
-      -1 * FV(mortgageRate / COMPOUND_FREQUENCY, 1, pmt, lastResult.loanAmount),
+    loanAmt:
+      -1 * FV(mortgageRate / COMPOUND_FREQUENCY, 1, pmt, lastResult.loanAmt),
     investmentAmount:
       -1 *
       FV(
@@ -138,14 +136,14 @@ function getMonthlyValueAfterInflation (value, inflationRate) {
 }
 
 export function getYearly ({
-  loanAmount,
+  loanAmt,
   investmentRate,
   inflationRate,
   shorterOption,
   longerOption
 }) {
   const monthlySeries = getMonthly({
-    loanAmount,
+    loanAmt,
     investmentRate,
     inflationRate,
     shorterOption,
@@ -170,7 +168,7 @@ export function getYearly ({
           budget: budgetResult || 0,
           pmt: pmtResult || 0,
           investmentPMT: investmentPMTResult || 0,
-          loanAmount: month.loanAmount || 0,
+          loanAmt: month.loanAmt || 0,
           investmentAmount: month.investmentAmount || 0
         })
 
