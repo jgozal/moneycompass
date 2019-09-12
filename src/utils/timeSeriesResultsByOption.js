@@ -19,7 +19,7 @@ const COMPOUND_FREQUENCY = 12
  *     @property {number} investmentAmount How much money in investments
  *   @property {object[]} longer
  */
-export function getMonthlyResultsByOption ({
+export function getMonthly ({
   loanAmount,
   investmentRate,
   inflationRate,
@@ -43,7 +43,7 @@ export function getMonthlyResultsByOption ({
       {
         budget: shorterOptionPMT,
         pmt: shorterOptionPMT,
-        loanAmount: loanAmount,
+        loanAmount: loanAmount + shorterOptionPMT,
         investmentAmount: 0
       }
     ],
@@ -51,8 +51,9 @@ export function getMonthlyResultsByOption ({
       {
         budget: shorterOptionPMT,
         pmt: longerOptionPMT,
-        loanAmount: loanAmount,
-        investmentAmount: 0
+        investmentPMT: -1 * (longerOptionPMT - shorterOptionPMT),
+        loanAmount: loanAmount + longerOptionPMT,
+        investmentAmount: -1 * (longerOptionPMT - shorterOptionPMT)
       }
     ]
   }
@@ -134,4 +135,51 @@ function getMonthlyResult (
 
 function getMonthlyValueAfterInflation (value, inflationRate) {
   return -1 * FV((-1 * inflationRate) / COMPOUND_FREQUENCY, 1, 0, value)
+}
+
+export function getYearly ({
+  loanAmount,
+  investmentRate,
+  inflationRate,
+  shorterOption,
+  longerOption
+}) {
+  const monthlySeries = getMonthly({
+    loanAmount,
+    investmentRate,
+    inflationRate,
+    shorterOption,
+    longerOption
+  })
+
+  const yearlySeries = {}
+
+  let budgetResult = 0
+  let pmtResult = 0
+  let investmentPMTResult = 0
+
+  for (const term in monthlySeries) {
+    yearlySeries[term] = []
+
+    monthlySeries[term].forEach((month, index) => {
+      budgetResult += month.budget
+      pmtResult += month.pmt
+      investmentPMTResult += month.investmentPMT
+      if ((index + 1) % 12 === 0) {
+        yearlySeries[term].push({
+          budget: budgetResult || 0,
+          pmt: pmtResult || 0,
+          investmentPMT: investmentPMTResult || 0,
+          loanAmount: month.loanAmount || 0,
+          investmentAmount: month.investmentAmount || 0
+        })
+
+        budgetResult = 0
+        pmtResult = 0
+        investmentPMTResult = 0
+      }
+    })
+  }
+
+  return yearlySeries
 }
