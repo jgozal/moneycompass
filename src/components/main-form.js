@@ -400,16 +400,17 @@ class MainForm extends React.Component {
                   </InputGroupAddon>
                 </InputGroup>
                 <Accordion title='How do I invest?'>
-                  {/* TODO: Could this be Vanguard instead? */}
                   Investing refers to the process of allocating money to
                   something that you expect to generate income from or/and that
                   you hope will appreciate (increase in value). You can invest
                   in anything: real estate, index funds, stocks, bonds etc. Most
                   times, you will need a brokerage account to invest.{' '}
-                  <a href='https://www.fidelity.com/'>Fidelity</a> provides a
-                  great platform for this, with low fees, as well as great
-                  customer service to help you navigate through the entire
-                  process.
+                  <a href='https://investor.vanguard.com/home/'>Vanguard</a>, an{' '}
+                  <a href='https://about.vanguard.com/what-sets-vanguard-apart/why-ownership-matters/'>
+                    investor-owned
+                  </a>{' '}
+                  fund company, offers great mutual funds and ETFs with very low
+                  fees.
                 </Accordion>
                 <Accordion title='Return on Investment (ROI)'>
                   Return on investment (ROI) is the gain or loss generated on
