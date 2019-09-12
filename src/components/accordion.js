@@ -20,17 +20,19 @@ class Accordion extends Component {
         <a tabIndex='0' onClick={this.toggle}>
           {this.state.collapse ? (
             <small className='text-dark'>
-              <FontAwesomeIcon icon={faCaretDown} className='mr-1' />
+              <FontAwesomeIcon icon={faCaretDown} className='mr-2' />
               <b>{this.props.title}</b>
             </small>
           ) : (
             <small className='text-muted'>
-              <FontAwesomeIcon icon={faCaretRight} className='mr-1' />
+              <FontAwesomeIcon icon={faCaretRight} className='mr-2' />
               {this.props.title}
             </small>
           )}
         </a>
-        <Collapse isOpen={this.state.collapse}>{this.props.children}</Collapse>
+        <Collapse className='pl-3 py-2' isOpen={this.state.collapse}>
+          {this.props.children}
+        </Collapse>
       </div>
     )
   }
