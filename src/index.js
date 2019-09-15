@@ -6,6 +6,7 @@ import { Navbar, NavbarBrand } from 'reactstrap'
 import React from 'react'
 import ReactDOM from 'react-dom'
 
+import FeedbackButton from './components/feedback-button'
 import MainForm from './components/main-form'
 
 class App extends React.Component {
@@ -20,6 +21,7 @@ class App extends React.Component {
           </NavbarBrand>
         </Navbar>
         <MainForm />
+        <FeedbackButton />
       </div>
     )
   }
