@@ -4,24 +4,25 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React from 'react'
 import { BLUE, LIGHT_BLUE, WHITE } from '../assets/colors'
 
+const FeedbackLink = styled('a')`
+  align-items: center;
+  background-color: ${LIGHT_BLUE};
+  border-radius: 50%;
+  bottom: 2rem;
+  display: flex;
+  height: 3em;
+  justify-content: center;
+  position: fixed;
+  right: 2rem;
+  width: 3em;
+  &:hover {
+    background-color: ${BLUE};
+  }
+`
+
 export default function FeedbackButton () {
   return (
-    <a
-      className={css`
-        align-items: center;
-        background-color: ${LIGHT_BLUE};
-        border-radius: 50%;
-        bottom: 2rem;
-        display: flex;
-        height: 3em;
-        justify-content: center;
-        position: fixed;
-        right: 2rem;
-        width: 3em;
-        &:hover {
-          background-color: ${BLUE};
-        }
-      `}
+    <FeedbackLink
       href='https://forms.gle/TZVcdcFMh25Knjn58'
       rel='noopener noreferrer'
       target='_blank'
@@ -33,6 +34,6 @@ export default function FeedbackButton () {
           font-size: 1.5rem;
         `}
       />
-    </a>
+    </FeedbackLink>
   )
 }
