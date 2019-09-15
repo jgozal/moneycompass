@@ -22,7 +22,7 @@ import Accordion from './accordion'
 import _ from 'lodash'
 import numbro from 'numbro'
 import { FV, PMT } from 'formulajs/lib/financial'
-import styled, { css } from 'react-emotion'
+import styled, { css, injectGlobal } from 'react-emotion'
 import { getYearly } from '../utils/timeSeriesResultsByOption'
 
 import { LIGHT_GRAY, GRAY, LIGHT_GREEN } from '../assets/colors'
@@ -50,33 +50,20 @@ option2.term = 30
 
 // CSS
 
-const Summary = styled(Row)`
+// TODO 2019-09-15: Where should global styles live?
+injectGlobal`
   b {
     font-weight: 500;
   }
+`
 
-  p,
-  h5 {
-    font-size: 17px;
-  }
+// TODO 2019-09-15: Should these be global?
+const Ol = styled('ol')`
+  padding-inline-start: 1rem;
+`
 
-  h5 {
-    margin-bottom: 1rem;
-    margin-left: 1.5rem;
-  }
-
-  .col {
-    margin-left: -2rem;
-  }
-
-  ol {
-    font-size: 15px;
-    margin-right: 2.5rem;
-  }
-
-  li {
-    margin-bottom: 1rem;
-  }
+const Li = styled('li')`
+  margin-top: 1rem;
 `
 
 const AmortizationTable = styled(Table)`
@@ -359,7 +346,9 @@ class MainForm extends React.Component {
                   15-year versus 30-year mortgages.
                 </Accordion>
                 <Accordion
-                  title={`What happens when after you’re done paying off the ${shorterOption.term}-year mortgage?`}
+                  title={`What happens when after you’re done paying off the ${
+                    shorterOption.term
+                  }-year mortgage?`}
                 >
                   This tool assumes that you’ll invest the difference between
                   the payment of the {shorterOption.term}-year and the{' '}
@@ -559,53 +548,54 @@ class MainForm extends React.Component {
           </Card>
         </Col>
         <Col xs='8'>
-          <Summary className='p-4 mr-5'>
-            <h4>Explanation</h4>
-            <p>
-              <b>{formatMoney(this.state.optCost)}</b> is the difference between
-              your {shorterOption.term} year investment total (
-              <b>{formatMoney(shorterOption.fv)}</b>) and your{' '}
-              {longerOption.term} year investment total (
-              <b>{formatMoney(longerOption.fv)}</b>).
-            </p>
-            <Col>
+          <Row className='py-4'>
+            <div className='p-3'>
+              <h4>Explanation</h4>
+              <p>
+                <b>{formatMoney(this.state.optCost)}</b> is the difference
+                between your {shorterOption.term} year investment total (
+                <b>{formatMoney(shorterOption.fv)}</b>) and your{' '}
+                {longerOption.term} year investment total (
+                <b>{formatMoney(longerOption.fv)}</b>).
+              </p>
+            </div>
+            <Col className='border-right'>
               <h5>{shorterOption.term} year scenario:</h5>
-              <ol>
-                <li>
+              <Ol>
+                <Li>
                   With the <b>{shorterOption.term} year mortgage</b> you pay{' '}
                   <b>{formatMoney(shorterOption.pmt)}</b> monthly for{' '}
                   {shorterOption.term} years.
-                </li>
-                <li>
+                </Li>
+                <Li>
                   After the house is paid, you{' '}
                   <b>invest {formatMoney(shorterOption.pmt)}</b> monthly with an{' '}
                   <b>ROI of {this.state.investmentRate}%</b> at an{' '}
                   <b>inflation rate of {this.state.inflation}%</b>.
-                </li>
-                <li>
+                </Li>
+                <Li>
                   After <b>{longerOption.term} years</b>, your{' '}
                   <b>investments</b> are worth{' '}
                   <b>{formatMoney(shorterOption.fv)}</b>.
-                </li>
-              </ol>
+                </Li>
+              </Ol>
             </Col>
-            <span className='border mr-5' />
             <Col>
               <h5>{longerOption.term} year scenario:</h5>
-              <ol>
-                <li>
+              <Ol>
+                <Li>
                   With the <b>{longerOption.term} year mortgage</b> you pay{' '}
                   <b>{formatMoney(longerOption.pmt)}</b> monthly for{' '}
                   {longerOption.term} years.
-                </li>
-                <li>
+                </Li>
+                <Li>
                   You also invest{' '}
                   <b>{formatMoney(shorterOption.pmt - longerOption.pmt)}</b>{' '}
                   every month, making your total expenditure (
                   <b>{formatMoney(shorterOption.pmt)}</b>) the same as the{' '}
                   {shorterOption.term} year mortgage.
-                </li>
-                <li>
+                </Li>
+                <Li>
                   After <b>{shorterOption.term} years</b> you have{' '}
                   <b>
                     {formatMoney(
@@ -624,15 +614,15 @@ class MainForm extends React.Component {
                     )}
                   </b>
                   .
-                </li>
-                <li>
+                </Li>
+                <Li>
                   After <b>{longerOption.term} years</b> you pay off your house,
                   and your <b>investments</b> are worth{' '}
                   <b>{formatMoney(longerOption.fv)}</b>.
-                </li>
-              </ol>
+                </Li>
+              </Ol>
             </Col>
-          </Summary>
+          </Row>
           <Button
             className='d-block mx-auto'
             outline
