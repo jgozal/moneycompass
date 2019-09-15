@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React from 'react'
 import { BLUE, LIGHT_BLUE, WHITE } from '../assets/colors'
 
-const FeedbackLink = styled('a')`
+const button = css`
   align-items: center;
   background-color: ${LIGHT_BLUE};
   border-radius: 50%;
@@ -22,7 +22,8 @@ const FeedbackLink = styled('a')`
 
 export default function FeedbackButton () {
   return (
-    <FeedbackLink
+    <a
+      className={button}
       href='https://forms.gle/TZVcdcFMh25Knjn58'
       rel='noopener noreferrer'
       target='_blank'
@@ -34,6 +35,6 @@ export default function FeedbackButton () {
           font-size: 1.5rem;
         `}
       />
-    </FeedbackLink>
+    </a>
   )
 }
