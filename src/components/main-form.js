@@ -548,17 +548,17 @@ class MainForm extends React.Component {
           </Card>
         </Col>
         <Col xs='8'>
-          <Row className='py-4'>
-            <div className='p-3'>
-              <h4>Explanation</h4>
-              <p>
-                <b>{formatMoney(this.state.optCost)}</b> is the difference
-                between your {shorterOption.term} year investment total (
-                <b>{formatMoney(shorterOption.fv)}</b>) and your{' '}
-                {longerOption.term} year investment total (
-                <b>{formatMoney(longerOption.fv)}</b>).
-              </p>
-            </div>
+          <div>
+            <h4>Explanation</h4>
+            <p>
+              <b>{formatMoney(this.state.optCost)}</b> is the difference between
+              your {shorterOption.term} year investment total (
+              <b>{formatMoney(shorterOption.fv)}</b>) and your{' '}
+              {longerOption.term} year investment total (
+              <b>{formatMoney(longerOption.fv)}</b>).
+            </p>
+          </div>
+          <Row>
             <Col className='border-right'>
               <h5>{shorterOption.term} year scenario:</h5>
               <Ol>
@@ -624,7 +624,7 @@ class MainForm extends React.Component {
             </Col>
           </Row>
           <Button
-            className='d-block mx-auto'
+            className='d-block mx-auto mt-4'
             outline
             color='info'
             size='lg'
