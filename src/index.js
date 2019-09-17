@@ -1,4 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.css'
+
+import { Container } from 'reactstrap'
 import React from 'react'
 import ReactDOM from 'react-dom'
 
@@ -8,9 +10,9 @@ class App extends React.Component {
   render () {
     // TODO 018.12.09: Include an intro paragraph
     return (
-      <div className='container-fluid'>
+      <Container>
         <MainForm />
-      </div>
+      </Container>
     )
   }
 }
