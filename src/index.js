@@ -1,9 +1,12 @@
 import 'bootstrap/dist/css/bootstrap.css'
 
-import { Container } from 'reactstrap'
+import { faCompass } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { Container, Navbar, NavbarBrand } from 'reactstrap'
 import React from 'react'
 import ReactDOM from 'react-dom'
 
+import FeedbackButton from './components/feedback-button'
 import MainForm from './components/main-form'
 
 class App extends React.Component {
@@ -11,7 +14,14 @@ class App extends React.Component {
     // TODO 018.12.09: Include an intro paragraph
     return (
       <Container>
+        <Navbar className='border-bottom fixed-top' color='white' light>
+          <NavbarBrand href='/'>
+            <FontAwesomeIcon icon={faCompass} className='mr-2 text-success' />
+            MoneyCompass
+          </NavbarBrand>
+        </Navbar>
         <MainForm />
+        <FeedbackButton />
       </Container>
     )
   }

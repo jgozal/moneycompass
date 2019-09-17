@@ -284,7 +284,7 @@ class MainForm extends React.Component {
     const bestOption = _.maxBy([shorterOption, longerOption], 'fv')
 
     return (
-      <Row>
+      <Row className='mt-5 p-4'>
         <Col xs='4'>
           {/* TODO 2019-09-11: We could probably pull this out into its own component */}
           <Card className='p-4'>
