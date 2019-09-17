@@ -110,7 +110,7 @@ function ScenarioCol (props) {
 function BoxCol (props) {
   return (
     <Col className={`p-4 text-center ${props.isBestOption && emphasize}`}>
-      <div className={cx(box(props.isBestOption), 'p-3')}>
+      <div className={cx(box(props.isBestOption), 'p-4')}>
         <b>{props.option.term}yr</b>
       </div>
       {props.isBestOption && <h3>Better by {formatMoney(props.optCost)}</h3>}
