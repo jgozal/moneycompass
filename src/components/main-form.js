@@ -179,6 +179,13 @@ const hoverTableCells = (year, option1, option2) => {
   })
 }
 
+const formatMoney = value => {
+  return numbro(value).formatCurrency({
+    thousandSeparated: true,
+    mantissa: 0
+  })
+}
+
 class MainForm extends React.Component {
   constructor () {
     super()
@@ -735,10 +742,6 @@ class MainForm extends React.Component {
       </Row>
     )
   }
-}
-
-const formatMoney = value => {
-  return numbro(value).format('$0,0.00')
 }
 
 export default MainForm
