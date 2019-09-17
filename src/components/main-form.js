@@ -57,13 +57,24 @@ injectGlobal`
   }
 `
 
-const Ol = styled('ol')`
-  padding-inline-start: 1rem;
-`
-
 const Li = styled('li')`
   margin-top: 1rem;
 `
+
+/**
+ * @param {*} props
+ *   @property {boolean} highlight
+ *   @property {Object} option
+ */
+function ScenarioCol (props) {
+  const highlightClass = cx('card', css(`border-color: ${LIGHT_GREEN};`))
+  return (
+    <Col className={`p-4 ${props.highlight && highlightClass}`}>
+      <h5>{props.option.term} year scenario:</h5>
+      <ol className={css('padding-inline-start: 1rem;')}>{props.children}</ol>
+    </Col>
+  )
+}
 
 const AmortizationTable = styled(Table)`
   th,
@@ -688,24 +699,6 @@ class MainForm extends React.Component {
 
 const formatMoney = value => {
   return numbro(value).format('$0,0.00')
-}
-
-/**
- *
- * @param {*} props
- *   @property {boolean} highlight
- *   @property {Object} option
- */
-function ScenarioCol (props) {
-  const highlightClass = cx('card', css`
-    border-color: ${LIGHT_GREEN}
-  `)
-  return (
-    <Col className={`p-4 ${props.highlight && highlightClass}`}>
-      <h5>{props.option.term} year scenario:</h5>
-      <Ol>{props.children}</Ol>
-    </Col>
-  )
 }
 
 export default MainForm
