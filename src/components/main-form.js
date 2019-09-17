@@ -22,7 +22,7 @@ import Accordion from './accordion'
 import _ from 'lodash'
 import numbro from 'numbro'
 import { FV, PMT } from 'formulajs/lib/financial'
-import styled, { css, cx, injectGlobal } from 'react-emotion'
+import styled, { css, cx } from 'react-emotion'
 import { getYearly } from '../utils/timeSeriesResultsByOption'
 
 import { LIGHT_GRAY, GRAY, LIGHT_GREEN } from '../assets/colors'
@@ -50,15 +50,35 @@ option2.term = 30
 
 // CSS
 
-// TODO 2019-09-15: Where should global styles live?
-injectGlobal`
-  b {
-    font-weight: 500;
-  }
-`
-
 const Li = styled('li')`
   margin-top: 1rem;
+`
+
+const AmortizationTable = styled(Table)`
+  thead tr:first-of-type th {
+    font-size: 1rem;
+  }
+
+  th,
+  tbody {
+    text-align: center;
+    font-size: 0.75rem;
+  }
+
+  th:first-of-type,
+  td:first-of-type {
+    white-space: nowrap;
+  }
+
+  th:first-of-type {
+    border: 0;
+  }
+
+  th:nth-child(6),
+  td:nth-child(6) {
+    border-left-width: thick;
+    border-left-color: ${GRAY}};
+  }
 `
 
 /**
@@ -75,23 +95,6 @@ function ScenarioCol (props) {
     </Col>
   )
 }
-
-const AmortizationTable = styled(Table)`
-  th,
-  tbody {
-    text-align: center;
-  }
-
-  th:first-of-type {
-    border: 0;
-  }
-
-  th:nth-child(6),
-  td:nth-child(6) {
-    border-left-width: thick;
-    border-left-color: ${GRAY}};
-  }
-`
 
 const checkLoanTerms = (year, option1, option2) => {
   return year + 1 === option1.term || year + 1 === option2.term
@@ -284,7 +287,7 @@ class MainForm extends React.Component {
     const bestOption = _.maxBy([shorterOption, longerOption], 'fv')
 
     return (
-      <Row className='mt-5 p-4'>
+      <Row>
         <Col xs='4'>
           {/* TODO 2019-09-11: We could probably pull this out into its own component */}
           <Card className='p-4'>
@@ -572,16 +575,16 @@ class MainForm extends React.Component {
           <Row noGutters>
             <ScenarioCol
               option={shorterOption}
-              highlight={shorterOption == bestOption}
+              highlight={shorterOption === bestOption}
             >
               <Li>
                 With the <b>{shorterOption.term} year mortgage</b> you pay{' '}
-                <b>{formatMoney(shorterOption.pmt)}</b> monthly for{' '}
+                <b>{formatMoney(-shorterOption.pmt)}</b> monthly for{' '}
                 {shorterOption.term} years.
               </Li>
               <Li>
                 After the house is paid, you{' '}
-                <b>invest {formatMoney(shorterOption.pmt)}</b> monthly with an{' '}
+                <b>invest {formatMoney(-shorterOption.pmt)}</b> monthly with an{' '}
                 <b>ROI of {this.state.investmentRate}%</b> at an{' '}
                 <b>inflation rate of {this.state.inflation}%</b>.
               </Li>
@@ -592,18 +595,18 @@ class MainForm extends React.Component {
             </ScenarioCol>
             <ScenarioCol
               option={longerOption}
-              highlight={longerOption == bestOption}
+              highlight={longerOption === bestOption}
             >
               <Li>
                 With the <b>{longerOption.term} year mortgage</b> you pay{' '}
-                <b>{formatMoney(longerOption.pmt)}</b> monthly for{' '}
+                <b>{formatMoney(-longerOption.pmt)}</b> monthly for{' '}
                 {longerOption.term} years.
               </Li>
               <Li>
                 You also invest{' '}
-                <b>{formatMoney(shorterOption.pmt - longerOption.pmt)}</b> every
-                month, making your total expenditure (
-                <b>{formatMoney(shorterOption.pmt)}</b>) the same as the{' '}
+                <b>{formatMoney(-(shorterOption.pmt - longerOption.pmt))}</b>{' '}
+                every month, making your total expenditure (
+                <b>{formatMoney(-shorterOption.pmt)}</b>) the same as the{' '}
                 {shorterOption.term} year mortgage.
               </Li>
               <Li>
@@ -619,7 +622,7 @@ class MainForm extends React.Component {
                 on your house, but your <b>investments</b> are worth{' '}
                 <b>
                   {formatMoney(
-                    this.state.yearlyResultsByOption.longer[
+                    -this.state.yearlyResultsByOption.longer[
                       shorterOption.term + 1
                     ].investmentAmount
                   )}
@@ -636,14 +639,13 @@ class MainForm extends React.Component {
           <Button
             className='d-block mx-auto mt-4'
             outline
-            color='info'
-            size='lg'
+            color='success'
             onClick={this.toggleShowTable}
           >
             {this.state.showTable ? 'Hide' : 'See'} Yearly Breakdown
           </Button>
           {this.state.showTable && (
-            <AmortizationTable bordered responsive className='mt-5'>
+            <AmortizationTable bordered responsive className='mt-4'>
               <thead>
                 <tr>
                   <th colSpan='1' />
@@ -676,14 +678,14 @@ class MainForm extends React.Component {
                       }
                     >
                       <td>Year {year + 1}</td>
-                      <td>{formatMoney(shorter.pmt)}</td>
-                      <td>{formatMoney(shorter.investmentPMT)}</td>
+                      <td>{formatMoney(-shorter.pmt)}</td>
+                      <td>{formatMoney(-shorter.investmentPMT)}</td>
                       <td>{formatMoney(shorter.loanAmt)}</td>
-                      <td>{formatMoney(shorter.investmentAmount)}</td>
-                      <td>{formatMoney(longer.pmt)}</td>
-                      <td>{formatMoney(longer.investmentPMT)}</td>
+                      <td>{formatMoney(-shorter.investmentAmount)}</td>
+                      <td>{formatMoney(-longer.pmt)}</td>
+                      <td>{formatMoney(-longer.investmentPMT)}</td>
                       <td>{formatMoney(longer.loanAmt)}</td>
-                      <td>{formatMoney(longer.investmentAmount)}</td>
+                      <td>{formatMoney(-longer.investmentAmount)}</td>
                     </tr>
                   )
                 })}
