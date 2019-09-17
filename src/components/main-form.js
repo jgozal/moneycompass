@@ -57,7 +57,6 @@ injectGlobal`
   }
 `
 
-// TODO 2019-09-15: Should these be global?
 const Ol = styled('ol')`
   padding-inline-start: 1rem;
 `
