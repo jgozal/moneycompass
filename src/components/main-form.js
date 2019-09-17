@@ -22,7 +22,7 @@ import Accordion from './accordion'
 import _ from 'lodash'
 import numbro from 'numbro'
 import { FV, PMT } from 'formulajs/lib/financial'
-import styled, { css, injectGlobal } from 'react-emotion'
+import styled, { css, cx, injectGlobal } from 'react-emotion'
 import { getYearly } from '../utils/timeSeriesResultsByOption'
 
 import { LIGHT_GRAY, GRAY, LIGHT_GREEN } from '../assets/colors'
@@ -697,8 +697,11 @@ const formatMoney = value => {
  *   @property {Object} option
  */
 function ScenarioCol (props) {
+  const highlightClass = cx('card', css`
+    border-color: ${LIGHT_GREEN}
+  `)
   return (
-    <Col className={`p-4 ${props.highlight && 'card border-success'}`}>
+    <Col className={`p-4 ${props.highlight && highlightClass}`}>
       <h5>{props.option.term} year scenario:</h5>
       <Ol>{props.children}</Ol>
     </Col>
