@@ -25,7 +25,6 @@ import { FV, PMT } from 'formulajs/lib/financial'
 import styled, { css, cx } from 'react-emotion'
 import { getYearly } from '../utils/timeSeriesResultsByOption'
 
-import classNames from 'classnames'
 import { LIGHT_GRAY, GRAY, LIGHT_GREEN } from '../assets/colors'
 
 // DEFAULT VALUES
@@ -91,12 +90,12 @@ const box = bestOption => css`
 
 /**
  * @param {*} props
- *   @property {boolean} bestOption
+ *   @property {boolean} isBestOption
  *   @property {Object} option
  */
 function ScenarioCol (props) {
   return (
-    <Col className={`p-4 ${props.bestOption && emphasize}`}>
+    <Col className={`p-4 ${props.isBestOption && emphasize}`}>
       <h5>{props.option.term} year scenario:</h5>
       <ol className={css('padding-inline-start: 1rem;')}>{props.children}</ol>
     </Col>
@@ -105,16 +104,16 @@ function ScenarioCol (props) {
 
 /**
  * @param {*} props
- *   @property {boolean} bestOption
+ *   @property {boolean} isBestOption
  *   @property {Object} option
  */
 function BoxCol (props) {
   return (
-    <Col className={`p-4 text-center ${props.bestOption && emphasize}`}>
-      <div className={classNames(box(props.bestOption), 'p-3')}>
+    <Col className={`p-4 text-center ${props.isBestOption && emphasize}`}>
+      <div className={cx(box(props.isBestOption), 'p-3')}>
         <b>{props.option.term}yr</b>
       </div>
-      {props.bestOption && <h3>Better by {formatMoney(props.optCost)}</h3>}
+      {props.isBestOption && <h3>Better by {formatMoney(props.optCost)}</h3>}
     </Col>
   )
 }
@@ -597,12 +596,12 @@ class MainForm extends React.Component {
             <Row>
               <BoxCol
                 option={shorterOption}
-                bestOption={shorterOption === bestOption}
+                isBestOption={shorterOption === bestOption}
                 optCost={this.state.optCost}
               />
               <BoxCol
                 option={longerOption}
-                bestOption={longerOption === bestOption}
+                isBestOption={longerOption === bestOption}
                 optCost={this.state.optCost}
               />
             </Row>
@@ -620,7 +619,7 @@ class MainForm extends React.Component {
           <Row noGutters>
             <ScenarioCol
               option={shorterOption}
-              bestOption={shorterOption === bestOption}
+              isBestOption={shorterOption === bestOption}
             >
               <Li>
                 With the <b>{shorterOption.term} year mortgage</b> you pay{' '}
@@ -640,7 +639,7 @@ class MainForm extends React.Component {
             </ScenarioCol>
             <ScenarioCol
               option={longerOption}
-              bestOption={longerOption === bestOption}
+              isBestOption={longerOption === bestOption}
             >
               <Li>
                 With the <b>{longerOption.term} year mortgage</b> you pay{' '}
