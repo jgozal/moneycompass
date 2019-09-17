@@ -22,7 +22,7 @@ import Accordion from './accordion'
 import _ from 'lodash'
 import numbro from 'numbro'
 import { FV, PMT } from 'formulajs/lib/financial'
-import styled, { css } from 'react-emotion'
+import styled, { css, cx } from 'react-emotion'
 import { getYearly } from '../utils/timeSeriesResultsByOption'
 
 import { LIGHT_GRAY, GRAY, LIGHT_GREEN } from '../assets/colors'
@@ -50,10 +50,24 @@ option2.term = 30
 
 // CSS
 
+const Li = styled('li')`
+  margin-top: 1rem;
+`
+
 const AmortizationTable = styled(Table)`
+  thead tr:first-of-type th {
+    font-size: 1rem;
+  }
+
   th,
   tbody {
     text-align: center;
+    font-size: 0.75rem;
+  }
+
+  th:first-of-type,
+  td:first-of-type {
+    white-space: nowrap;
   }
 
   th:first-of-type {
@@ -66,6 +80,21 @@ const AmortizationTable = styled(Table)`
     border-left-color: ${GRAY}};
   }
 `
+
+/**
+ * @param {*} props
+ *   @property {boolean} highlight
+ *   @property {Object} option
+ */
+function ScenarioCol (props) {
+  const highlightClass = cx('card', css(`border-color: ${LIGHT_GREEN};`))
+  return (
+    <Col className={`p-4 ${props.highlight && highlightClass}`}>
+      <h5>{props.option.term} year scenario:</h5>
+      <ol className={css('padding-inline-start: 1rem;')}>{props.children}</ol>
+    </Col>
+  )
+}
 
 const checkLoanTerms = (year, option1, option2) => {
   return year + 1 === option1.term || year + 1 === option2.term
@@ -99,12 +128,12 @@ const hoverTableCells = (year, option1, option2) => {
     cell.style.backgroundColor = index !== 0 && color
     cell.style.filter = `brightness(${brightness}%)`
 
-    if (typeof nextCells !== 'undefined' && index !== 0) {
+    if (nextCells !== undefined && index !== 0) {
       nextCells.style.backgroundColor = color
       nextCells.style.filter = `brightness(${brightness}%)`
     }
 
-    if (typeof prevCells !== 'undefined' && index !== 4) {
+    if (prevCells !== undefined && index !== 4) {
       prevCells.style.backgroundColor = color
       prevCells.style.filter = `brightness(${brightness}%)`
     }
@@ -146,6 +175,8 @@ class MainForm extends React.Component {
         option1,
         option2
       },
+      shorterOption: '',
+      longerOption: '',
       yearlyResultsByOption: [],
       showTable: false
     }
@@ -230,11 +261,11 @@ class MainForm extends React.Component {
     state.optCost = this.calculateOpportunityCost(option1, option2)
 
     const [shorter, longer] = _.sortBy([option1, option2], 'term')
-    state.shorterOption = shorter
-    state.longerOption = longer
+    state.shorterOption = shorter.term === option1.term ? 'option1' : 'option2'
+    state.longerOption = longer.term === option1.term ? 'option1' : 'option2'
 
     state.yearlyResultsByOption = getYearly({
-      loanAmount: state.loanAmt,
+      loanAmt: state.loanAmt,
       investmentRate: state.investmentRate / 100,
       inflationRate: state.inflation / 100,
       shorterOption: {
@@ -251,8 +282,12 @@ class MainForm extends React.Component {
   }
 
   render () {
+    const shorterOption = this.state.options[this.state.shorterOption]
+    const longerOption = this.state.options[this.state.longerOption]
+    const bestOption = _.maxBy([shorterOption, longerOption], 'fv')
+
     return (
-      <Row className='mt-5 p-4'>
+      <Row>
         <Col xs='4'>
           {/* TODO 2019-09-11: We could probably pull this out into its own component */}
           <Card className='p-4'>
@@ -325,26 +360,21 @@ class MainForm extends React.Component {
                   15-year versus 30-year mortgages.
                 </Accordion>
                 <Accordion
-                  title={`What happens when after you’re done paying off the ${_.min(
-                    [option1.term, option2.term]
-                  )}-year mortgage?`}
+                  title={`What happens when after you’re done paying off the ${
+                    shorterOption.term
+                  }-year mortgage?`}
                 >
                   This tool assumes that you’ll invest the difference between
-                  the payment of the {this.state.shorterOption.term}-year and
-                  the {this.state.longerOption.term}-year mortgages. If you had
-                  to make monthly payments of{' '}
-                  {formatMoney(-1 * this.state.shorterOption.pmt)} for your{' '}
-                  {this.state.shorterOption.term}-year mortgage versus{' '}
-                  {formatMoney(-1 * this.state.longerOption.pmt)} for your{' '}
-                  {this.state.longerOption.term}-year mortgage, you would invest
-                  the difference (
-                  {formatMoney(
-                    -1 *
-                      (this.state.shorterOption.pmt -
-                        this.state.longerOption.pmt)
-                  )}
-                  ) monthly after paying off your{' '}
-                  {this.state.shorterOption.term}-year mortgage.
+                  the payment of the {shorterOption.term}-year and the{' '}
+                  {longerOption.term}-year mortgages. If you had to make monthly
+                  payments of {formatMoney(-1 * shorterOption.pmt)} for your{' '}
+                  {shorterOption.term}-year mortgage versus{' '}
+                  {formatMoney(-1 * longerOption.pmt)} for your{' '}
+                  {longerOption.term}-year mortgage, you would invest the
+                  difference (
+                  {formatMoney(-1 * (shorterOption.pmt - longerOption.pmt))})
+                  monthly after paying off your {shorterOption.term}-year
+                  mortgage.
                 </Accordion>
               </FormGroup>
               <FormGroup>
@@ -519,39 +549,108 @@ class MainForm extends React.Component {
                   and your return on investment lower. We factor all of this
                   automatically so the final result you see on your right is not
                   the actual money you will have gained/lost in{' '}
-                  {this.state.longerOption.term} years, but rather, the money
-                  you will have gained/lost in {this.state.longerOption.term}{' '}
-                  years adjusted to today’s purchasing power. If you’re curious
-                  about what the actual number would be, give inflation a value
-                  of 0%. But remember that everything will be a lot more
-                  expensive in {this.state.longerOption.term} years, and that is
-                  why we need to include inflation.
+                  {longerOption.term} years, but rather, the money you will have
+                  gained/lost in {longerOption.term} years adjusted to today’s
+                  purchasing power. If you’re curious about what the actual
+                  number would be, give inflation a value of 0%. But remember
+                  that everything will be a lot more expensive in{' '}
+                  {longerOption.term} years, and that is why we need to include
+                  inflation.
                 </Accordion>
               </FormGroup>
             </Form>
           </Card>
         </Col>
         <Col xs='8'>
+          <div>
+            <h4>Explanation</h4>
+            <p>
+              <b>{formatMoney(this.state.optCost)}</b> is the difference between
+              your {shorterOption.term} year investment total (
+              <b>{formatMoney(shorterOption.fv)}</b>) and your{' '}
+              {longerOption.term} year investment total (
+              <b>{formatMoney(longerOption.fv)}</b>).
+            </p>
+          </div>
+          <Row noGutters>
+            <ScenarioCol
+              option={shorterOption}
+              highlight={shorterOption === bestOption}
+            >
+              <Li>
+                With the <b>{shorterOption.term} year mortgage</b> you pay{' '}
+                <b>{formatMoney(-shorterOption.pmt)}</b> monthly for{' '}
+                {shorterOption.term} years.
+              </Li>
+              <Li>
+                After the house is paid, you{' '}
+                <b>invest {formatMoney(-shorterOption.pmt)}</b> monthly with an{' '}
+                <b>ROI of {this.state.investmentRate}%</b> at an{' '}
+                <b>inflation rate of {this.state.inflation}%</b>.
+              </Li>
+              <Li>
+                After <b>{longerOption.term} years</b>, your <b>investments</b>{' '}
+                are worth <b>{formatMoney(shorterOption.fv)}</b>.
+              </Li>
+            </ScenarioCol>
+            <ScenarioCol
+              option={longerOption}
+              highlight={longerOption === bestOption}
+            >
+              <Li>
+                With the <b>{longerOption.term} year mortgage</b> you pay{' '}
+                <b>{formatMoney(-longerOption.pmt)}</b> monthly for{' '}
+                {longerOption.term} years.
+              </Li>
+              <Li>
+                You also invest{' '}
+                <b>{formatMoney(-(shorterOption.pmt - longerOption.pmt))}</b>{' '}
+                every month, making your total expenditure (
+                <b>{formatMoney(-shorterOption.pmt)}</b>) the same as the{' '}
+                {shorterOption.term} year mortgage.
+              </Li>
+              <Li>
+                After <b>{shorterOption.term} years</b> you have{' '}
+                <b>
+                  {formatMoney(
+                    this.state.yearlyResultsByOption.longer[
+                      shorterOption.term + 1
+                    ].loanAmt
+                  )}{' '}
+                  left to pay
+                </b>{' '}
+                on your house, but your <b>investments</b> are worth{' '}
+                <b>
+                  {formatMoney(
+                    -this.state.yearlyResultsByOption.longer[
+                      shorterOption.term + 1
+                    ].investmentAmount
+                  )}
+                </b>
+                .
+              </Li>
+              <Li>
+                After <b>{longerOption.term} years</b> you pay off your house,
+                and your <b>investments</b> are worth{' '}
+                <b>{formatMoney(longerOption.fv)}</b>.
+              </Li>
+            </ScenarioCol>
+          </Row>
           <Button
-            className='d-block mx-auto'
+            className='d-block mx-auto mt-4'
             outline
-            color='info'
-            size='lg'
+            color='success'
             onClick={this.toggleShowTable}
           >
             {this.state.showTable ? 'Hide' : 'See'} Yearly Breakdown
           </Button>
           {this.state.showTable && (
-            <AmortizationTable bordered responsive className='mt-5'>
+            <AmortizationTable bordered responsive className='mt-4'>
               <thead>
                 <tr>
                   <th colSpan='1' />
-                  <th colSpan='4'>
-                    {Math.min(option1.term, option2.term)} year
-                  </th>
-                  <th colSpan='4'>
-                    {Math.max(option1.term, option2.term)} year
-                  </th>
+                  <th colSpan='4'>{shorterOption.term} year</th>
+                  <th colSpan='4'>{longerOption.term} year</th>
                 </tr>
                 <tr>
                   <th colSpan='1' />
@@ -579,14 +678,14 @@ class MainForm extends React.Component {
                       }
                     >
                       <td>Year {year + 1}</td>
-                      <td>{formatMoney(shorter.pmt)}</td>
-                      <td>{formatMoney(shorter.investmentPMT)}</td>
-                      <td>{formatMoney(shorter.loanAmount)}</td>
-                      <td>{formatMoney(shorter.investmentAmount)}</td>
-                      <td>{formatMoney(longer.pmt)}</td>
-                      <td>{formatMoney(longer.investmentPMT)}</td>
-                      <td>{formatMoney(longer.loanAmount)}</td>
-                      <td>{formatMoney(longer.investmentAmount)}</td>
+                      <td>{formatMoney(-shorter.pmt)}</td>
+                      <td>{formatMoney(-shorter.investmentPMT)}</td>
+                      <td>{formatMoney(shorter.loanAmt)}</td>
+                      <td>{formatMoney(-shorter.investmentAmount)}</td>
+                      <td>{formatMoney(-longer.pmt)}</td>
+                      <td>{formatMoney(-longer.investmentPMT)}</td>
+                      <td>{formatMoney(longer.loanAmt)}</td>
+                      <td>{formatMoney(-longer.investmentAmount)}</td>
                     </tr>
                   )
                 })}
@@ -600,7 +699,7 @@ class MainForm extends React.Component {
   }
 }
 
-function formatMoney (value) {
+const formatMoney = value => {
   return numbro(value).format('$0,0.00')
 }
 
