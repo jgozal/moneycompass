@@ -22,7 +22,7 @@ class App extends React.Component {
     // TODO 018.12.09: Include an intro paragraph
     return (
       <div>
-        <Navbar className='border-bottom' color='white' light>
+        <Navbar className='border-bottom sticky-top' color='white' light>
           <NavbarBrand href='/'>
             <FontAwesomeIcon icon={faCompass} className='mr-2 text-success' />
             MoneyCompass
