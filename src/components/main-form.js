@@ -81,7 +81,7 @@ const AmortizationTable = styled(Table)`
     border-left-color: ${GRAY}};
   }
 `
-const highlight = cx('card', css(`border-color: ${LIGHT_GREEN};`))
+const emphasize = cx('card', css(`border-color: ${LIGHT_GREEN};`))
 
 const box = bestOption => css`
   background-color: ${bestOption ? LIGHT_GREEN : GRAY};
@@ -96,7 +96,7 @@ const box = bestOption => css`
  */
 function ScenarioCol (props) {
   return (
-    <Col className={`p-4 ${props.bestOption && highlight}`}>
+    <Col className={`p-4 ${props.bestOption && emphasize}`}>
       <h5>{props.option.term} year scenario:</h5>
       <ol className={css('padding-inline-start: 1rem;')}>{props.children}</ol>
     </Col>
@@ -110,7 +110,7 @@ function ScenarioCol (props) {
  */
 function BoxCol (props) {
   return (
-    <Col className={`p-4 text-center ${props.bestOption && highlight}`}>
+    <Col className={`p-4 text-center ${props.bestOption && emphasize}`}>
       <div className={classNames(box(props.bestOption), 'p-3')}>
         <b>{props.option.term}yr</b>
       </div>
