@@ -270,6 +270,7 @@ class MainForm extends React.Component {
   render () {
     const shorterOption = this.state.options[this.state.shorterOption]
     const longerOption = this.state.options[this.state.longerOption]
+    const bestOption = _.maxBy([shorterOption, longerOption], 'fv')
 
     return (
       <Row>
@@ -557,70 +558,69 @@ class MainForm extends React.Component {
               <b>{formatMoney(longerOption.fv)}</b>).
             </p>
           </div>
-          <Row>
-            <Col className='border-right'>
-              <h5>{shorterOption.term} year scenario:</h5>
-              <Ol>
-                <Li>
-                  With the <b>{shorterOption.term} year mortgage</b> you pay{' '}
-                  <b>{formatMoney(shorterOption.pmt)}</b> monthly for{' '}
-                  {shorterOption.term} years.
-                </Li>
-                <Li>
-                  After the house is paid, you{' '}
-                  <b>invest {formatMoney(shorterOption.pmt)}</b> monthly with an{' '}
-                  <b>ROI of {this.state.investmentRate}%</b> at an{' '}
-                  <b>inflation rate of {this.state.inflation}%</b>.
-                </Li>
-                <Li>
-                  After <b>{longerOption.term} years</b>, your{' '}
-                  <b>investments</b> are worth{' '}
-                  <b>{formatMoney(shorterOption.fv)}</b>.
-                </Li>
-              </Ol>
-            </Col>
-            <Col>
-              <h5>{longerOption.term} year scenario:</h5>
-              <Ol>
-                <Li>
-                  With the <b>{longerOption.term} year mortgage</b> you pay{' '}
-                  <b>{formatMoney(longerOption.pmt)}</b> monthly for{' '}
-                  {longerOption.term} years.
-                </Li>
-                <Li>
-                  You also invest{' '}
-                  <b>{formatMoney(shorterOption.pmt - longerOption.pmt)}</b>{' '}
-                  every month, making your total expenditure (
-                  <b>{formatMoney(shorterOption.pmt)}</b>) the same as the{' '}
-                  {shorterOption.term} year mortgage.
-                </Li>
-                <Li>
-                  After <b>{shorterOption.term} years</b> you have{' '}
-                  <b>
-                    {formatMoney(
-                      this.state.yearlyResultsByOption.longer[
-                        shorterOption.term + 1
-                      ].loanAmt
-                    )}{' '}
-                    left to pay
-                  </b>{' '}
-                  on your house, but your <b>investments</b> are worth{' '}
-                  <b>
-                    {formatMoney(
-                      this.state.yearlyResultsByOption.longer[
-                        shorterOption.term + 1
-                      ].investmentAmount
-                    )}
-                  </b>
-                  .
-                </Li>
-                <Li>
-                  After <b>{longerOption.term} years</b> you pay off your house,
-                  and your <b>investments</b> are worth{' '}
-                  <b>{formatMoney(longerOption.fv)}</b>.
-                </Li>
-              </Ol>
-            </Col>
+          <Row noGutters>
+            <ScenarioCol
+              option={shorterOption}
+              highlight={shorterOption == bestOption}
+            >
+              <Li>
+                With the <b>{shorterOption.term} year mortgage</b> you pay{' '}
+                <b>{formatMoney(shorterOption.pmt)}</b> monthly for{' '}
+                {shorterOption.term} years.
+              </Li>
+              <Li>
+                After the house is paid, you{' '}
+                <b>invest {formatMoney(shorterOption.pmt)}</b> monthly with an{' '}
+                <b>ROI of {this.state.investmentRate}%</b> at an{' '}
+                <b>inflation rate of {this.state.inflation}%</b>.
+              </Li>
+              <Li>
+                After <b>{longerOption.term} years</b>, your <b>investments</b>{' '}
+                are worth <b>{formatMoney(shorterOption.fv)}</b>.
+              </Li>
+            </ScenarioCol>
+            <ScenarioCol
+              option={longerOption}
+              highlight={longerOption == bestOption}
+            >
+              <Li>
+                With the <b>{longerOption.term} year mortgage</b> you pay{' '}
+                <b>{formatMoney(longerOption.pmt)}</b> monthly for{' '}
+                {longerOption.term} years.
+              </Li>
+              <Li>
+                You also invest{' '}
+                <b>{formatMoney(shorterOption.pmt - longerOption.pmt)}</b> every
+                month, making your total expenditure (
+                <b>{formatMoney(shorterOption.pmt)}</b>) the same as the{' '}
+                {shorterOption.term} year mortgage.
+              </Li>
+              <Li>
+                After <b>{shorterOption.term} years</b> you have{' '}
+                <b>
+                  {formatMoney(
+                    this.state.yearlyResultsByOption.longer[
+                      shorterOption.term + 1
+                    ].loanAmt
+                  )}{' '}
+                  left to pay
+                </b>{' '}
+                on your house, but your <b>investments</b> are worth{' '}
+                <b>
+                  {formatMoney(
+                    this.state.yearlyResultsByOption.longer[
+                      shorterOption.term + 1
+                    ].investmentAmount
+                  )}
+                </b>
+                .
+              </Li>
+              <Li>
+                After <b>{longerOption.term} years</b> you pay off your house,
+                and your <b>investments</b> are worth{' '}
+                <b>{formatMoney(longerOption.fv)}</b>.
+              </Li>
+            </ScenarioCol>
           </Row>
           <Button
             className='d-block mx-auto mt-4'
@@ -688,6 +688,21 @@ class MainForm extends React.Component {
 
 const formatMoney = value => {
   return numbro(value).format('$0,0.00')
+}
+
+/**
+ *
+ * @param {*} props
+ *   @property {boolean} highlight
+ *   @property {Object} option
+ */
+function ScenarioCol (props) {
+  return (
+    <Col className={`p-4 ${props.highlight && 'card border-success'}`}>
+      <h5>{props.option.term} year scenario:</h5>
+      <Ol>{props.children}</Ol>
+    </Col>
+  )
 }
 
 export default MainForm
