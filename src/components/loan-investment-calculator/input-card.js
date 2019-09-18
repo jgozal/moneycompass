@@ -1,5 +1,6 @@
 import React from 'react'
 
+import Accordion from './accordion'
 import {
   Card,
   Col,
@@ -11,7 +12,6 @@ import {
   InputGroupText,
   Row
 } from 'reactstrap'
-import Accordion from './accordion'
 
 import { formatMoney } from '../../utils/numberUtils'
 

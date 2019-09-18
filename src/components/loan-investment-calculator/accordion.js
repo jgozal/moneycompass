@@ -1,7 +1,8 @@
+import React, { Component } from 'react'
+
 import { Collapse } from 'reactstrap'
 import { faCaretDown, faCaretRight } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import React, { Component } from 'react'
 
 class Accordion extends Component {
   constructor (props) {
