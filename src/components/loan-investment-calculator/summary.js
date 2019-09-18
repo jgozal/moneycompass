@@ -54,7 +54,7 @@ const Summary = props => {
     <div>
       <div>
         <h4>Which is better?</h4>
-        <p className='mt-2'>
+        <p className='mt-3'>
           <b>
             You make {formatMoney(props.optCost)} more by choosing the{' '}
             {props.bestOption.term} year mortgage
@@ -65,7 +65,7 @@ const Summary = props => {
           {props.longerOption.term} year investment total (
           <b>{formatMoney(props.longerOption.fv)}</b>).
         </p>
-        <Row className='mt-4'>
+        <Row noGutters className='mt-4'>
           <BoxCol
             option={props.shorterOption}
             isBestOption={props.shorterOption === props.bestOption}
@@ -78,7 +78,7 @@ const Summary = props => {
           />
         </Row>
       </div>
-      <Row noGutters>
+      <Row noGutters className='mt-3'>
         <ScenarioCol option={props.shorterOption}>
           <Li>
             With the <b>{props.shorterOption.term} year mortgage</b> you pay{' '}
