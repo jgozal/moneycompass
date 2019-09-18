@@ -84,7 +84,7 @@ const emphasize = cx('card', css(`border-color: ${LIGHT_GREEN};`))
 
 const box = bestOption => css`
   background-color: ${bestOption ? LIGHT_GREEN : GRAY};
-  font-size: 3rem;
+  font-size: 3.5rem;
   color: white;
 `
 
