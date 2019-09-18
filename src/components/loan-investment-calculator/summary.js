@@ -71,16 +71,15 @@ const Summary = props => {
       <div>
         <h4>How it works</h4>
         <p>
-          <b>{formatMoney(props.optCost)}</b> is the difference between your{' '}
+          <b>
+            You make {formatMoney(props.optCost)} more by choosing the{' '}
+            {props.bestOption.term} year mortgage
+          </b>
+          . <b>{formatMoney(props.optCost)}</b> is the difference between your{' '}
           {props.shorterOption.term} year investment total (
           <b>{formatMoney(props.shorterOption.fv)}</b>) and your{' '}
           {props.longerOption.term} year investment total (
-          <b>{formatMoney(props.longerOption.fv)}</b>). In other words,{' '}
-          <b>
-            you make {formatMoney(props.optCost)} more by choosing the{' '}
-            {props.bestOption.term} year mortgage
-          </b>
-          .
+          <b>{formatMoney(props.longerOption.fv)}</b>).
         </p>
       </div>
       <Row noGutters>
