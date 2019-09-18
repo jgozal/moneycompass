@@ -113,7 +113,7 @@ function BoxCol (props) {
       <div className={cx(box(props.isBestOption), 'p-4')}>
         <b>{props.option.term}yr</b>
       </div>
-      {props.isBestOption && <h3>Better by {formatMoney(props.optCost)}</h3>}
+      {props.isBestOption && <h3 className='mt-3'>Better by {formatMoney(props.optCost)}</h3>}
     </Col>
   )
 }
