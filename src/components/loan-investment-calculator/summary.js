@@ -75,7 +75,12 @@ const Summary = props => {
           {props.shorterOption.term} year investment total (
           <b>{formatMoney(props.shorterOption.fv)}</b>) and your{' '}
           {props.longerOption.term} year investment total (
-          <b>{formatMoney(props.longerOption.fv)}</b>).
+          <b>{formatMoney(props.longerOption.fv)}</b>). In other words,{' '}
+          <b>
+            you make {formatMoney(props.optCost)} more by choosing the{' '}
+            {props.bestOption.term} year mortgage
+          </b>
+          .
         </p>
       </div>
       <Row noGutters>
