@@ -20,12 +20,11 @@ const box = bestOption => css`
 
 /**
  * @param {*} props
- *   @property {boolean} isBestOption
  *   @property {Object} option
  */
 function ScenarioCol (props) {
   return (
-    <Col className={`p-4 ${props.isBestOption && emphasize}`}>
+    <Col className='p-4'>
       <h5>{props.option.term} year scenario:</h5>
       <ol className={css('padding-inline-start: 1rem;')}>{props.children}</ol>
     </Col>
@@ -55,7 +54,18 @@ const Summary = props => {
     <div>
       <div>
         <h4>Which is better?</h4>
-        <Row>
+        <p className='mt-2'>
+          <b>
+            You make {formatMoney(props.optCost)} more by choosing the{' '}
+            {props.bestOption.term} year mortgage
+          </b>
+          . <b>{formatMoney(props.optCost)}</b> is the difference between your{' '}
+          {props.shorterOption.term} year investment total (
+          <b>{formatMoney(props.shorterOption.fv)}</b>) and your{' '}
+          {props.longerOption.term} year investment total (
+          <b>{formatMoney(props.longerOption.fv)}</b>).
+        </p>
+        <Row className='mt-4'>
           <BoxCol
             option={props.shorterOption}
             isBestOption={props.shorterOption === props.bestOption}
@@ -68,25 +78,8 @@ const Summary = props => {
           />
         </Row>
       </div>
-      <div>
-        <h4>How it works</h4>
-        <p>
-          <b>
-            You make {formatMoney(props.optCost)} more by choosing the{' '}
-            {props.bestOption.term} year mortgage
-          </b>
-          . <b>{formatMoney(props.optCost)}</b> is the difference between your{' '}
-          {props.shorterOption.term} year investment total (
-          <b>{formatMoney(props.shorterOption.fv)}</b>) and your{' '}
-          {props.longerOption.term} year investment total (
-          <b>{formatMoney(props.longerOption.fv)}</b>).
-        </p>
-      </div>
       <Row noGutters>
-        <ScenarioCol
-          option={props.shorterOption}
-          isBestOption={props.shorterOption === props.bestOption}
-        >
+        <ScenarioCol option={props.shorterOption}>
           <Li>
             With the <b>{props.shorterOption.term} year mortgage</b> you pay{' '}
             <b>{formatMoney(-props.shorterOption.pmt)}</b> monthly for{' '}
@@ -104,10 +97,7 @@ const Summary = props => {
             <b>{formatMoney(props.shorterOption.fv)}</b>.
           </Li>
         </ScenarioCol>
-        <ScenarioCol
-          option={props.longerOption}
-          isBestOption={props.longerOption === props.bestOption}
-        >
+        <ScenarioCol option={props.longerOption}>
           <Li>
             With the <b>{props.longerOption.term} year mortgage</b> you pay{' '}
             <b>{formatMoney(-props.longerOption.pmt)}</b> monthly for{' '}
