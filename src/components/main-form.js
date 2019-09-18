@@ -607,7 +607,7 @@ class MainForm extends React.Component {
             </Row>
           </div>
           <div>
-            <h4>Explanation</h4>
+            <h4>How it works</h4>
             <p>
               <b>{formatMoney(this.state.optCost)}</b> is the difference between
               your {shorterOption.term} year investment total (
