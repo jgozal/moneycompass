@@ -36,7 +36,7 @@ option1.term = 15
 option2.interestRate = 4.3
 option2.term = 30
 
-class LoanInvestmentCalculator extends React.Component {
+class MortgageInvestmentCompare extends React.Component {
   constructor () {
     super()
     this.toggleShowTable = this.toggleShowTable.bind(this)
@@ -217,4 +217,4 @@ class LoanInvestmentCalculator extends React.Component {
   }
 }
 
-export default LoanInvestmentCalculator
+export default MortgageInvestmentCompare
