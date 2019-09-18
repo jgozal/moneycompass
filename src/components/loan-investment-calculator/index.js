@@ -180,7 +180,6 @@ class LoanInvestmentCalculator extends React.Component {
             longerOption={longerOption}
           />
         </Col>
-
         <Col xs='8'>
           <Summary
             shorterOption={shorterOption}
