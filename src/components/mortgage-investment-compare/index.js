@@ -30,11 +30,11 @@ const DEFAULT_OPTION = {
 let option1 = _.cloneDeep(DEFAULT_OPTION)
 let option2 = _.cloneDeep(DEFAULT_OPTION)
 
-option1.interestRate = 4
-option1.term = 15
+option1.interestRate = 0
+option1.term = 2
 
-option2.interestRate = 4.3
-option2.term = 30
+option2.interestRate = 0
+option2.term = 4
 
 class MortgageInvestmentCompare extends React.Component {
   constructor () {
@@ -47,9 +47,9 @@ class MortgageInvestmentCompare extends React.Component {
     this.updateInput = this.updateInput.bind(this)
     this.calculateAll = this.calculateAll.bind(this)
     this.state = {
-      investmentRate: 9,
-      loanAmt: 200000,
-      inflation: 2,
+      investmentRate: 0,
+      loanAmt: 10000,
+      inflation: 0,
       optCost: 0,
       options: {
         option1,
@@ -206,7 +206,6 @@ class MortgageInvestmentCompare extends React.Component {
             yearlyResultsByOption={this.state.yearlyResultsByOption}
             showTable={this.state.showTable}
           />
-          <pre>{JSON.stringify(this.state, null, 4).replace(/[{}]/g, '')}</pre>
         </Col>
       </Row>
     )
