@@ -20,7 +20,7 @@ import { toUSD } from '../../utils/numberFormat'
  *   @property {number} loanAmt
  *   @property {number} investmentRate
  *   @property {number} inflation
- *   @property {function} updateInput
+ *   @property {function} onInputChange
  *   @property {Object} option1
  *   @property {Object} option2
  *   @property {Object} shorterOption
@@ -42,7 +42,7 @@ const InputCard = props => {
               placeholder='Loan Amount'
               type='number'
               value={props.loanAmt}
-              onChange={props.updateInput}
+              onChange={props.onInputChange}
             />
           </InputGroup>
           <Accordion title='How much can I afford?'>
@@ -66,7 +66,7 @@ const InputCard = props => {
                   placeholder='Loan Term'
                   type='number'
                   value={props.option1.term}
-                  onChange={props.updateInput}
+                  onChange={props.onInputChange}
                 />
                 <InputGroupAddon addonType='append'>
                   <InputGroupText>years</InputGroupText>
@@ -81,7 +81,7 @@ const InputCard = props => {
                   placeholder='Loan Term'
                   type='number'
                   value={props.option2.term}
-                  onChange={props.updateInput}
+                  onChange={props.onInputChange}
                 />
                 <InputGroupAddon addonType='append'>
                   <InputGroupText>years</InputGroupText>
@@ -126,7 +126,7 @@ const InputCard = props => {
                   placeholder='APR'
                   type='number'
                   value={props.option1.interestRate}
-                  onChange={props.updateInput}
+                  onChange={props.onInputChange}
                 />
                 <InputGroupAddon addonType='append'>
                   <InputGroupText>%</InputGroupText>
@@ -141,7 +141,7 @@ const InputCard = props => {
                   placeholder='APR'
                   type='number'
                   value={props.option2.interestRate}
-                  onChange={props.updateInput}
+                  onChange={props.onInputChange}
                 />
                 <InputGroupAddon addonType='append'>
                   <InputGroupText>%</InputGroupText>
@@ -170,7 +170,7 @@ const InputCard = props => {
               placeholder='ROI'
               type='number'
               value={props.investmentRate}
-              onChange={props.updateInput}
+              onChange={props.onInputChange}
             />
             <InputGroupAddon addonType='append'>
               <InputGroupText>%</InputGroupText>
@@ -241,7 +241,7 @@ const InputCard = props => {
               placeholder='Inflation'
               type='number'
               value={props.inflation}
-              onChange={props.updateInput}
+              onChange={props.onInputChange}
             />
             <InputGroupAddon addonType='append'>
               <InputGroupText>%</InputGroupText>

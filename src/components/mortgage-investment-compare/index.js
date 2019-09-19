@@ -173,7 +173,7 @@ class MortgageInvestmentCompare extends React.Component {
             loanAmt={this.state.loanAmt}
             investmentRate={this.state.investmentRate}
             inflation={this.state.inflation}
-            updateInput={this.updateInput}
+            onInputChange={this.updateInput}
             option1={option1}
             option2={option2}
             shorterOption={shorterOption}
