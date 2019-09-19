@@ -2,7 +2,7 @@ import React from 'react'
 
 import styled, { css, cx } from 'react-emotion'
 import { Col, Row } from 'reactstrap'
-import { GRAY, LIGHT_GREEN } from '../../assets/colors'
+import { GRAY, GREEN_300 } from '../../assets/colors'
 
 import { toUSD } from '../../utils/numberFormat'
 
@@ -10,10 +10,10 @@ const Li = styled('li')`
   margin-top: 1rem;
 `
 
-const emphasize = cx('card', css(`border-color: ${LIGHT_GREEN};`))
+const emphasize = cx('card', css(`border-color: ${GREEN_300};`))
 
 const box = bestOption => css`
-  background-color: ${bestOption ? LIGHT_GREEN : GRAY};
+  background-color: ${bestOption ? GREEN_300 : GRAY};
   font-size: 3.5rem;
   color: white;
 `

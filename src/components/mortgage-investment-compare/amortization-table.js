@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { Table } from 'reactstrap'
-import { LIGHT_GRAY, GRAY, LIGHT_GREEN } from '../../assets/colors'
+import { GRAY_300, GRAY, GREEN_300 } from '../../assets/colors'
 import { css, cx } from 'react-emotion'
 
 import { toUSD } from '../../utils/numberFormat'
@@ -41,15 +41,11 @@ const highlightTableCells = (year, option1, option2) => {
   return checkLoanTerms(year, option1, option2)
     ? css`
         td:nth-child(n + 2):nth-child(-n + 5) {
-          background-color: ${option1.fv > option2.fv
-    ? LIGHT_GREEN
-    : LIGHT_GRAY};
+          background-color: ${option1.fv > option2.fv ? GREEN_300 : GRAY_300};
         }
 
         td:nth-child(n + 6):nth-child(-n + 9) {
-          background-color: ${option2.fv > option1.fv
-    ? LIGHT_GREEN
-    : LIGHT_GRAY};
+          background-color: ${option2.fv > option1.fv ? GREEN_300 : GRAY_300};
         }
       `
     : undefined
@@ -86,9 +82,7 @@ const hoverTableCells = (year, option1, option2) => {
       cell.addEventListener('mouseover', () => hover(null, 85, cell, index))
       cell.addEventListener('mouseleave', () => hover(null, 100, cell, index))
     } else {
-      cell.addEventListener('mouseover', () =>
-        hover(LIGHT_GRAY, 85, cell, index)
-      )
+      cell.addEventListener('mouseover', () => hover(GRAY_300, 85, cell, index))
       cell.addEventListener('mouseleave', () =>
         hover('white', 100, cell, index)
       )
