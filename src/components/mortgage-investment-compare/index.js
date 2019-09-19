@@ -187,7 +187,7 @@ class MortgageInvestmentCompare extends React.Component {
             color='success'
             onClick={this.toggleShowTable}
           >
-            {this.state.showTable ? 'View Summary' : 'See Yearly Breakdown'}
+            {this.state.showTable ? 'Back to Summary' : 'See Yearly Breakdown'}
           </Button>
           {this.state.showTable ? (
             <AmortizationTable
