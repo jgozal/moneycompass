@@ -43,6 +43,7 @@ export function getMonthly ({
       {
         budget: shorterOptionPMT,
         pmt: shorterOptionPMT,
+        investmentPMT: shorterOptionPMT,
         loanAmt: loanAmt + shorterOptionPMT,
         investmentAmount: 0
       }
@@ -51,7 +52,7 @@ export function getMonthly ({
       {
         budget: shorterOptionPMT,
         pmt: longerOptionPMT,
-        investmentPMT: -1 * (longerOptionPMT - shorterOptionPMT),
+        investmentPMT: shorterOptionPMT - longerOptionPMT,
         loanAmt: loanAmt + longerOptionPMT,
         investmentAmount: -1 * (longerOptionPMT - shorterOptionPMT)
       }
@@ -68,6 +69,9 @@ export function getMonthly ({
         shorterOption.mortgageRate,
         investmentRate,
         inflationRate,
+        month >= shorterOption.mortgageTerm * COMPOUND_FREQUENCY
+          ? shorterOptionPMT
+          : 0,
         monthlyResultsByOption.shorter[month - 1]
       )
     )
@@ -76,6 +80,7 @@ export function getMonthly ({
         longerOption.mortgageRate,
         investmentRate,
         inflationRate,
+        shorterOptionPMT - longerOptionPMT,
         monthlyResultsByOption.longer[month - 1]
       )
     )
@@ -88,6 +93,7 @@ function getMonthlyResult (
   mortgageRate,
   investmentRate,
   inflationRate,
+  investmentPMT,
   lastResult
 ) {
   let pmt = lastResult.pmt
@@ -98,13 +104,10 @@ function getMonthlyResult (
     pmt = PMT(mortgageRate / COMPOUND_FREQUENCY, 1, lastResult.loanAmt)
   }
 
-  // Everything else can be invested
-  const investmentPMT = lastResult.budget - pmt
-
   const resultBeforeInflation = {
     budget: lastResult.budget,
     pmt: pmt,
-    investmentPMT: investmentPMT,
+    investmentPMT: lastResult.investmentPMT || 0,
     loanAmt:
       -1 * FV(mortgageRate / COMPOUND_FREQUENCY, 1, pmt, lastResult.loanAmt),
     investmentAmount:
