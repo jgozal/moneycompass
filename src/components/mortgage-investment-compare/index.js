@@ -181,31 +181,33 @@ class MortgageInvestmentCompare extends React.Component {
           />
         </Col>
         <Col xs='8'>
-          <Summary
-            shorterOption={shorterOption}
-            longerOption={longerOption}
-            bestOption={bestOption}
-            optCost={this.state.optCost}
-            inflation={this.state.inflation}
-            investmentRate={this.state.investmentRate}
-            yearlyResultsByOption={this.state.yearlyResultsByOption}
-          />
           <Button
-            className='d-block mx-auto mt-1'
+            className='float-right mb-3'
             outline
             color='success'
             onClick={this.toggleShowTable}
           >
-            {this.state.showTable ? 'Hide' : 'See'} Yearly Breakdown
+            {this.state.showTable ? 'View Summary' : 'See Yearly Breakdown'}
           </Button>
-          <AmortizationTable
-            option1={option1}
-            option2={option2}
-            shorterOption={shorterOption}
-            longerOption={longerOption}
-            yearlyResultsByOption={this.state.yearlyResultsByOption}
-            showTable={this.state.showTable}
-          />
+          {this.state.showTable ? (
+            <AmortizationTable
+              option1={option1}
+              option2={option2}
+              shorterOption={shorterOption}
+              longerOption={longerOption}
+              yearlyResultsByOption={this.state.yearlyResultsByOption}
+            />
+          ) : (
+            <Summary
+              shorterOption={shorterOption}
+              longerOption={longerOption}
+              bestOption={bestOption}
+              optCost={this.state.optCost}
+              inflation={this.state.inflation}
+              investmentRate={this.state.investmentRate}
+              yearlyResultsByOption={this.state.yearlyResultsByOption}
+            />
+          )}
           <pre>{JSON.stringify(this.state, null, 4).replace(/[{}]/g, '')}</pre>
         </Col>
       </Row>
