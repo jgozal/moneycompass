@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.css'
 
 import { Container, Navbar, NavbarBrand } from 'reactstrap'
-import { css, cx, injectGlobal } from 'react-emotion'
+import { css, cx } from 'react-emotion'
 import { faCompass } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
@@ -13,12 +13,12 @@ import FeedbackButton from './components/feedback-button'
 import MortgageInvestmentCompare from './components/mortgage-investment-compare/index'
 
 // GLOBAL STYLES
-injectGlobal`
+const globalStyles = css`
   color: ${GRAY_900};
   font-family: 'Noto Sans', sans-serif;
 
   a {
-    color: ${LIGHT_BLUE}
+    color: ${LIGHT_BLUE};
   }
 `
 
@@ -36,7 +36,7 @@ class App extends React.Component {
   render () {
     // TODO 018.12.09: Include an intro paragraph
     return (
-      <div>
+      <div className={globalStyles}>
         <Navbar className='border-bottom sticky-top' color='white' light>
           <NavbarBrand href='/'>
             <FontAwesomeIcon icon={faCompass} className='mr-2 text-success' />
