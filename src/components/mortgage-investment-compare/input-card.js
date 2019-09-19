@@ -13,7 +13,7 @@ import {
   Row
 } from 'reactstrap'
 
-import { formatMoney } from '../../utils/numberUtils'
+import { toUSD } from '../../utils/numberFormat'
 
 const InputCard = props => {
   return (
@@ -93,15 +93,13 @@ const InputCard = props => {
             payment of the {props.shorterOption.term}-year and the{' '}
             {props.longerOption.term}
             -year mortgages. If you had to make monthly payments of{' '}
-            {formatMoney(-props.shorterOption.pmt)} for your{' '}
+            {toUSD(-props.shorterOption.pmt)} for your{' '}
             {props.shorterOption.term}
-            -year mortgage versus {formatMoney(-props.longerOption.pmt)} for
-            your {props.longerOption.term}
+            -year mortgage versus {toUSD(-props.longerOption.pmt)} for your{' '}
+            {props.longerOption.term}
             -year mortgage, you would invest the difference (
-            {formatMoney(
-              -1 * (props.shorterOption.pmt - props.longerOption.pmt)
-            )}
-            ) monthly after paying off your {props.shorterOption.term}-year
+            {toUSD(-1 * (props.shorterOption.pmt - props.longerOption.pmt))})
+            monthly after paying off your {props.shorterOption.term}-year
             mortgage.
           </Accordion>
         </FormGroup>

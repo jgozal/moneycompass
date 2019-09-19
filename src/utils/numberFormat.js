@@ -1,6 +1,6 @@
 import numbro from 'numbro'
 
-export const formatMoney = value => {
+export const toUSD = value => {
   return numbro(value).formatCurrency({
     thousandSeparated: true,
     mantissa: 0
