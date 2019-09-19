@@ -208,7 +208,7 @@ class MortgageInvestmentCompare extends React.Component {
               yearlyResultsByOption={this.state.yearlyResultsByOption}
             />
           )}
-          <pre>{JSON.stringify(this.state, null, 4).replace(/[{}]/g, '')}</pre>
+          {/* <pre>{JSON.stringify(this.state, null, 4).replace(/[{}]/g, '')}</pre> */}
         </Col>
       </Row>
     )

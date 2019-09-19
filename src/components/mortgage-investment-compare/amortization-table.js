@@ -13,7 +13,7 @@ const amortizationTable = css`
 
   tbody {
     display: block;
-    height: 35rem;
+    height: 40rem;
     overflow: auto;
   }
 
