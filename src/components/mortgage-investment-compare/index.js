@@ -191,7 +191,7 @@ class MortgageInvestmentCompare extends React.Component {
             yearlyResultsByOption={this.state.yearlyResultsByOption}
           />
           <Button
-            className='d-block mx-auto mt-4'
+            className='d-block mx-auto mt-1'
             outline
             color='success'
             onClick={this.toggleShowTable}
