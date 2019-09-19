@@ -11,12 +11,6 @@ const amortizationTable = css`
     font-size: 1rem;
   }
 
-  tbody {
-    display: block;
-    height: 40rem;
-    overflow: auto;
-  }
-
   thead,
   tbody tr {
     display: table;
@@ -27,6 +21,12 @@ const amortizationTable = css`
     width: calc(
       100% - 1em
     ); /* scrollbar is average 1em/16px width, remove it from thead width */
+  }
+
+  tbody {
+    display: block;
+    height: 40rem;
+    overflow: auto;
   }
 
   th,
