@@ -65,7 +65,7 @@ const Summary = props => {
     <div>
       <div>
         <h4>Which is better?</h4>
-        <p className='mt-3'>
+        <p className='mt-4'>
           <b>
             You make {toUSD(props.optCost)} more by choosing the{' '}
             {props.bestOption.term} year mortgage
