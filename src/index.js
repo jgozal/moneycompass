@@ -8,10 +8,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import { GRAY_900 } from './assets/colors'
+import { GRAY_900, DARK_BLUE_GRAY } from './assets/colors'
 import FeedbackButton from './components/feedback-button'
 import MortgageInvestmentCompare from './components/mortgage-investment-compare/index'
-import { DARK_BLUE_GRAY } from './assets/colors'
 
 const footer = cx(
   css(`background-color: ${DARK_BLUE_GRAY};`),
