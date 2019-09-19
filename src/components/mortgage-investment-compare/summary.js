@@ -130,7 +130,7 @@ const Summary = props => {
               <b>
                 {toUSD(
                   props.yearlyResultsByOption.longer[
-                    props.shorterOption.term + 1
+                    props.shorterOption.term - 1
                   ].loanAmt
                 )}{' '}
                 left to pay
@@ -139,7 +139,7 @@ const Summary = props => {
               <b>
                 {toUSD(
                   -props.yearlyResultsByOption.longer[
-                    props.shorterOption.term + 1
+                    props.shorterOption.term - 1
                   ].investmentAmount
                 )}
               </b>
