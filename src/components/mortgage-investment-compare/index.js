@@ -36,7 +36,7 @@ option1.term = 15
 option2.interestRate = 4.3
 option2.term = 30
 
-class LoanInvestmentCalculator extends React.Component {
+class MortgageInvestmentCompare extends React.Component {
   constructor () {
     super()
     this.toggleShowTable = this.toggleShowTable.bind(this)
@@ -171,9 +171,9 @@ class LoanInvestmentCalculator extends React.Component {
         <Col xs='4'>
           <InputCard
             loanAmt={this.state.loanAmt}
-            inflation={this.state.inflation}
             investmentRate={this.state.investmentRate}
-            updateInput={this.updateInput}
+            inflation={this.state.inflation}
+            onInputChange={this.updateInput}
             option1={option1}
             option2={option2}
             shorterOption={shorterOption}
@@ -206,15 +206,11 @@ class LoanInvestmentCalculator extends React.Component {
             yearlyResultsByOption={this.state.yearlyResultsByOption}
             showTable={this.state.showTable}
           />
-          {
-            <pre>
-              {JSON.stringify(this.state, null, 4).replace(/[{}]/g, '')}
-            </pre>
-          }
+          <pre>{JSON.stringify(this.state, null, 4).replace(/[{}]/g, '')}</pre>
         </Col>
       </Row>
     )
   }
 }
 
-export default LoanInvestmentCalculator
+export default MortgageInvestmentCompare

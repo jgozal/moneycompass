@@ -4,7 +4,7 @@ import styled, { css, cx } from 'react-emotion'
 import { Col, Row } from 'reactstrap'
 import { GRAY, LIGHT_GREEN } from '../../assets/colors'
 
-import { formatMoney } from '../../utils/numberUtils'
+import { toUSD } from '../../utils/numberFormat'
 
 const Li = styled('li')`
   margin-top: 1rem;
@@ -43,11 +43,22 @@ function BoxCol (props) {
         <b>{props.option.term}yr</b>
       </div>
       {props.isBestOption && (
-        <h3 className='mt-3'>Better by {formatMoney(props.optCost)}</h3>
+        <h3 className='mt-3'>Better by {toUSD(props.optCost)}</h3>
       )}
     </Col>
   )
 }
+
+/**
+ * @param {*} props
+ *   @property {Object} shorterOption
+ *   @property {Object} longerOption
+ *   @property {Object} bestOption
+ *   @property {number} optCost
+ *   @property {number} investmentRate
+ *   @property {number} inflation
+ *   @property {Object} yearlyResultsByOption
+ */
 
 const Summary = props => {
   return (
@@ -56,14 +67,14 @@ const Summary = props => {
         <h4>Which is better?</h4>
         <p className='mt-3'>
           <b>
-            You make {formatMoney(props.optCost)} more by choosing the{' '}
+            You make {toUSD(props.optCost)} more by choosing the{' '}
             {props.bestOption.term} year mortgage
           </b>
-          . <b>{formatMoney(props.optCost)}</b> is the difference between your{' '}
+          . <b>{toUSD(props.optCost)}</b> is the difference between your{' '}
           {props.shorterOption.term} year investment total (
-          <b>{formatMoney(props.shorterOption.fv)}</b>) and your{' '}
+          <b>{toUSD(props.shorterOption.fv)}</b>) and your{' '}
           {props.longerOption.term} year investment total (
-          <b>{formatMoney(props.longerOption.fv)}</b>).
+          <b>{toUSD(props.longerOption.fv)}</b>).
         </p>
         <Row noGutters className='mt-4'>
           <BoxCol
@@ -82,40 +93,37 @@ const Summary = props => {
         <ScenarioCol option={props.shorterOption}>
           <Li>
             With the <b>{props.shorterOption.term} year mortgage</b> you pay{' '}
-            <b>{formatMoney(-props.shorterOption.pmt)}</b> monthly for{' '}
+            <b>{toUSD(-props.shorterOption.pmt)}</b> monthly for{' '}
             {props.shorterOption.term} years.
           </Li>
           <Li>
             After the house is paid, you{' '}
-            <b>invest {formatMoney(-props.shorterOption.pmt)}</b> monthly with
-            an <b>ROI of {props.investmentRate}%</b> at an{' '}
+            <b>invest {toUSD(-props.shorterOption.pmt)}</b> monthly with an{' '}
+            <b>ROI of {props.investmentRate}%</b> at an{' '}
             <b>inflation rate of {props.inflation}%</b>.
           </Li>
           <Li>
             After <b>{props.longerOption.term} years</b>, your{' '}
-            <b>investments</b> are worth{' '}
-            <b>{formatMoney(props.shorterOption.fv)}</b>.
+            <b>investments</b> are worth <b>{toUSD(props.shorterOption.fv)}</b>.
           </Li>
         </ScenarioCol>
         <ScenarioCol option={props.longerOption}>
           <Li>
             With the <b>{props.longerOption.term} year mortgage</b> you pay{' '}
-            <b>{formatMoney(-props.longerOption.pmt)}</b> monthly for{' '}
+            <b>{toUSD(-props.longerOption.pmt)}</b> monthly for{' '}
             {props.longerOption.term} years.
           </Li>
           <Li>
             You also invest{' '}
-            <b>
-              {formatMoney(-(props.shorterOption.pmt - props.longerOption.pmt))}
-            </b>{' '}
+            <b>{toUSD(-(props.shorterOption.pmt - props.longerOption.pmt))}</b>{' '}
             every month, making your total expenditure (
-            <b>{formatMoney(-props.shorterOption.pmt)}</b>) the same as the{' '}
+            <b>{toUSD(-props.shorterOption.pmt)}</b>) the same as the{' '}
             {props.shorterOption.term} year mortgage.
           </Li>
           <Li>
             After <b>{props.shorterOption.term} years</b> you have{' '}
             <b>
-              {formatMoney(
+              {toUSD(
                 props.yearlyResultsByOption.longer[props.shorterOption.term + 1]
                   .loanAmt
               )}{' '}
@@ -123,7 +131,7 @@ const Summary = props => {
             </b>{' '}
             on your house, but your <b>investments</b> are worth{' '}
             <b>
-              {formatMoney(
+              {toUSD(
                 -props.yearlyResultsByOption.longer[
                   props.shorterOption.term + 1
                 ].investmentAmount
@@ -134,7 +142,7 @@ const Summary = props => {
           <Li>
             After <b>{props.longerOption.term} years</b> you pay off your house,
             and your <b>investments</b> are worth{' '}
-            <b>{formatMoney(props.longerOption.fv)}</b>.
+            <b>{toUSD(props.longerOption.fv)}</b>.
           </Li>
         </ScenarioCol>
       </Row>

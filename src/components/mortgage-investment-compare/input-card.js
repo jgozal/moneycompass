@@ -13,7 +13,19 @@ import {
   Row
 } from 'reactstrap'
 
-import { formatMoney } from '../../utils/numberUtils'
+import { toUSD } from '../../utils/numberFormat'
+
+/**
+ * @param {*} props
+ *   @property {number} loanAmt
+ *   @property {number} investmentRate
+ *   @property {number} inflation
+ *   @property {function} onInputChange
+ *   @property {Object} option1
+ *   @property {Object} option2
+ *   @property {Object} shorterOption
+ *   @property {Object} longerOption
+ */
 
 const InputCard = props => {
   return (
@@ -30,7 +42,7 @@ const InputCard = props => {
               placeholder='Loan Amount'
               type='number'
               value={props.loanAmt}
-              onChange={props.updateInput}
+              onChange={props.onInputChange}
             />
           </InputGroup>
           <Accordion title='How much can I afford?'>
@@ -54,7 +66,7 @@ const InputCard = props => {
                   placeholder='Loan Term'
                   type='number'
                   value={props.option1.term}
-                  onChange={props.updateInput}
+                  onChange={props.onInputChange}
                 />
                 <InputGroupAddon addonType='append'>
                   <InputGroupText>years</InputGroupText>
@@ -69,7 +81,7 @@ const InputCard = props => {
                   placeholder='Loan Term'
                   type='number'
                   value={props.option2.term}
-                  onChange={props.updateInput}
+                  onChange={props.onInputChange}
                 />
                 <InputGroupAddon addonType='append'>
                   <InputGroupText>years</InputGroupText>
@@ -93,15 +105,13 @@ const InputCard = props => {
             payment of the {props.shorterOption.term}-year and the{' '}
             {props.longerOption.term}
             -year mortgages. If you had to make monthly payments of{' '}
-            {formatMoney(-props.shorterOption.pmt)} for your{' '}
+            {toUSD(-props.shorterOption.pmt)} for your{' '}
             {props.shorterOption.term}
-            -year mortgage versus {formatMoney(-props.longerOption.pmt)} for
-            your {props.longerOption.term}
+            -year mortgage versus {toUSD(-props.longerOption.pmt)} for your{' '}
+            {props.longerOption.term}
             -year mortgage, you would invest the difference (
-            {formatMoney(
-              -1 * (props.shorterOption.pmt - props.longerOption.pmt)
-            )}
-            ) monthly after paying off your {props.shorterOption.term}-year
+            {toUSD(-1 * (props.shorterOption.pmt - props.longerOption.pmt))})
+            monthly after paying off your {props.shorterOption.term}-year
             mortgage.
           </Accordion>
         </FormGroup>
@@ -116,7 +126,7 @@ const InputCard = props => {
                   placeholder='APR'
                   type='number'
                   value={props.option1.interestRate}
-                  onChange={props.updateInput}
+                  onChange={props.onInputChange}
                 />
                 <InputGroupAddon addonType='append'>
                   <InputGroupText>%</InputGroupText>
@@ -131,7 +141,7 @@ const InputCard = props => {
                   placeholder='APR'
                   type='number'
                   value={props.option2.interestRate}
-                  onChange={props.updateInput}
+                  onChange={props.onInputChange}
                 />
                 <InputGroupAddon addonType='append'>
                   <InputGroupText>%</InputGroupText>
@@ -160,7 +170,7 @@ const InputCard = props => {
               placeholder='ROI'
               type='number'
               value={props.investmentRate}
-              onChange={props.updateInput}
+              onChange={props.onInputChange}
             />
             <InputGroupAddon addonType='append'>
               <InputGroupText>%</InputGroupText>
@@ -231,7 +241,7 @@ const InputCard = props => {
               placeholder='Inflation'
               type='number'
               value={props.inflation}
-              onChange={props.updateInput}
+              onChange={props.onInputChange}
             />
             <InputGroupAddon addonType='append'>
               <InputGroupText>%</InputGroupText>

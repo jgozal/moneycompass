@@ -4,7 +4,7 @@ import { Table } from 'reactstrap'
 import { LIGHT_GRAY, GRAY, LIGHT_GREEN } from '../../assets/colors'
 import { css, cx } from 'react-emotion'
 
-import { formatMoney } from '../../utils/numberUtils'
+import { toUSD } from '../../utils/numberFormat'
 
 const amortizationTable = css`
   thead tr:first-of-type th {
@@ -32,7 +32,7 @@ const amortizationTable = css`
     border-left-color: ${GRAY}};
   }
 `
-
+// checks if the table row being passed corresponds to the final year of either term
 const checkLoanTerms = (year, option1, option2) => {
   return year + 1 === option1.term || year + 1 === option2.term
 }
@@ -96,6 +96,16 @@ const hoverTableCells = (year, option1, option2) => {
   })
 }
 
+/**
+ * @param {*} props
+ *   @property {Object} option1
+ *   @property {Object} option2
+ *   @property {Object} shorterOption
+ *   @property {Object} longerOption
+ *   @property {Object} yearlyResultsByOption
+ *   @property {boolean} showTable
+ */
+
 const AmortizationTable = props => {
   return (
     props.showTable && (
@@ -136,14 +146,14 @@ const AmortizationTable = props => {
                 }
               >
                 <td>Year {year + 1}</td>
-                <td>{formatMoney(-shorter.pmt)}</td>
-                <td>{formatMoney(-shorter.investmentPMT)}</td>
-                <td>{formatMoney(shorter.loanAmt)}</td>
-                <td>{formatMoney(-shorter.investmentAmount)}</td>
-                <td>{formatMoney(-longer.pmt)}</td>
-                <td>{formatMoney(-longer.investmentPMT)}</td>
-                <td>{formatMoney(longer.loanAmt)}</td>
-                <td>{formatMoney(-longer.investmentAmount)}</td>
+                <td>{toUSD(-shorter.pmt)}</td>
+                <td>{toUSD(-shorter.investmentPMT)}</td>
+                <td>{toUSD(shorter.loanAmt)}</td>
+                <td>{toUSD(-shorter.investmentAmount)}</td>
+                <td>{toUSD(-longer.pmt)}</td>
+                <td>{toUSD(-longer.investmentPMT)}</td>
+                <td>{toUSD(longer.loanAmt)}</td>
+                <td>{toUSD(-longer.investmentAmount)}</td>
               </tr>
             )
           })}
