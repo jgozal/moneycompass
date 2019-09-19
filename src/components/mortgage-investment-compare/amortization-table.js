@@ -32,7 +32,7 @@ const amortizationTable = css`
     border-left-color: ${GRAY}};
   }
 `
-
+// checks if the table row being passed corresponds to the final year of either term
 const checkLoanTerms = (year, option1, option2) => {
   return year + 1 === option1.term || year + 1 === option2.term
 }
