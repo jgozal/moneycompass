@@ -8,7 +8,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 
 import FeedbackButton from './components/feedback-button'
-import MainForm from './components/main-form'
+import MortgageInvestmentCompare from './components/mortgage-investment-compare/index'
 
 // TODO 2019-09-15: Where should global styles live?
 injectGlobal`
@@ -29,7 +29,7 @@ class App extends React.Component {
           </NavbarBrand>
         </Navbar>
         <Container fluid className='pt-4 px-5'>
-          <MainForm />
+          <MortgageInvestmentCompare />
           <FeedbackButton />
         </Container>
       </div>
