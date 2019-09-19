@@ -171,8 +171,8 @@ class MortgageInvestmentCompare extends React.Component {
         <Col xs='4'>
           <InputCard
             loanAmt={this.state.loanAmt}
-            inflation={this.state.inflation}
             investmentRate={this.state.investmentRate}
+            inflation={this.state.inflation}
             updateInput={this.updateInput}
             option1={option1}
             option2={option2}

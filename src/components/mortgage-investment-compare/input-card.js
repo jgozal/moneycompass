@@ -15,6 +15,18 @@ import {
 
 import { toUSD } from '../../utils/numberFormat'
 
+/**
+ * @param {*} props
+ *   @property {number} loanAmt
+ *   @property {number} investmentRate
+ *   @property {number} inflation
+ *   @property {function} updateInput
+ *   @property {Object} option1
+ *   @property {Object} option2
+ *   @property {Object} shorterOption
+ *   @property {Object} longerOption
+ */
+
 const InputCard = props => {
   return (
     <Card className='p-4'>

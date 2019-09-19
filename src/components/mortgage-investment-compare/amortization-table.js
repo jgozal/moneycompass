@@ -96,6 +96,16 @@ const hoverTableCells = (year, option1, option2) => {
   })
 }
 
+/**
+ * @param {*} props
+ *   @property {Object} option1
+ *   @property {Object} option2
+ *   @property {Object} shorterOption
+ *   @property {Object} longerOption
+ *   @property {Object} yearlyResultsByOption
+ *   @property {boolean} showTable
+ */
+
 const AmortizationTable = props => {
   return (
     props.showTable && (

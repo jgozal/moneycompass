@@ -50,6 +50,17 @@ function BoxCol (props) {
   )
 }
 
+/**
+ * @param {*} props
+ *   @property {Object} shorterOption
+ *   @property {Object} longerOption
+ *   @property {Object} bestOption
+ *   @property {number} optCost
+ *   @property {number} investmentRate
+ *   @property {number} inflation
+ *   @property {Object} yearlyResultsByOption
+ */
+
 const Summary = props => {
   return (
     <div>
