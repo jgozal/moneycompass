@@ -9,115 +9,113 @@ export const getMonthly = ({
 }) => {
   const monthlySeries = {}
 
+  const budget = Math.abs(shorterOption.mortgagePMT)
+
+  /* const getValuesAfterInflation = monthlySeries => {
+    const monthlySeriesAfterInflation = {
+      shorter: [],
+      longer: []
+    }
+
+    for (const term in monthlySeries) {
+      monthlySeries[term].forEach((month, index) => {
+        const monthAfterInflation = {}
+
+        for (const key in month) {
+          monthAfterInflation[key] =
+            month[key] /
+            (1 + (inflationRate / COMPOUND_FREQUENCY) * (index + 1))
+        }
+
+        monthlySeriesAfterInflation[term].push(monthAfterInflation)
+      })
+    }
+
+    return monthlySeriesAfterInflation
+  } */
+
+  const checkShorterCutoff = (month, value, before) => {
+    let condition
+
+    if (before) {
+      condition = month <= shorterOption.mortgageTerm * COMPOUND_FREQUENCY - 1
+    } else {
+      condition = month > shorterOption.mortgageTerm * COMPOUND_FREQUENCY - 1
+    }
+
+    return condition ? value : 0
+  }
+
   const shorterList = [
-    // first month
     {
-      budget:
-        Math.abs(shorterOption.mortgagePMT) *
-        (1 - inflationRate / COMPOUND_FREQUENCY),
+      budget: budget / (1 + inflationRate / COMPOUND_FREQUENCY),
+      pmt: budget / (1 + inflationRate / COMPOUND_FREQUENCY),
+      loanAmt:
+        loanAmt * (1 + shorterOption.mortgageRate / COMPOUND_FREQUENCY) +
+        shorterOption.mortgagePMT,
       investmentPMT: 0,
-      investmentAmount: 0,
-      pmt: shorterOption.mortgagePMT * (1 - inflationRate / COMPOUND_FREQUENCY),
-      loanAmt:
-        loanAmt *
-          (1 + shorterOption.mortgageRate / COMPOUND_FREQUENCY) *
-          (1 - inflationRate / COMPOUND_FREQUENCY) +
-        shorterOption.mortgagePMT * (1 - inflationRate / COMPOUND_FREQUENCY)
+      investmentAmount: 0
     }
   ]
-
   const longerList = [
-    // first month
     {
-      budget:
-        Math.abs(shorterOption.mortgagePMT) *
-        (1 - inflationRate / COMPOUND_FREQUENCY),
-      investmentPMT:
-        (shorterOption.mortgagePMT - longerOption.mortgagePMT) *
-        (1 - inflationRate / COMPOUND_FREQUENCY),
-      investmentAmount:
-        (shorterOption.mortgagePMT - longerOption.mortgagePMT) *
-        (1 - inflationRate / COMPOUND_FREQUENCY),
-      pmt: longerOption.mortgagePMT * (1 - inflationRate / COMPOUND_FREQUENCY),
+      budget: budget / (1 + inflationRate / COMPOUND_FREQUENCY),
+      pmt:
+        Math.abs(longerOption.mortgagePMT) /
+        (1 + inflationRate / COMPOUND_FREQUENCY),
       loanAmt:
-        loanAmt *
-          (1 + longerOption.mortgageRate / COMPOUND_FREQUENCY) *
-          (1 - inflationRate / COMPOUND_FREQUENCY) +
-        longerOption.mortgagePMT * (1 - inflationRate / COMPOUND_FREQUENCY)
+        loanAmt * (1 + longerOption.mortgageRate / COMPOUND_FREQUENCY) +
+        longerOption.mortgagePMT,
+      investmentPMT:
+        (budget + longerOption.mortgagePMT) /
+        (1 + inflationRate / COMPOUND_FREQUENCY),
+      investmentAmount: budget + longerOption.mortgagePMT
     }
   ]
 
-  const getShorterInvestmentPMT = (month, budget, inflationAdjusted) => {
-    let investmentPMT
-    if (month <= shorterOption.mortgageTerm * COMPOUND_FREQUENCY) {
-      investmentPMT = 0
-    } else {
-      investmentPMT = inflationAdjusted
-        ? budget * (1 - inflationRate / COMPOUND_FREQUENCY)
-        : budget
-    }
-    return investmentPMT
-  }
-
-  const getShorterLoanPMT = (month, prevPMT, inflationAdjusted) => {
-    let loanPMT
-    if (month >= shorterOption.mortgageTerm * COMPOUND_FREQUENCY) {
-      loanPMT = 0
-    } else {
-      loanPMT = inflationAdjusted
-        ? prevPMT * (1 - inflationRate / COMPOUND_FREQUENCY)
-        : shorterOption.mortgagePMT
-    }
-    return loanPMT
-  }
-
-  // results after inflation
   for (
     let month = 1;
     month <= longerOption.mortgageTerm * COMPOUND_FREQUENCY - 1;
     month++
   ) {
     const shorter = {
-      budget: Math.abs(
-        shorterList[month - 1].budget * (1 - inflationRate / COMPOUND_FREQUENCY)
-      ),
-      pmt: getShorterLoanPMT(month, shorterList[month - 1].pmt, true),
+      budget:
+        shorterList[month - 1].budget /
+        (1 + inflationRate / COMPOUND_FREQUENCY),
+      pmt: checkShorterCutoff(month, shorterList[month - 1].budget, true),
       loanAmt:
         shorterList[month - 1].loanAmt *
-          (1 + shorterOption.mortgageRate / COMPOUND_FREQUENCY) *
-          (1 - inflationRate / COMPOUND_FREQUENCY) +
-        getShorterLoanPMT(month, shorterList[month - 1].pmt, true),
-      investmentPMT: getShorterInvestmentPMT(
+          (1 + shorterOption.mortgageRate / COMPOUND_FREQUENCY) -
+        checkShorterCutoff(month, budget, true),
+      investmentPMT: checkShorterCutoff(
         month,
         shorterList[month - 1].budget,
-        true
+        false
       ),
       investmentAmount:
-        shorterList[month - 1].investmentAmount *
-          (1 - inflationRate / COMPOUND_FREQUENCY) *
-          (1 + investmentRate / COMPOUND_FREQUENCY) +
-        getShorterInvestmentPMT(month, shorterList[month - 1].budget, true)
+        (shorterList[month - 1].investmentAmount *
+          (1 + investmentRate / COMPOUND_FREQUENCY)) /
+          (1 + inflationRate / COMPOUND_FREQUENCY) +
+        checkShorterCutoff(month, budget, false)
     }
 
     const longer = {
-      budget: Math.abs(
-        longerList[month - 1].budget * (1 - inflationRate / COMPOUND_FREQUENCY)
-      ),
-      pmt: longerList[month - 1].pmt * (1 - inflationRate / COMPOUND_FREQUENCY),
+      budget:
+        shorterList[month - 1].budget /
+        (1 + inflationRate / COMPOUND_FREQUENCY),
+      pmt: longerList[month - 1].pmt / (1 + inflationRate / COMPOUND_FREQUENCY),
       loanAmt:
         longerList[month - 1].loanAmt *
-          (1 + longerOption.mortgageRate / COMPOUND_FREQUENCY) *
-          (1 - inflationRate / COMPOUND_FREQUENCY) +
-        longerList[month - 1].pmt * (1 - inflationRate / COMPOUND_FREQUENCY),
+          (1 + longerOption.mortgageRate / COMPOUND_FREQUENCY) +
+        longerOption.mortgagePMT,
       investmentPMT:
-        (shorterList[month - 1].pmt - longerList[month - 1].pmt) *
-        (1 - inflationRate / COMPOUND_FREQUENCY),
+        longerList[month - 1].investmentPMT /
+        (1 + inflationRate / COMPOUND_FREQUENCY),
       investmentAmount:
-        longerList[month - 1].investmentAmount *
-          (1 - inflationRate / COMPOUND_FREQUENCY) *
-          (1 + investmentRate / COMPOUND_FREQUENCY) +
-        (shorterList[month - 1].pmt - longerList[month - 1].pmt) *
-          (1 - inflationRate / COMPOUND_FREQUENCY)
+        (longerList[month - 1].investmentAmount *
+          (1 + investmentRate / COMPOUND_FREQUENCY)) /
+          (1 + inflationRate / COMPOUND_FREQUENCY) +
+        (budget + longerOption.mortgagePMT)
     }
 
     shorterList.push(shorter)

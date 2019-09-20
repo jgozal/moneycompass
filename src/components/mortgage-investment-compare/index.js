@@ -151,12 +151,12 @@ class MortgageInvestmentCompare extends React.Component {
       shorterOption: {
         mortgageRate: shorter.interestRate / 100,
         mortgageTerm: shorter.term,
-        mortgagePMT: -shorter.pmt
+        mortgagePMT: shorter.pmt
       },
       longerOption: {
         mortgageRate: longer.interestRate / 100,
         mortgageTerm: longer.term,
-        mortgagePMT: -longer.pmt
+        mortgagePMT: longer.pmt
       }
     })
 
