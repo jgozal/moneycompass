@@ -150,11 +150,13 @@ class MortgageInvestmentCompare extends React.Component {
       inflationRate: state.inflation / 100,
       shorterOption: {
         mortgageRate: shorter.interestRate / 100,
-        mortgageTerm: shorter.term
+        mortgageTerm: shorter.term,
+        mortgagePMT: -shorter.pmt
       },
       longerOption: {
         mortgageRate: longer.interestRate / 100,
-        mortgageTerm: longer.term
+        mortgageTerm: longer.term,
+        mortgagePMT: -longer.pmt
       }
     })
 
