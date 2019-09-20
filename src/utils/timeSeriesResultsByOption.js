@@ -29,9 +29,11 @@ export const getMonthly = ({
     let condition
 
     if (before) {
-      condition = month <= shorterOption.mortgageTerm * COMPOUND_FREQUENCY - 1
+      condition =
+        month + 1 <= shorterOption.mortgageTerm * COMPOUND_FREQUENCY - 1
     } else {
-      condition = month > shorterOption.mortgageTerm * COMPOUND_FREQUENCY - 1
+      condition =
+        month + 1 > shorterOption.mortgageTerm * COMPOUND_FREQUENCY - 1
     }
 
     return condition ? value : 0
@@ -59,12 +61,12 @@ export const getMonthly = ({
   ]
 
   for (
-    let month = 1;
-    month <= longerOption.mortgageTerm * COMPOUND_FREQUENCY - 1;
+    let month = 0;
+    month <= longerOption.mortgageTerm * COMPOUND_FREQUENCY;
     month++
   ) {
-    const shorterPrevMonth = shorterList[month - 1]
-    const longerPrevMonth = longerList[month - 1]
+    const shorterPrevMonth = shorterList[month]
+    const longerPrevMonth = longerList[month]
 
     const shorter = {
       budget: shorterPrevMonth.budget,
