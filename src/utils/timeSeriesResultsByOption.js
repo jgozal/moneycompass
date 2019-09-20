@@ -13,28 +13,13 @@ export const getMonthly = ({
   const monthlyInflationRate = 1 + inflationRate / COMPOUND_FREQUENCY
   const monthlyInvestmentRate = 1 + investmentRate / COMPOUND_FREQUENCY
 
-  /* const getValuesAfterInflation = monthlySeries => {
-    const monthlySeriesAfterInflation = {
-      shorter: [],
-      longer: []
+  const getValuesAfterInflation = monthData => {
+    const monthAfterInflation = {}
+    for (const key in monthData) {
+      monthAfterInflation[key] = monthData[key] / monthlyInflationRate
     }
-
-    for (const term in monthlySeries) {
-      monthlySeries[term].forEach((month, index) => {
-        const monthAfterInflation = {}
-
-        for (const key in month) {
-          monthAfterInflation[key] =
-            month[key] /
-            (1 + (inflationRate / COMPOUND_FREQUENCY) * (index + 1))
-        }
-
-        monthlySeriesAfterInflation[term].push(monthAfterInflation)
-      })
-    }
-
-    return monthlySeriesAfterInflation
-  } */
+    return monthAfterInflation
+  }
 
   const checkShorterCutoff = (month, value, before) => {
     let condition
@@ -50,8 +35,8 @@ export const getMonthly = ({
 
   const shorterList = [
     {
-      budget: budget / monthlyInflationRate,
-      pmt: budget / monthlyInflationRate,
+      budget: budget,
+      pmt: budget,
       loanAmt:
         loanAmt * (1 + shorterOption.mortgageRate / COMPOUND_FREQUENCY) +
         shorterOption.mortgagePMT,
@@ -61,12 +46,12 @@ export const getMonthly = ({
   ]
   const longerList = [
     {
-      budget: budget / monthlyInflationRate,
-      pmt: Math.abs(longerOption.mortgagePMT) / monthlyInflationRate,
+      budget: budget,
+      pmt: Math.abs(longerOption.mortgagePMT),
       loanAmt:
         loanAmt * (1 + longerOption.mortgageRate / COMPOUND_FREQUENCY) +
         longerOption.mortgagePMT,
-      investmentPMT: (budget + longerOption.mortgagePMT) / monthlyInflationRate,
+      investmentPMT: budget + longerOption.mortgagePMT,
       investmentAmount: budget + longerOption.mortgagePMT
     }
   ]
@@ -77,39 +62,37 @@ export const getMonthly = ({
     month++
   ) {
     const shorter = {
-      budget: shorterList[month - 1].budget / monthlyInflationRate,
+      budget: shorterList[month - 1].budget,
       pmt: checkShorterCutoff(month, shorterList[month - 1].budget, true),
       loanAmt:
         shorterList[month - 1].loanAmt *
           (1 + shorterOption.mortgageRate / COMPOUND_FREQUENCY) -
-        checkShorterCutoff(month, budget, true),
+        checkShorterCutoff(month, shorterList[month - 1].budget, true),
       investmentPMT: checkShorterCutoff(
         month,
         shorterList[month - 1].budget,
         false
       ),
       investmentAmount:
-        (shorterList[month - 1].investmentAmount * monthlyInvestmentRate) /
-          monthlyInflationRate +
+        shorterList[month - 1].investmentAmount * monthlyInvestmentRate +
         checkShorterCutoff(month, budget, false)
     }
 
     const longer = {
-      budget: shorterList[month - 1].budget / monthlyInflationRate,
-      pmt: longerList[month - 1].pmt / monthlyInflationRate,
+      budget: shorterList[month - 1].budget,
+      pmt: longerList[month - 1].pmt,
       loanAmt:
         longerList[month - 1].loanAmt *
-          (1 + longerOption.mortgageRate / COMPOUND_FREQUENCY) +
-        longerOption.mortgagePMT,
-      investmentPMT: longerList[month - 1].investmentPMT / monthlyInflationRate,
+          (1 + longerOption.mortgageRate / COMPOUND_FREQUENCY) -
+        longerList[month - 1].pmt,
+      investmentPMT: longerList[month - 1].investmentPMT,
       investmentAmount:
-        (longerList[month - 1].investmentAmount * monthlyInvestmentRate) /
-          monthlyInflationRate +
+        longerList[month - 1].investmentAmount * monthlyInvestmentRate +
         (budget + longerOption.mortgagePMT)
     }
 
-    shorterList.push(shorter)
-    longerList.push(longer)
+    shorterList.push(getValuesAfterInflation(shorter))
+    longerList.push(getValuesAfterInflation(longer))
   }
 
   monthlySeries.shorter = shorterList
