@@ -12,6 +12,10 @@ export const getMonthly = ({
   const budget = Math.abs(shorterOption.mortgagePMT)
   const monthlyInflationRate = 1 + inflationRate / COMPOUND_FREQUENCY
   const monthlyInvestmentRate = 1 + investmentRate / COMPOUND_FREQUENCY
+  const shorterOptionMonthlyMortgageRate =
+    1 + shorterOption.mortgageRate / COMPOUND_FREQUENCY
+  const longerOptionMonthlyMortgageRate =
+    1 + longerOption.mortgageRate / COMPOUND_FREQUENCY
 
   const getValuesAfterInflation = monthData => {
     const monthAfterInflation = {}
@@ -38,8 +42,7 @@ export const getMonthly = ({
       budget: budget,
       pmt: budget,
       loanAmt:
-        loanAmt * (1 + shorterOption.mortgageRate / COMPOUND_FREQUENCY) +
-        shorterOption.mortgagePMT,
+        loanAmt * shorterOptionMonthlyMortgageRate + shorterOption.mortgagePMT,
       investmentPMT: 0,
       investmentAmount: 0
     }
@@ -49,8 +52,7 @@ export const getMonthly = ({
       budget: budget,
       pmt: Math.abs(longerOption.mortgagePMT),
       loanAmt:
-        loanAmt * (1 + longerOption.mortgageRate / COMPOUND_FREQUENCY) +
-        longerOption.mortgagePMT,
+        loanAmt * longerOptionMonthlyMortgageRate + longerOption.mortgagePMT,
       investmentPMT: budget + longerOption.mortgagePMT,
       investmentAmount: budget + longerOption.mortgagePMT
     }
@@ -61,33 +63,30 @@ export const getMonthly = ({
     month <= longerOption.mortgageTerm * COMPOUND_FREQUENCY - 1;
     month++
   ) {
+    const shorterPrevMonth = shorterList[month - 1]
+    const longerPrevMonth = longerList[month - 1]
+
     const shorter = {
-      budget: shorterList[month - 1].budget,
-      pmt: checkShorterCutoff(month, shorterList[month - 1].budget, true),
+      budget: shorterPrevMonth.budget,
+      pmt: checkShorterCutoff(month, shorterPrevMonth.budget, true),
       loanAmt:
-        shorterList[month - 1].loanAmt *
-          (1 + shorterOption.mortgageRate / COMPOUND_FREQUENCY) -
-        checkShorterCutoff(month, shorterList[month - 1].budget, true),
-      investmentPMT: checkShorterCutoff(
-        month,
-        shorterList[month - 1].budget,
-        false
-      ),
+        shorterPrevMonth.loanAmt * shorterOptionMonthlyMortgageRate -
+        checkShorterCutoff(month, shorterPrevMonth.budget, true),
+      investmentPMT: checkShorterCutoff(month, shorterPrevMonth.budget, false),
       investmentAmount:
-        shorterList[month - 1].investmentAmount * monthlyInvestmentRate +
+        shorterPrevMonth.investmentAmount * monthlyInvestmentRate +
         checkShorterCutoff(month, budget, false)
     }
 
     const longer = {
-      budget: shorterList[month - 1].budget,
-      pmt: longerList[month - 1].pmt,
+      budget: shorterPrevMonth.budget,
+      pmt: longerPrevMonth.pmt,
       loanAmt:
-        longerList[month - 1].loanAmt *
-          (1 + longerOption.mortgageRate / COMPOUND_FREQUENCY) -
-        longerList[month - 1].pmt,
-      investmentPMT: longerList[month - 1].investmentPMT,
+        longerPrevMonth.loanAmt * longerOptionMonthlyMortgageRate -
+        longerPrevMonth.pmt,
+      investmentPMT: longerPrevMonth.investmentPMT,
       investmentAmount:
-        longerList[month - 1].investmentAmount * monthlyInvestmentRate +
+        longerPrevMonth.investmentAmount * monthlyInvestmentRate +
         (budget + longerOption.mortgagePMT)
     }
 
