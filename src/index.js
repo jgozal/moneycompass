@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { BrowserRouter as Router, Route } from 'react-router-dom'
 
 import { GRAY_900, BLUE_GRAY_900, LIGHT_BLUE } from './assets/colors'
 import FeedbackButton from './components/feedback-button'
@@ -36,25 +37,30 @@ class App extends React.Component {
   render () {
     // TODO 018.12.09: Include an intro paragraph
     return (
-      <div className={globalStyles}>
-        <Navbar className='border-bottom sticky-top' color='white' light>
-          <NavbarBrand href='/'>
-            <FontAwesomeIcon icon={faCompass} className='mr-2 text-success' />
-            MoneyCompass
-          </NavbarBrand>
-        </Navbar>
-        <Container fluid className='pt-4 px-5'>
-          <MortgageInvestmentCompare />
-          <FeedbackButton />
-        </Container>
-        <footer className={footer}>
-          <p>Copyright © 2019 Money Compass. All rights reserved</p>
-          <p>
-            Say hi!{' '}
-            <a href='mailto:hello@moneycompass.org'>hello@moneycompass.org</a>
-          </p>
-        </footer>
-      </div>
+      <Router>
+        <div className={globalStyles}>
+          <Navbar className='border-bottom sticky-top' color='white' light>
+            <NavbarBrand href='/'>
+              <FontAwesomeIcon icon={faCompass} className='mr-2 text-success' />
+              MoneyCompass
+            </NavbarBrand>
+          </Navbar>
+          <Container fluid className='pt-4 px-5'>
+            <Route
+              path='/mortgage-investment-compare'
+              component={MortgageInvestmentCompare}
+            />
+            <FeedbackButton />
+          </Container>
+          <footer className={footer}>
+            <p>Copyright © 2019 Money Compass. All rights reserved</p>
+            <p>
+              Say hi!{' '}
+              <a href='mailto:hello@moneycompass.org'>hello@moneycompass.org</a>
+            </p>
+          </footer>
+        </div>
+      </Router>
     )
   }
 }
