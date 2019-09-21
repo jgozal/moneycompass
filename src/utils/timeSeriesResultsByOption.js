@@ -81,7 +81,7 @@ export const getMonthly = ({
     }
 
     const longer = {
-      budget: shorterPrevMonth.budget,
+      budget: longerPrevMonth.budget,
       pmt: longerPrevMonth.pmt,
       loanAmt:
         longerPrevMonth.loanAmt * longerOptionMonthlyMortgageRate -
@@ -109,6 +109,8 @@ export const getYearly = ({
   shorterOption,
   longerOption
 }) => {
+  const yearlySeries = {}
+
   const monthlySeries = getMonthly({
     loanAmt,
     investmentRate,
@@ -116,8 +118,6 @@ export const getYearly = ({
     shorterOption,
     longerOption
   })
-
-  const yearlySeries = {}
 
   let budgetResult = 0
   let pmtResult = 0
@@ -138,7 +138,6 @@ export const getYearly = ({
           loanAmt: month.loanAmt || 0,
           investmentAmount: month.investmentAmount || 0
         })
-
         budgetResult = 0
         pmtResult = 0
         investmentPMTResult = 0
