@@ -11,6 +11,24 @@ const amortizationTable = css`
     font-size: 1rem;
   }
 
+  thead,
+  tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed; /* even columns width , fix width of table too*/
+  }
+  thead {
+    width: calc(
+      100% - 1em
+    ); /* scrollbar is average 1em/16px width, remove it from thead width */
+  }
+
+  tbody {
+    display: block;
+    height: 40rem;
+    overflow: auto;
+  }
+
   th,
   tbody {
     text-align: center;
@@ -97,13 +115,13 @@ const hoverTableCells = (year, option1, option2) => {
  *   @property {Object} shorterOption
  *   @property {Object} longerOption
  *   @property {Object} yearlyResultsByOption
- *   @property {boolean} showTable
  */
 
 const AmortizationTable = props => {
   return (
-    props.showTable && (
-      <Table bordered responsive className={cx(amortizationTable, 'mt-4')}>
+    <div>
+      <h4>Yearly Breakdown</h4>
+      <Table bordered responsive className={cx(amortizationTable, 'mt-3')}>
         <thead>
           <tr>
             <th colSpan='1' />
@@ -153,7 +171,7 @@ const AmortizationTable = props => {
           })}
         </tbody>
       </Table>
-    )
+    </div>
   )
 }
 

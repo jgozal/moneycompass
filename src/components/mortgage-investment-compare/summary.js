@@ -65,7 +65,7 @@ const Summary = props => {
     <div>
       <div>
         <h4>Which is better?</h4>
-        <p className='mt-3'>
+        <p className='mt-4'>
           <b>
             You make {toUSD(props.optCost)} more by choosing the{' '}
             {props.bestOption.term} year mortgage
@@ -76,7 +76,7 @@ const Summary = props => {
           {props.longerOption.term} year investment total (
           <b>{toUSD(props.longerOption.fv)}</b>).
         </p>
-        <Row noGutters className='mt-4'>
+        <Row noGutters className='my-4'>
           <BoxCol
             option={props.shorterOption}
             isBestOption={props.shorterOption === props.bestOption}
@@ -89,63 +89,70 @@ const Summary = props => {
           />
         </Row>
       </div>
-      <Row noGutters className='mt-3'>
-        <ScenarioCol option={props.shorterOption}>
-          <Li>
-            With the <b>{props.shorterOption.term} year mortgage</b> you pay{' '}
-            <b>{toUSD(-props.shorterOption.pmt)}</b> monthly for{' '}
-            {props.shorterOption.term} years.
-          </Li>
-          <Li>
-            After the house is paid, you{' '}
-            <b>invest {toUSD(-props.shorterOption.pmt)}</b> monthly with an{' '}
-            <b>ROI of {props.investmentRate}%</b> at an{' '}
-            <b>inflation rate of {props.inflation}%</b>.
-          </Li>
-          <Li>
-            After <b>{props.longerOption.term} years</b>, your{' '}
-            <b>investments</b> are worth <b>{toUSD(props.shorterOption.fv)}</b>.
-          </Li>
-        </ScenarioCol>
-        <ScenarioCol option={props.longerOption}>
-          <Li>
-            With the <b>{props.longerOption.term} year mortgage</b> you pay{' '}
-            <b>{toUSD(-props.longerOption.pmt)}</b> monthly for{' '}
-            {props.longerOption.term} years.
-          </Li>
-          <Li>
-            You also invest{' '}
-            <b>{toUSD(-(props.shorterOption.pmt - props.longerOption.pmt))}</b>{' '}
-            every month, making your total expenditure (
-            <b>{toUSD(-props.shorterOption.pmt)}</b>) the same as the{' '}
-            {props.shorterOption.term} year mortgage.
-          </Li>
-          <Li>
-            After <b>{props.shorterOption.term} years</b> you have{' '}
-            <b>
-              {toUSD(
-                props.yearlyResultsByOption.longer[props.shorterOption.term + 1]
-                  .loanAmt
-              )}{' '}
-              left to pay
-            </b>{' '}
-            on your house, but your <b>investments</b> are worth{' '}
-            <b>
-              {toUSD(
-                -props.yearlyResultsByOption.longer[
-                  props.shorterOption.term + 1
-                ].investmentAmount
-              )}
-            </b>
-            .
-          </Li>
-          <Li>
-            After <b>{props.longerOption.term} years</b> you pay off your house,
-            and your <b>investments</b> are worth{' '}
-            <b>{toUSD(props.longerOption.fv)}</b>.
-          </Li>
-        </ScenarioCol>
-      </Row>
+      <div>
+        <h4>How it works</h4>
+        <Row noGutters>
+          <ScenarioCol option={props.shorterOption}>
+            <Li>
+              With the <b>{props.shorterOption.term} year mortgage</b> you pay{' '}
+              <b>{toUSD(-props.shorterOption.pmt)}</b> monthly for{' '}
+              {props.shorterOption.term} years.
+            </Li>
+            <Li>
+              After the house is paid, you{' '}
+              <b>invest {toUSD(-props.shorterOption.pmt)}</b> monthly with an{' '}
+              <b>ROI of {props.investmentRate}%</b> at an{' '}
+              <b>inflation rate of {props.inflation}%</b>.
+            </Li>
+            <Li>
+              After <b>{props.longerOption.term} years</b>, your{' '}
+              <b>investments</b> are worth{' '}
+              <b>{toUSD(props.shorterOption.fv)}</b>.
+            </Li>
+          </ScenarioCol>
+          <ScenarioCol option={props.longerOption}>
+            <Li>
+              With the <b>{props.longerOption.term} year mortgage</b> you pay{' '}
+              <b>{toUSD(-props.longerOption.pmt)}</b> monthly for{' '}
+              {props.longerOption.term} years.
+            </Li>
+            <Li>
+              You also invest{' '}
+              <b>
+                {toUSD(-(props.shorterOption.pmt - props.longerOption.pmt))}
+              </b>{' '}
+              every month, making your total expenditure (
+              <b>{toUSD(-props.shorterOption.pmt)}</b>) the same as the{' '}
+              {props.shorterOption.term} year mortgage.
+            </Li>
+            <Li>
+              After <b>{props.shorterOption.term} years</b> you have{' '}
+              <b>
+                {toUSD(
+                  props.yearlyResultsByOption.longer[
+                    props.shorterOption.term - 1
+                  ].loanAmt
+                )}{' '}
+                left to pay
+              </b>{' '}
+              on your house, but your <b>investments</b> are worth{' '}
+              <b>
+                {toUSD(
+                  -props.yearlyResultsByOption.longer[
+                    props.shorterOption.term - 1
+                  ].investmentAmount
+                )}
+              </b>
+              .
+            </Li>
+            <Li>
+              After <b>{props.longerOption.term} years</b> you pay off your
+              house, and your <b>investments</b> are worth{' '}
+              <b>{toUSD(props.longerOption.fv)}</b>.
+            </Li>
+          </ScenarioCol>
+        </Row>
+      </div>
     </div>
   )
 }
