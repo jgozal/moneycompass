@@ -35,6 +35,27 @@ export const getMonthly = ({
   const longerOptionMonthlyMortgageRate =
     1 + longerOption.mortgageRate / COMPOUND_FREQUENCY
 
+  const firstMonthShorter = {
+    budget: budget,
+    pmt: budget,
+    loanAmt:
+      loanAmt * shorterOptionMonthlyMortgageRate + shorterOption.mortgagePMT,
+    investmentPMT: 0,
+    investmentAmt: 0
+  }
+
+  const firstMonthLonger = {
+    budget: budget,
+    pmt: Math.abs(longerOption.mortgagePMT),
+    loanAmt:
+      loanAmt * longerOptionMonthlyMortgageRate + longerOption.mortgagePMT,
+    investmentPMT: budget + longerOption.mortgagePMT,
+    investmentAmt: budget + longerOption.mortgagePMT
+  }
+
+  const shorterList = [firstMonthShorter]
+  const longerList = [firstMonthLonger]
+
   const getValuesAfterInflation = termSeries => {
     return termSeries.map((monthData, index) => {
       const monthAfterInflation = {}
@@ -57,27 +78,6 @@ export const getMonthly = ({
 
     return condition ? value : 0
   }
-
-  const shorterList = [
-    {
-      budget: budget,
-      pmt: budget,
-      loanAmt:
-        loanAmt * shorterOptionMonthlyMortgageRate + shorterOption.mortgagePMT,
-      investmentPMT: 0,
-      investmentAmt: 0
-    }
-  ]
-  const longerList = [
-    {
-      budget: budget,
-      pmt: Math.abs(longerOption.mortgagePMT),
-      loanAmt:
-        loanAmt * longerOptionMonthlyMortgageRate + longerOption.mortgagePMT,
-      investmentPMT: budget + longerOption.mortgagePMT,
-      investmentAmt: budget + longerOption.mortgagePMT
-    }
-  ]
 
   for (
     let month = 1;
