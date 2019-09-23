@@ -1,5 +1,23 @@
 const COMPOUND_FREQUENCY = 12
 
+/**
+ * @param {number} option.loanAmt How much money the loan is
+ * @param {number} option.investmentRate Market return rate (in decimals)
+ * @param {number} option.inflationRate Annual inflation rate (in decimals)
+ * @param {object} option.shorterOption
+ *   @property {number} mortgageRate Mortgage APR (in decimals)
+ *   @property {number} mortgageTerm Mortgage term (in years)
+ *   @property {number} mortgagePMT Mortgage payment (monthly)
+ * @param {object} option.longerOption
+ *
+ * @return {object}
+ *   @property {object[]} shorter
+ *     @property {number} pmt Monthly payment amount (for that year)
+ *     @property {number} loanAmt Remaining loan amount
+ *     @property {number} investmentAmt How much money in investments
+ *   @property {object[]} longer
+ */
+
 export const getMonthly = ({
   loanAmt,
   investmentRate,
@@ -10,19 +28,22 @@ export const getMonthly = ({
   const monthlySeries = {}
 
   const budget = Math.abs(shorterOption.mortgagePMT)
-  const monthlyInflationRate = 1 + inflationRate / COMPOUND_FREQUENCY
+  const monthlyInflationRate = inflationRate / COMPOUND_FREQUENCY
   const monthlyInvestmentRate = 1 + investmentRate / COMPOUND_FREQUENCY
   const shorterOptionMonthlyMortgageRate =
     1 + shorterOption.mortgageRate / COMPOUND_FREQUENCY
   const longerOptionMonthlyMortgageRate =
     1 + longerOption.mortgageRate / COMPOUND_FREQUENCY
 
-  const getValuesAfterInflation = monthData => {
-    const monthAfterInflation = {}
-    for (const key in monthData) {
-      monthAfterInflation[key] = monthData[key] / monthlyInflationRate
-    }
-    return monthAfterInflation
+  const getValuesAfterInflation = termSeries => {
+    return termSeries.map((monthData, index) => {
+      const monthAfterInflation = {}
+      for (const key in monthData) {
+        monthAfterInflation[key] =
+          monthData[key] * getPurchasingPower(index + 1, monthlyInflationRate)
+      }
+      return monthAfterInflation
+    })
   }
 
   const checkShorterCutoff = (month, value, before) => {
@@ -46,7 +67,7 @@ export const getMonthly = ({
       loanAmt:
         loanAmt * shorterOptionMonthlyMortgageRate + shorterOption.mortgagePMT,
       investmentPMT: 0,
-      investmentAmount: 0
+      investmentAmt: 0
     }
   ]
   const longerList = [
@@ -56,7 +77,7 @@ export const getMonthly = ({
       loanAmt:
         loanAmt * longerOptionMonthlyMortgageRate + longerOption.mortgagePMT,
       investmentPMT: budget + longerOption.mortgagePMT,
-      investmentAmount: budget + longerOption.mortgagePMT
+      investmentAmt: budget + longerOption.mortgagePMT
     }
   ]
 
@@ -75,8 +96,8 @@ export const getMonthly = ({
         shorterPrevMonth.loanAmt * shorterOptionMonthlyMortgageRate -
         checkShorterCutoff(month, shorterPrevMonth.budget, true),
       investmentPMT: checkShorterCutoff(month, shorterPrevMonth.budget, false),
-      investmentAmount:
-        shorterPrevMonth.investmentAmount * monthlyInvestmentRate +
+      investmentAmt:
+        shorterPrevMonth.investmentAmt * monthlyInvestmentRate +
         checkShorterCutoff(month, budget, false)
     }
 
@@ -87,17 +108,17 @@ export const getMonthly = ({
         longerPrevMonth.loanAmt * longerOptionMonthlyMortgageRate -
         longerPrevMonth.pmt,
       investmentPMT: longerPrevMonth.investmentPMT,
-      investmentAmount:
-        longerPrevMonth.investmentAmount * monthlyInvestmentRate +
+      investmentAmt:
+        longerPrevMonth.investmentAmt * monthlyInvestmentRate +
         (budget + longerOption.mortgagePMT)
     }
 
-    shorterList.push(getValuesAfterInflation(shorter))
-    longerList.push(getValuesAfterInflation(longer))
+    shorterList.push(shorter)
+    longerList.push(longer)
   }
 
-  monthlySeries.shorter = shorterList
-  monthlySeries.longer = longerList
+  monthlySeries.shorter = getValuesAfterInflation(shorterList)
+  monthlySeries.longer = getValuesAfterInflation(longerList)
 
   return monthlySeries
 }
@@ -136,7 +157,7 @@ export const getYearly = ({
           pmt: pmtResult || 0,
           investmentPMT: investmentPMTResult || 0,
           loanAmt: month.loanAmt || 0,
-          investmentAmount: month.investmentAmount || 0
+          investmentAmt: month.investmentAmt || 0
         })
         budgetResult = 0
         pmtResult = 0
@@ -146,4 +167,12 @@ export const getYearly = ({
   }
 
   return yearlySeries
+}
+
+export const getPurchasingPower = (term, inflationRate, compoundFrequency) => {
+  return (
+    1 /
+    (1 + inflationRate / (compoundFrequency || 1)) **
+      (term * (compoundFrequency || 1))
+  )
 }

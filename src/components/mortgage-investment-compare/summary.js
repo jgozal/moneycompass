@@ -140,7 +140,7 @@ const Summary = props => {
                 {toUSD(
                   props.yearlyResultsByOption.longer[
                     props.shorterOption.term - 1
-                  ].investmentAmount
+                  ].investmentAmt
                 )}
               </b>
               .
