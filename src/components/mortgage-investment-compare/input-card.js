@@ -1,5 +1,4 @@
 import React from 'react'
-import styled from 'react-emotion'
 
 import Accordion from './accordion'
 import {
@@ -103,7 +102,7 @@ const InputCard = props => {
             versus 30-year mortgages.
           </Accordion>
           <Accordion
-            title={`What happens when after you’re done paying off the ${
+            title={`What happens after you’re done paying off the ${
               props.shorterOption.term
             }-year mortgage?`}
           >
@@ -165,7 +164,7 @@ const InputCard = props => {
             <a href='https://www.bankrate.com/glossary/a/apr/'>Bankrate</a>{' '}
             provides a more in-depth explanation.
           </Accordion>
-          <Accordion title='Fixed vs Variable Interest Rates'>
+          <Accordion title='Fixed vs. Variable Interest Rates'>
             This tool assumes your mortgage interest rate is fixed.{' '}
             <a href='https://www.valuepenguin.com/loans/fixed-vs-variable-interest-rates'>
               Value Penguin
