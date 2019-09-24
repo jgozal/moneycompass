@@ -201,8 +201,9 @@ class MortgageInvestmentCompare extends React.Component {
         </Col>
         <Col xs='8'>
           <Button
-            className='float-right mb-3'
+            className='float-right mb-4 ml-4'
             outline
+            size='lg'
             color='success'
             onClick={this.toggleShowTable}
           >

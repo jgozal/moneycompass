@@ -2,54 +2,67 @@ import React from 'react'
 
 import { Table } from 'reactstrap'
 import { GRAY_300, GRAY, GREEN_300 } from '../../assets/colors'
-import { css, cx } from 'react-emotion'
+import styled, { css } from 'react-emotion'
 
 import { toUSD } from '../../utils/numberFormat'
 
-const amortizationTable = css`
-  thead tr:first-of-type th {
-    font-size: 1rem;
-  }
+const tableDivider = css`
+  border-left-width: thick;
+  border-left-color: ${GRAY}};
+`
+const fixedTableLayout = css`
+  display: table;
+  width: 100%;
+  table-layout: fixed; /* even columns width , fix width of table too*/
+`
+const tableFontSizeAlign = css`
+  text-align: center;
+  font-size: 0.75rem;
+`
 
-  thead,
-  tbody tr {
-    display: table;
-    width: 100%;
-    table-layout: fixed; /* even columns width , fix width of table too*/
-  }
-  thead {
-    width: calc(
-      100% - 1em
-    ); /* scrollbar is average 1em/16px width, remove it from thead width */
-  }
+const Thead = styled('thead')`
+  ${fixedTableLayout}
 
-  tbody {
-    display: block;
-    height: 40rem;
-    overflow: auto;
-  }
+  width: calc(
+    100% - 1em
+  ); /* scrollbar is average 1em/16px width, remove it from thead width */
+`
+const Tbody = styled('tbody')`
+  ${tableFontSizeAlign}
 
-  th,
-  tbody {
-    text-align: center;
-    font-size: 0.75rem;
-  }
+  display: block;
+  height: 45rem;
+  overflow: auto;
+`
+const Th = styled('th')`
+  ${tableFontSizeAlign}
 
-  th:first-of-type,
-  td:first-of-type {
+  :first-of-type {
     white-space: nowrap;
-  }
-
-  th:first-of-type {
     border: 0;
   }
 
-  th:nth-child(6),
-  td:nth-child(6) {
-    border-left-width: thick;
-    border-left-color: ${GRAY}};
+  :nth-child(6) {
+    ${tableDivider}
   }
 `
+const Tr = styled('tr')`
+  ${fixedTableLayout}
+
+  :first-of-type th {
+    font-size: 1rem;
+  }
+`
+const Td = styled('td')`
+  :first-of-type {
+    white-space: nowrap;
+  }
+
+  :nth-child(6) {
+    ${tableDivider}
+  }
+`
+
 // checks if the table row being passed corresponds to the final year of either term
 const checkLoanTerms = (year, option1, option2) => {
   return year + 1 === option1.term || year + 1 === option2.term
@@ -121,32 +134,32 @@ const AmortizationTable = props => {
   return (
     <div>
       <h4>Yearly Breakdown</h4>
-      <Table bordered responsive className={cx(amortizationTable, 'mt-3')}>
-        <thead>
-          <tr>
-            <th colSpan='1' />
-            <th colSpan='4'>{props.shorterOption.term} year</th>
-            <th colSpan='4'>{props.longerOption.term} year</th>
-          </tr>
-          <tr>
-            <th colSpan='1' />
-            <th>Mortgage Payment</th>
-            <th>Investment Payment</th>
-            <th>Loan Amount</th>
-            <th>Investment Amount</th>
-            <th>Mortgage Payment</th>
-            <th>Investment Payment</th>
-            <th>Loan Amount</th>
-            <th>Investment Amount</th>
-          </tr>
-        </thead>
-        <tbody>
+      <Table bordered responsive className='mt-3'>
+        <Thead>
+          <Tr>
+            <Th colSpan='1' />
+            <Th colSpan='4'>{props.shorterOption.term} year</Th>
+            <Th colSpan='4'>{props.longerOption.term} year</Th>
+          </Tr>
+          <Tr>
+            <Th colSpan='1' />
+            <Th>Mortgage Payment</Th>
+            <Th>Investment Payment</Th>
+            <Th>Loan Amount</Th>
+            <Th>Investment Amount</Th>
+            <Th>Mortgage Payment</Th>
+            <Th>Investment Payment</Th>
+            <Th>Loan Amount</Th>
+            <Th>Investment Amount</Th>
+          </Tr>
+        </Thead>
+        <Tbody>
           {props.yearlyResultsByOption.shorter.map((_r, year) => {
             const shorter = props.yearlyResultsByOption.shorter[year]
             const longer = props.yearlyResultsByOption.longer[year]
 
             return (
-              <tr
+              <Tr
                 key={'row' + year}
                 className={highlightTableCells(
                   year,
@@ -157,19 +170,19 @@ const AmortizationTable = props => {
                   hoverTableCells(year, props.option1, props.option2)
                 }
               >
-                <td>Year {year + 1}</td>
-                <td>{toUSD(shorter.pmt)}</td>
-                <td>{toUSD(shorter.investmentPMT)}</td>
-                <td>{toUSD(shorter.loanAmt)}</td>
-                <td>{toUSD(shorter.investmentAmt)}</td>
-                <td>{toUSD(longer.pmt)}</td>
-                <td>{toUSD(longer.investmentPMT)}</td>
-                <td>{toUSD(longer.loanAmt)}</td>
-                <td>{toUSD(longer.investmentAmt)}</td>
-              </tr>
+                <Td>Year {year + 1}</Td>
+                <Td>{toUSD(shorter.pmt)}</Td>
+                <Td>{toUSD(shorter.investmentPMT)}</Td>
+                <Td>{toUSD(shorter.loanAmt)}</Td>
+                <Td>{toUSD(shorter.investmentAmt)}</Td>
+                <Td>{toUSD(longer.pmt)}</Td>
+                <Td>{toUSD(longer.investmentPMT)}</Td>
+                <Td>{toUSD(longer.loanAmt)}</Td>
+                <Td>{toUSD(longer.investmentAmt)}</Td>
+              </Tr>
             )
           })}
-        </tbody>
+        </Tbody>
       </Table>
     </div>
   )

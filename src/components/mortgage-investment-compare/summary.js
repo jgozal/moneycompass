@@ -38,7 +38,7 @@ function ScenarioCol (props) {
  */
 function BoxCol (props) {
   return (
-    <Col className={`p-4 text-center ${props.isBestOption && emphasize}`}>
+    <Col className={`p-4 mt-2 text-center ${props.isBestOption && emphasize}`}>
       <div className={cx(box(props.isBestOption), 'p-4')}>
         <b>{props.option.term}yr</b>
       </div>
@@ -71,9 +71,9 @@ const Summary = props => {
             {props.bestOption.term} year mortgage
           </b>
           . <b>{toUSD(props.optCost)}</b> is the difference between your{' '}
-          {props.shorterOption.term} year investment total (
+          {props.shorterOption.term} year final portfolio value (
           <b>{toUSD(props.shorterOption.fv)}</b>) and your{' '}
-          {props.longerOption.term} year investment total (
+          {props.longerOption.term} year final portfolio value (
           <b>{toUSD(props.longerOption.fv)}</b>).
         </p>
         <Row noGutters className='my-4'>

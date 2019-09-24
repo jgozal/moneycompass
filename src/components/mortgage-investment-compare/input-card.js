@@ -31,9 +31,9 @@ const InputCard = props => {
   return (
     <Card className='p-4'>
       <Form>
-        <FormGroup>
+        <FormGroup className='mb-3'>
           <label>How much is your loan?</label>
-          <InputGroup>
+          <InputGroup className='my-2'>
             <InputGroupAddon addonType='prepend'>
               <InputGroupText>$</InputGroupText>
             </InputGroupAddon>
@@ -55,12 +55,15 @@ const InputCard = props => {
             has a great tool to help you determine how much you can afford.
           </Accordion>
         </FormGroup>
-        <FormGroup>
+        <hr />
+        <FormGroup className='mb-3'>
           <label>Loan Term</label>
           <Row form>
             <Col>
-              <small>Mortgage Option 1</small>
-              <InputGroup>
+              <small>
+                <b>Mortgage Option 1</b>
+              </small>
+              <InputGroup className='my-2'>
                 <Input
                   name='options.option1.term'
                   placeholder='Loan Term'
@@ -74,8 +77,10 @@ const InputCard = props => {
               </InputGroup>
             </Col>
             <Col>
-              <small>Mortgage Option 2</small>
-              <InputGroup>
+              <small>
+                <b>Mortgage Option 2</b>
+              </small>
+              <InputGroup className='my-2'>
                 <Input
                   name='options.option2.term'
                   placeholder='Loan Term'
@@ -97,7 +102,7 @@ const InputCard = props => {
             versus 30-year mortgages.
           </Accordion>
           <Accordion
-            title={`What happens when after you’re done paying off the ${
+            title={`What happens after you’re done paying off the ${
               props.shorterOption.term
             }-year mortgage?`}
           >
@@ -115,12 +120,15 @@ const InputCard = props => {
             mortgage.
           </Accordion>
         </FormGroup>
-        <FormGroup>
+        <hr />
+        <FormGroup className='mb-3'>
           <label>Annual Percentage Rate (APR) & Interest</label>
           <Row form>
             <Col>
-              <small>Mortgage Option 1</small>
-              <InputGroup>
+              <small>
+                <b>Mortgage Option 1</b>
+              </small>
+              <InputGroup className='my-2'>
                 <Input
                   name='options.option1.interestRate'
                   placeholder='APR'
@@ -134,8 +142,10 @@ const InputCard = props => {
               </InputGroup>
             </Col>
             <Col>
-              <small>Mortgage Option 2</small>
-              <InputGroup>
+              <small>
+                <b>Mortgage Option 2</b>
+              </small>
+              <InputGroup className='my-2'>
                 <Input
                   name='options.option2.interestRate'
                   placeholder='APR'
@@ -154,7 +164,7 @@ const InputCard = props => {
             <a href='https://www.bankrate.com/glossary/a/apr/'>Bankrate</a>{' '}
             provides a more in-depth explanation.
           </Accordion>
-          <Accordion title='Fixed vs Variable Interest Rates'>
+          <Accordion title='Fixed vs. Variable Interest Rates'>
             This tool assumes your mortgage interest rate is fixed.{' '}
             <a href='https://www.valuepenguin.com/loans/fixed-vs-variable-interest-rates'>
               Value Penguin
@@ -162,9 +172,10 @@ const InputCard = props => {
             has a great article about how fixed and variable rates work.
           </Accordion>
         </FormGroup>
-        <FormGroup>
+        <hr />
+        <FormGroup className='mb-3'>
           <label>Return on Investment (ROI)</label>
-          <InputGroup>
+          <InputGroup className='my-2'>
             <Input
               name='investmentRate'
               placeholder='ROI'
@@ -233,9 +244,10 @@ const InputCard = props => {
             provides a more in-depth analysis on this topic.
           </Accordion>
         </FormGroup>
-        <FormGroup>
+        <hr />
+        <FormGroup className='mb-3'>
           <label>Inflation</label>
-          <InputGroup>
+          <InputGroup className='my-2'>
             <Input
               name='inflation'
               placeholder='Inflation'
