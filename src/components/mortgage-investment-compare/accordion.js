@@ -32,7 +32,7 @@ class Accordion extends Component {
           )}
         </a>
         <Collapse className='pl-3 py-2' isOpen={this.state.collapse}>
-          {this.props.children}
+          <small>{this.props.children}</small>
         </Collapse>
       </div>
     )

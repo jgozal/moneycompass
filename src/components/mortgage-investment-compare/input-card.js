@@ -1,4 +1,5 @@
 import React from 'react'
+import styled from 'react-emotion'
 
 import Accordion from './accordion'
 import {
@@ -31,9 +32,9 @@ const InputCard = props => {
   return (
     <Card className='p-4'>
       <Form>
-        <FormGroup>
+        <FormGroup className='mb-3'>
           <label>How much is your loan?</label>
-          <InputGroup>
+          <InputGroup className='my-2'>
             <InputGroupAddon addonType='prepend'>
               <InputGroupText>$</InputGroupText>
             </InputGroupAddon>
@@ -55,12 +56,15 @@ const InputCard = props => {
             has a great tool to help you determine how much you can afford.
           </Accordion>
         </FormGroup>
-        <FormGroup>
+        <hr />
+        <FormGroup className='mb-3'>
           <label>Loan Term</label>
           <Row form>
             <Col>
-              <small>Mortgage Option 1</small>
-              <InputGroup>
+              <small>
+                <b>Mortgage Option 1</b>
+              </small>
+              <InputGroup className='my-2'>
                 <Input
                   name='options.option1.term'
                   placeholder='Loan Term'
@@ -74,8 +78,10 @@ const InputCard = props => {
               </InputGroup>
             </Col>
             <Col>
-              <small>Mortgage Option 2</small>
-              <InputGroup>
+              <small>
+                <b>Mortgage Option 2</b>
+              </small>
+              <InputGroup className='my-2'>
                 <Input
                   name='options.option2.term'
                   placeholder='Loan Term'
@@ -115,12 +121,15 @@ const InputCard = props => {
             mortgage.
           </Accordion>
         </FormGroup>
-        <FormGroup>
+        <hr />
+        <FormGroup className='mb-3'>
           <label>Annual Percentage Rate (APR) & Interest</label>
           <Row form>
             <Col>
-              <small>Mortgage Option 1</small>
-              <InputGroup>
+              <small>
+                <b>Mortgage Option 1</b>
+              </small>
+              <InputGroup className='my-2'>
                 <Input
                   name='options.option1.interestRate'
                   placeholder='APR'
@@ -134,8 +143,10 @@ const InputCard = props => {
               </InputGroup>
             </Col>
             <Col>
-              <small>Mortgage Option 2</small>
-              <InputGroup>
+              <small>
+                <b>Mortgage Option 2</b>
+              </small>
+              <InputGroup className='my-2'>
                 <Input
                   name='options.option2.interestRate'
                   placeholder='APR'
@@ -162,9 +173,10 @@ const InputCard = props => {
             has a great article about how fixed and variable rates work.
           </Accordion>
         </FormGroup>
-        <FormGroup>
+        <hr />
+        <FormGroup className='mb-3'>
           <label>Return on Investment (ROI)</label>
-          <InputGroup>
+          <InputGroup className='my-2'>
             <Input
               name='investmentRate'
               placeholder='ROI'
@@ -233,9 +245,10 @@ const InputCard = props => {
             provides a more in-depth analysis on this topic.
           </Accordion>
         </FormGroup>
-        <FormGroup>
+        <hr />
+        <FormGroup className='mb-3'>
           <label>Inflation</label>
-          <InputGroup>
+          <InputGroup className='my-2'>
             <Input
               name='inflation'
               placeholder='Inflation'
