@@ -13,7 +13,10 @@ import Summary from './summary'
 
 import _ from 'lodash'
 import { FV, PMT } from 'formulajs/lib/financial'
-import { getYearly } from '../../utils/timeSeriesResultsByOption'
+import {
+  getYearly,
+  getPurchasingPower
+} from '../../utils/timeSeriesResultsByOption'
 
 // DEFAULT VALUES
 
@@ -89,18 +92,32 @@ class MortgageInvestmentCompare extends React.Component {
   calculateFV (option1, option2, state) {
     // TODO: what if terms of option1 and option2 are equal?
     if (option1.term > option2.term) {
-      return FV(
-        (state.investmentRate - state.inflation) / 100 / COMPOUND_FREQUENCY,
-        option1.term * COMPOUND_FREQUENCY,
-        option2.pmt - option1.pmt,
-        0
+      return (
+        FV(
+          state.investmentRate / 100 / COMPOUND_FREQUENCY,
+          option1.term * COMPOUND_FREQUENCY,
+          option2.pmt - option1.pmt,
+          0
+        ) *
+        getPurchasingPower(
+          option1.term,
+          state.inflation / 100,
+          COMPOUND_FREQUENCY
+        )
       )
     } else if (option1.term < option2.term) {
-      return FV(
-        (state.investmentRate - state.inflation) / 100 / COMPOUND_FREQUENCY,
-        (option2.term - option1.term) * COMPOUND_FREQUENCY,
-        option1.pmt,
-        0
+      return (
+        FV(
+          state.investmentRate / 100 / COMPOUND_FREQUENCY,
+          (option2.term - option1.term) * COMPOUND_FREQUENCY,
+          option1.pmt,
+          0
+        ) *
+        getPurchasingPower(
+          option2.term,
+          state.inflation / 100,
+          COMPOUND_FREQUENCY
+        )
       )
     }
   }
@@ -150,11 +167,13 @@ class MortgageInvestmentCompare extends React.Component {
       inflationRate: state.inflation / 100,
       shorterOption: {
         mortgageRate: shorter.interestRate / 100,
-        mortgageTerm: shorter.term
+        mortgageTerm: shorter.term,
+        mortgagePMT: shorter.pmt
       },
       longerOption: {
         mortgageRate: longer.interestRate / 100,
-        mortgageTerm: longer.term
+        mortgageTerm: longer.term,
+        mortgagePMT: longer.pmt
       }
     })
 

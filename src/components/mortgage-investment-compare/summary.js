@@ -138,9 +138,9 @@ const Summary = props => {
               on your house, but your <b>investments</b> are worth{' '}
               <b>
                 {toUSD(
-                  -props.yearlyResultsByOption.longer[
+                  props.yearlyResultsByOption.longer[
                     props.shorterOption.term - 1
-                  ].investmentAmount
+                  ].investmentAmt
                 )}
               </b>
               .

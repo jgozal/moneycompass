@@ -158,14 +158,14 @@ const AmortizationTable = props => {
                 }
               >
                 <td>Year {year + 1}</td>
-                <td>{toUSD(-shorter.pmt)}</td>
-                <td>{toUSD(-shorter.investmentPMT)}</td>
+                <td>{toUSD(shorter.pmt)}</td>
+                <td>{toUSD(shorter.investmentPMT)}</td>
                 <td>{toUSD(shorter.loanAmt)}</td>
-                <td>{toUSD(-shorter.investmentAmount)}</td>
-                <td>{toUSD(-longer.pmt)}</td>
-                <td>{toUSD(-longer.investmentPMT)}</td>
+                <td>{toUSD(shorter.investmentAmt)}</td>
+                <td>{toUSD(longer.pmt)}</td>
+                <td>{toUSD(longer.investmentPMT)}</td>
                 <td>{toUSD(longer.loanAmt)}</td>
-                <td>{toUSD(-longer.investmentAmount)}</td>
+                <td>{toUSD(longer.investmentAmt)}</td>
               </tr>
             )
           })}
