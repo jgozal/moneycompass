@@ -2,7 +2,7 @@ import React from 'react'
 
 import { Table } from 'reactstrap'
 import { GRAY_300, GRAY, GREEN_300 } from '../../assets/colors'
-import styled, { css, cx } from 'react-emotion'
+import styled, { css } from 'react-emotion'
 
 import { toUSD } from '../../utils/numberFormat'
 
