@@ -124,22 +124,14 @@ class MortgageInvestmentCompare extends React.Component {
     const option1 = _.cloneDeep(input.option1)
     const option2 = _.cloneDeep(input.option2)
 
-    console.log(option1, option2)
-
     option1.pmt = this.calculatePMT(option1, input)
     option2.pmt = this.calculatePMT(option2, input)
-
-    console.log(option1, option2)
 
     option1.interestAmt = this.calculateInterestAmt(option1, input)
     option2.interestAmt = this.calculateInterestAmt(option2, input)
 
-    console.log(option1, option2)
-
     option1.fv = this.calculateFV(option1, option2, input)
     option2.fv = this.calculateFV(option2, option1, input)
-
-    console.log(option1, option2)
 
     const optCost = this.calculateOpportunityCost(option1, option2)
 
@@ -175,7 +167,6 @@ class MortgageInvestmentCompare extends React.Component {
       'term'
     )
     const bestOption = _.maxBy(options, 'fv')
-    console.log(bestOption, options)
     const [shorterOption, longerOption] = options
 
     return (

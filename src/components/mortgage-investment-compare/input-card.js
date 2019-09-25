@@ -16,6 +16,11 @@ import {
 
 import { toUSD } from '../../utils/numberFormat'
 
+/**
+ *
+ * @param {*} props
+ *   @property {number} mustBeGreaterThan - If present, number must be greater
+ */
 function ValidatedNumberInput (props) {
   const [value, setValue] = useState(props.value)
   const [isValid, setIsValid] = useState(true)
@@ -24,13 +29,19 @@ function ValidatedNumberInput (props) {
     const value = event.target.value
     setValue(value)
     const parsed = parseFloat(value)
-    if (!value || !_.isNumber(parsed) || parsed < 0) {
+    if (!value || !_.isNumber(parsed)) {
       setIsValid(false)
       return
-    } else {
-      setIsValid(true)
-      props.onChange(props.name, parsed)
     }
+    if (
+      _.isNumber(props.mustBeGreaterThan) &&
+      parsed <= props.mustBeGreaterThan
+    ) {
+      setIsValid(false)
+      return
+    }
+    setIsValid(true)
+    props.onChange(props.name, parsed)
   }
 
   return (
@@ -70,6 +81,7 @@ const InputCard = props => {
               name='loanAmt'
               onChange={onInputChange}
               placeholder='Loan Amount'
+              mustBeGreaterThan={0}
               value={props.input.loanAmt}
             />
           </InputGroup>
@@ -96,6 +108,7 @@ const InputCard = props => {
                   name='option1.term'
                   onChange={onInputChange}
                   placeholder='Loan Term'
+                  mustBeGreaterThan={0}
                   value={props.input.option1.term}
                 />
                 <InputGroupAddon addonType='append'>
@@ -112,6 +125,7 @@ const InputCard = props => {
                   name='option2.term'
                   onChange={onInputChange}
                   placeholder='Loan Term'
+                  mustBeGreaterThan={0}
                   value={props.input.option2.term}
                 />
                 <InputGroupAddon addonType='append'>
