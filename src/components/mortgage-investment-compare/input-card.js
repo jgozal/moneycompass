@@ -1,4 +1,5 @@
-import React from 'react'
+import _ from 'lodash'
+import React, { useState } from 'react'
 
 import Accordion from './accordion'
 import {
@@ -15,19 +16,47 @@ import {
 
 import { toUSD } from '../../utils/numberFormat'
 
-/**
- * @param {*} props
- *   @property {number} loanAmt
- *   @property {number} investmentRate
- *   @property {number} inflation
- *   @property {function} onInputChange
- *   @property {Object} option1
- *   @property {Object} option2
- *   @property {Object} shorterOption
- *   @property {Object} longerOption
- */
+function ValidatedNumberInput (props) {
+  const [value, setValue] = useState(props.value)
+  const [isValid, setIsValid] = useState(true)
+
+  function onInputChange (event) {
+    const value = event.target.value
+    setValue(value)
+    const parsed = parseFloat(value)
+    if (!value || !_.isNumber(parsed) || parsed < 0) {
+      setIsValid(false)
+      return
+    } else {
+      setIsValid(true)
+      props.onChange(props.name, parsed)
+    }
+  }
+
+  return (
+    <Input
+      invalid={!isValid}
+      name={props.name}
+      onChange={onInputChange}
+      placeholder={props.placeholder}
+      type='number'
+      value={value}
+    />
+  )
+}
 
 const InputCard = props => {
+  function onInputChange (path, value) {
+    const newInput = _.cloneDeep(props.input)
+    _.set(newInput, path, value)
+    props.onInputChange(newInput)
+  }
+
+  const [shorterOption, longerOption] = _.sortBy(
+    [props.input.option1, props.input.option2],
+    'term'
+  )
+
   return (
     <Card className='p-4'>
       <Form>
@@ -37,12 +66,11 @@ const InputCard = props => {
             <InputGroupAddon addonType='prepend'>
               <InputGroupText>$</InputGroupText>
             </InputGroupAddon>
-            <Input
+            <ValidatedNumberInput
               name='loanAmt'
+              onChange={onInputChange}
               placeholder='Loan Amount'
-              type='number'
-              value={props.loanAmt}
-              onChange={props.onInputChange}
+              value={props.input.loanAmt}
             />
           </InputGroup>
           <Accordion title='How much can I afford?'>
@@ -64,12 +92,11 @@ const InputCard = props => {
                 <b>Mortgage Option 1</b>
               </small>
               <InputGroup className='my-2'>
-                <Input
-                  name='options.option1.term'
+                <ValidatedNumberInput
+                  name='option1.term'
+                  onChange={onInputChange}
                   placeholder='Loan Term'
-                  type='number'
-                  value={props.option1.term}
-                  onChange={props.onInputChange}
+                  value={props.input.option1.term}
                 />
                 <InputGroupAddon addonType='append'>
                   <InputGroupText>years</InputGroupText>
@@ -81,12 +108,11 @@ const InputCard = props => {
                 <b>Mortgage Option 2</b>
               </small>
               <InputGroup className='my-2'>
-                <Input
-                  name='options.option2.term'
+                <ValidatedNumberInput
+                  name='option2.term'
+                  onChange={onInputChange}
                   placeholder='Loan Term'
-                  type='number'
-                  value={props.option2.term}
-                  onChange={props.onInputChange}
+                  value={props.input.option2.term}
                 />
                 <InputGroupAddon addonType='append'>
                   <InputGroupText>years</InputGroupText>
@@ -102,22 +128,18 @@ const InputCard = props => {
             versus 30-year mortgages.
           </Accordion>
           <Accordion
-            title={`What happens after you’re done paying off the ${
-              props.shorterOption.term
-            }-year mortgage?`}
+            title={`What happens after you’re done paying off the
+            ${shorterOption.term}-year mortgage?`}
           >
             This tool assumes that you’ll invest the difference between the
-            payment of the {props.shorterOption.term}-year and the{' '}
-            {props.longerOption.term}
+            payment of the {shorterOption.term}-year and the {longerOption.term}
             -year mortgages. If you had to make monthly payments of{' '}
-            {toUSD(-props.shorterOption.pmt)} for your{' '}
-            {props.shorterOption.term}
-            -year mortgage versus {toUSD(-props.longerOption.pmt)} for your{' '}
-            {props.longerOption.term}
+            {toUSD(-shorterOption.pmt)} for your {shorterOption.term}
+            -year mortgage versus {toUSD(-longerOption.pmt)} for your{' '}
+            {longerOption.term}
             -year mortgage, you would invest the difference (
-            {toUSD(-1 * (props.shorterOption.pmt - props.longerOption.pmt))})
-            monthly after paying off your {props.shorterOption.term}-year
-            mortgage.
+            {toUSD(-1 * (shorterOption.pmt - longerOption.pmt))}) monthly after
+            paying off your {shorterOption.term}-year mortgage.
           </Accordion>
         </FormGroup>
         <hr />
@@ -129,12 +151,11 @@ const InputCard = props => {
                 <b>Mortgage Option 1</b>
               </small>
               <InputGroup className='my-2'>
-                <Input
-                  name='options.option1.interestRate'
+                <ValidatedNumberInput
+                  name='option1.interestRate'
+                  onChange={onInputChange}
                   placeholder='APR'
-                  type='number'
-                  value={props.option1.interestRate}
-                  onChange={props.onInputChange}
+                  value={props.input.option1.interestRate}
                 />
                 <InputGroupAddon addonType='append'>
                   <InputGroupText>%</InputGroupText>
@@ -146,12 +167,11 @@ const InputCard = props => {
                 <b>Mortgage Option 2</b>
               </small>
               <InputGroup className='my-2'>
-                <Input
-                  name='options.option2.interestRate'
+                <ValidatedNumberInput
+                  name='option2.interestRate'
+                  onChange={onInputChange}
                   placeholder='APR'
-                  type='number'
-                  value={props.option2.interestRate}
-                  onChange={props.onInputChange}
+                  value={props.input.option2.interestRate}
                 />
                 <InputGroupAddon addonType='append'>
                   <InputGroupText>%</InputGroupText>
@@ -176,12 +196,11 @@ const InputCard = props => {
         <FormGroup className='mb-3'>
           <label>Return on Investment (ROI)</label>
           <InputGroup className='my-2'>
-            <Input
+            <ValidatedNumberInput
               name='investmentRate'
               placeholder='ROI'
-              type='number'
-              value={props.investmentRate}
-              onChange={props.onInputChange}
+              value={props.input.investmentRate}
+              onChange={onInputChange}
             />
             <InputGroupAddon addonType='append'>
               <InputGroupText>%</InputGroupText>
@@ -248,12 +267,11 @@ const InputCard = props => {
         <FormGroup className='mb-3'>
           <label>Inflation</label>
           <InputGroup className='my-2'>
-            <Input
+            <ValidatedNumberInput
               name='inflation'
+              onChange={onInputChange}
               placeholder='Inflation'
-              type='number'
-              value={props.inflation}
-              onChange={props.onInputChange}
+              value={props.input.inflation}
             />
             <InputGroupAddon addonType='append'>
               <InputGroupText>%</InputGroupText>
@@ -291,13 +309,13 @@ const InputCard = props => {
             As time passes, inflation makes your mortgage payments cheaper and
             your return on investment lower. We factor all of this automatically
             so the final result you see on your right is not the actual money
-            you will have gained/lost in {props.longerOption.term} years, but
-            rather, the money you will have gained/lost in{' '}
-            {props.longerOption.term} years adjusted to today’s purchasing
-            power. If you’re curious about what the actual number would be, give
-            inflation a value of 0%. But remember that everything will be a lot
-            more expensive in {props.longerOption.term} years, and that is why
-            we need to include inflation.
+            you will have gained/lost in {longerOption.term} years, but rather,
+            the money you will have gained/lost in {longerOption.term} years
+            adjusted to today’s purchasing power. If you’re curious about what
+            the actual number would be, give inflation a value of 0%. But
+            remember that everything will be a lot more expensive in{' '}
+            {longerOption.term} years, and that is why we need to include
+            inflation.
           </Accordion>
         </FormGroup>
       </Form>
