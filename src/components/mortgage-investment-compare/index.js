@@ -35,7 +35,7 @@ class MortgageInvestmentCompare extends React.Component {
 
     const input = {
       inflation: 2,
-      investmentRate: 9,
+      investmentRate: 8,
       loanAmt: 200000,
       option1: {
         interestRate: 4,

@@ -228,7 +228,7 @@ const InputCard = props => {
           <Accordion title='Return on Investment (ROI)'>
             Return on investment (ROI) is the gain or loss generated on your
             investment relative to the amount of money invested (expressed as a
-            percentage). This tool defaults to a 9% ROI because that is roughly
+            percentage). This tool defaults to a {props.input.investmentRate}% ROI because that is roughly
             the average historical annual return for the S&P 500.{' '}
             <a href='https://www.investopedia.com/ask/answers/042415/what-average-annual-return-sp-500.asp'>
               Investopedia
