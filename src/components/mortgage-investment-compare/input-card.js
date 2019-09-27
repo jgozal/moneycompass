@@ -13,8 +13,9 @@ import {
 } from 'reactstrap'
 
 import { toUSD } from '../../utils/numberFormat'
-import Accordion from './accordion'
-import ValidatedNumberInput from './validated-number-input'
+import Accordion from '../general/accordion'
+import Tooltip from '../general/tooltip'
+import ValidatedNumberInput from '../general/validated-number-input'
 
 const InputCard = props => {
   function onInputChange (path, value) {
@@ -32,13 +33,17 @@ const InputCard = props => {
     <Card className='p-4'>
       <Form>
         <FormGroup className='mb-3'>
-          <label>How much is your loan?</label>
+          <Tooltip
+            children={<label>How much is your loan?</label>}
+            content='The loan'
+            id='loanAmt'
+          />
           <InputGroup className='my-2'>
             <InputGroupAddon addonType='prepend'>
               <InputGroupText>$</InputGroupText>
             </InputGroupAddon>
             <ValidatedNumberInput
-              max={500000000}
+              max={5000000000}
               min={0}
               name='loanAmt'
               onChange={onInputChange}
@@ -58,7 +63,11 @@ const InputCard = props => {
         </FormGroup>
         <hr />
         <FormGroup className='mb-3'>
-          <label>Loan Term</label>
+          <Tooltip
+            children={<label>Loan Term</label>}
+            content='The loan'
+            id='term'
+          />
           <Row form>
             <Col>
               <small>
@@ -67,7 +76,7 @@ const InputCard = props => {
               <InputGroup className='my-2'>
                 <ValidatedNumberInput
                   isInteger
-                  max={100}
+                  max={1000}
                   min={1}
                   name='option1.term'
                   onChange={onInputChange}
@@ -86,7 +95,7 @@ const InputCard = props => {
               <InputGroup className='my-2'>
                 <ValidatedNumberInput
                   isInteger
-                  max={100}
+                  max={1000}
                   min={1}
                   name='option2.term'
                   onChange={onInputChange}
@@ -123,7 +132,11 @@ const InputCard = props => {
         </FormGroup>
         <hr />
         <FormGroup className='mb-3'>
-          <label>Annual Percentage Rate (APR) & Interest</label>
+          <Tooltip
+            children={<label>Annual Percentage Rate (APR) & Interest</label>}
+            content='The loan'
+            id='interestRate'
+          />
           <Row form>
             <Col>
               <small>
@@ -131,8 +144,8 @@ const InputCard = props => {
               </small>
               <InputGroup className='my-2'>
                 <ValidatedNumberInput
-                  max={100}
-                  min={-100}
+                  max={1000}
+                  min={-1000}
                   name='option1.interestRate'
                   onChange={onInputChange}
                   placeholder='APR'
@@ -149,8 +162,8 @@ const InputCard = props => {
               </small>
               <InputGroup className='my-2'>
                 <ValidatedNumberInput
-                  max={100}
-                  min={-100}
+                  max={1000}
+                  min={-1000}
                   name='option2.interestRate'
                   onChange={onInputChange}
                   placeholder='APR'
@@ -177,11 +190,15 @@ const InputCard = props => {
         </FormGroup>
         <hr />
         <FormGroup className='mb-3'>
-          <label>Return on Investment (ROI)</label>
+          <Tooltip
+            children={<label>Return on Investment (ROI)</label>}
+            content='The loan'
+            id='investmentRate'
+          />
           <InputGroup className='my-2'>
             <ValidatedNumberInput
-              max={100}
-              min={-100}
+              max={1000}
+              min={-1000}
               name='investmentRate'
               placeholder='ROI'
               value={props.input.investmentRate}
@@ -250,11 +267,15 @@ const InputCard = props => {
         </FormGroup>
         <hr />
         <FormGroup className='mb-3'>
-          <label>Inflation</label>
+          <Tooltip
+            children={<label>Inflation</label>}
+            content='The loan'
+            id='inflation'
+          />
           <InputGroup className='my-2'>
             <ValidatedNumberInput
-              max={200}
-              min={-200}
+              max={1000000000}
+              min={-1000000000}
               name='inflation'
               onChange={onInputChange}
               placeholder='Inflation'

@@ -10,7 +10,7 @@ import ReactDOM from 'react-dom'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 
 import { GRAY_900, BLUE_GRAY_900, LIGHT_BLUE } from './assets/colors'
-import FeedbackButton from './components/feedback-button'
+import FeedbackButton from './components/general/feedback-button'
 import MortgageInvestmentCompare from './components/mortgage-investment-compare/index'
 
 // GLOBAL STYLES
