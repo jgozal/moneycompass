@@ -76,8 +76,7 @@ class MortgageInvestmentCompare extends React.Component {
 
   // Returns future value dynamically depending on mortgage term length.
   calculateFV (option1, option2, input) {
-    // TODO: what if terms of option1 and option2 are equal?
-    if (option1.term > option2.term) {
+    if (option1.term >= option2.term) {
       return (
         FV(
           input.investmentRate / 100 / COMPOUND_FREQUENCY,

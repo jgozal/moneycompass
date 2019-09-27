@@ -38,6 +38,7 @@ const InputCard = props => {
               <InputGroupText>$</InputGroupText>
             </InputGroupAddon>
             <ValidatedNumberInput
+              max={500000000}
               min={0}
               name='loanAmt'
               onChange={onInputChange}
@@ -65,7 +66,9 @@ const InputCard = props => {
               </small>
               <InputGroup className='my-2'>
                 <ValidatedNumberInput
-                  min={0}
+                  isInteger
+                  max={100}
+                  min={1}
                   name='option1.term'
                   onChange={onInputChange}
                   placeholder='Loan Term'
@@ -82,7 +85,9 @@ const InputCard = props => {
               </small>
               <InputGroup className='my-2'>
                 <ValidatedNumberInput
-                  min={0}
+                  isInteger
+                  max={100}
+                  min={1}
                   name='option2.term'
                   onChange={onInputChange}
                   placeholder='Loan Term'
@@ -126,6 +131,8 @@ const InputCard = props => {
               </small>
               <InputGroup className='my-2'>
                 <ValidatedNumberInput
+                  max={100}
+                  min={-100}
                   name='option1.interestRate'
                   onChange={onInputChange}
                   placeholder='APR'
@@ -142,6 +149,8 @@ const InputCard = props => {
               </small>
               <InputGroup className='my-2'>
                 <ValidatedNumberInput
+                  max={100}
+                  min={-100}
                   name='option2.interestRate'
                   onChange={onInputChange}
                   placeholder='APR'
@@ -171,6 +180,8 @@ const InputCard = props => {
           <label>Return on Investment (ROI)</label>
           <InputGroup className='my-2'>
             <ValidatedNumberInput
+              max={100}
+              min={-100}
               name='investmentRate'
               placeholder='ROI'
               value={props.input.investmentRate}
@@ -242,6 +253,8 @@ const InputCard = props => {
           <label>Inflation</label>
           <InputGroup className='my-2'>
             <ValidatedNumberInput
+              max={200}
+              min={-200}
               name='inflation'
               onChange={onInputChange}
               placeholder='Inflation'
