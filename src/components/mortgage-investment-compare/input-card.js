@@ -1,13 +1,11 @@
 import _ from 'lodash'
-import React, { useState } from 'react'
+import React from 'react'
 
-import Accordion from './accordion'
 import {
   Card,
   Col,
   Form,
   FormGroup,
-  Input,
   InputGroup,
   InputGroupAddon,
   InputGroupText,
@@ -15,46 +13,8 @@ import {
 } from 'reactstrap'
 
 import { toUSD } from '../../utils/numberFormat'
-
-/**
- *
- * @param {*} props
- *   @property {number} mustBeGreaterThan - If present, number must be greater
- */
-function ValidatedNumberInput (props) {
-  const [value, setValue] = useState(props.value)
-  const [isValid, setIsValid] = useState(true)
-
-  function onInputChange (event) {
-    const value = event.target.value
-    setValue(value)
-    const parsed = parseFloat(value)
-    if (!value || !_.isNumber(parsed)) {
-      setIsValid(false)
-      return
-    }
-    if (
-      _.isNumber(props.mustBeGreaterThan) &&
-      parsed <= props.mustBeGreaterThan
-    ) {
-      setIsValid(false)
-      return
-    }
-    setIsValid(true)
-    props.onChange(props.name, parsed)
-  }
-
-  return (
-    <Input
-      invalid={!isValid}
-      name={props.name}
-      onChange={onInputChange}
-      placeholder={props.placeholder}
-      type='number'
-      value={value}
-    />
-  )
-}
+import Accordion from './accordion'
+import ValidatedNumberInput from './validated-number-input'
 
 const InputCard = props => {
   function onInputChange (path, value) {
@@ -78,10 +38,10 @@ const InputCard = props => {
               <InputGroupText>$</InputGroupText>
             </InputGroupAddon>
             <ValidatedNumberInput
+              min={0}
               name='loanAmt'
               onChange={onInputChange}
               placeholder='Loan Amount'
-              mustBeGreaterThan={0}
               value={props.input.loanAmt}
             />
           </InputGroup>
@@ -105,10 +65,10 @@ const InputCard = props => {
               </small>
               <InputGroup className='my-2'>
                 <ValidatedNumberInput
+                  min={0}
                   name='option1.term'
                   onChange={onInputChange}
                   placeholder='Loan Term'
-                  mustBeGreaterThan={0}
                   value={props.input.option1.term}
                 />
                 <InputGroupAddon addonType='append'>
@@ -122,10 +82,10 @@ const InputCard = props => {
               </small>
               <InputGroup className='my-2'>
                 <ValidatedNumberInput
+                  min={0}
                   name='option2.term'
                   onChange={onInputChange}
                   placeholder='Loan Term'
-                  mustBeGreaterThan={0}
                   value={props.input.option2.term}
                 />
                 <InputGroupAddon addonType='append'>
