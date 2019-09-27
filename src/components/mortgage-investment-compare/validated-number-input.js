@@ -39,7 +39,6 @@ export default function (props) {
   return (
     <Input
       invalid={!isValid}
-      min={props.min}
       name={props.name}
       onChange={onInputChange}
       placeholder={props.placeholder}
