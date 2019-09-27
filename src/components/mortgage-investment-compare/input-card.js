@@ -79,7 +79,7 @@ const InputCard = props => {
               <InputGroup className='my-2'>
                 <ValidatedNumberInput
                   isInteger
-                  max={1000}
+                  max={100}
                   min={1}
                   name='option1.term'
                   onChange={onInputChange}
@@ -98,7 +98,7 @@ const InputCard = props => {
               <InputGroup className='my-2'>
                 <ValidatedNumberInput
                   isInteger
-                  max={1000}
+                  max={100}
                   min={1}
                   name='option2.term'
                   onChange={onInputChange}
