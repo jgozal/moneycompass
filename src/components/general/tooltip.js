@@ -23,7 +23,7 @@ export default class TooltipWrapper extends React.Component {
   render () {
     return (
       <div>
-        <span href='#' id={`${this.props.id}-tooltip`}>
+        <span id={`${this.props.id}-tooltip`}>
           {this.props.children}{' '}
           {this.props.icon && (
             <FontAwesomeIcon
