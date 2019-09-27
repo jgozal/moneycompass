@@ -11,6 +11,7 @@ import {
   InputGroupText,
   Row
 } from 'reactstrap'
+import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
 
 import { toUSD } from '../../utils/numberFormat'
 import Accordion from '../general/accordion'
@@ -35,7 +36,8 @@ const InputCard = props => {
         <FormGroup className='mb-3'>
           <Tooltip
             children={<label>How much is your loan?</label>}
-            content='The loan'
+            icon={faQuestionCircle}
+            content='The amount you promise to pay back after making your down payment'
             id='loanAmt'
           />
           <InputGroup className='my-2'>
@@ -65,7 +67,8 @@ const InputCard = props => {
         <FormGroup className='mb-3'>
           <Tooltip
             children={<label>Loan Term</label>}
-            content='The loan'
+            icon={faQuestionCircle}
+            content='The time you have to repay the loan (in years)'
             id='term'
           />
           <Row form>
@@ -134,7 +137,8 @@ const InputCard = props => {
         <FormGroup className='mb-3'>
           <Tooltip
             children={<label>Annual Percentage Rate (APR) & Interest</label>}
-            content='The loan'
+            icon={faQuestionCircle}
+            content='The yearly cost of borrowing the loan'
             id='interestRate'
           />
           <Row form>
@@ -192,7 +196,8 @@ const InputCard = props => {
         <FormGroup className='mb-3'>
           <Tooltip
             children={<label>Return on Investment (ROI)</label>}
-            content='The loan'
+            icon={faQuestionCircle}
+            content='How well you expect your investment to perform each year'
             id='investmentRate'
           />
           <InputGroup className='my-2'>
@@ -269,7 +274,8 @@ const InputCard = props => {
         <FormGroup className='mb-3'>
           <Tooltip
             children={<label>Inflation</label>}
-            content='The loan'
+            icon={faQuestionCircle}
+            content='How fast you expect prices to rise every year'
             id='inflation'
           />
           <InputGroup className='my-2'>

@@ -1,5 +1,8 @@
 import React from 'react'
 import { Tooltip } from 'reactstrap'
+import { css } from 'react-emotion'
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 export default class TooltipWrapper extends React.Component {
   constructor (props) {
@@ -21,7 +24,16 @@ export default class TooltipWrapper extends React.Component {
     return (
       <div>
         <span href='#' id={`${this.props.id}-tooltip`}>
-          {this.props.children}
+          {this.props.children}{' '}
+          {this.props.icon && (
+            <FontAwesomeIcon
+              icon={this.props.icon}
+              className={css`
+                font-size: 0.7rem;
+                vertical-align: text-top;
+              `}
+            />
+          )}
         </span>
 
         <Tooltip
