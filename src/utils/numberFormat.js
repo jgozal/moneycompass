@@ -1,8 +1,9 @@
 import numbro from 'numbro'
+import _ from 'lodash'
 
-export const toUSD = value => {
+export const toUSD = (value, mantissa) => {
   return numbro(value).formatCurrency({
     thousandSeparated: true,
-    mantissa: 0
+    mantissa: mantissa || 0
   })
 }

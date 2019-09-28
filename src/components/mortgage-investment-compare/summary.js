@@ -95,12 +95,12 @@ const Summary = props => {
           <ScenarioCol option={props.shorterOption}>
             <Li>
               With the <b>{props.shorterOption.term} year mortgage</b> you pay{' '}
-              <b>{toUSD(-props.shorterOption.pmt)}</b> monthly for{' '}
+              <b>{toUSD(-props.shorterOption.pmt, 1)}</b> monthly for{' '}
               {props.shorterOption.term} years.
             </Li>
             <Li>
               After the house is paid, you{' '}
-              <b>invest {toUSD(-props.shorterOption.pmt)}</b> monthly with an{' '}
+              <b>invest {toUSD(-props.shorterOption.pmt, 1)}</b> monthly with an{' '}
               <b>ROI of {props.investmentRate}%</b> at an{' '}
               <b>inflation rate of {props.inflation}%</b>.
             </Li>
@@ -113,16 +113,16 @@ const Summary = props => {
           <ScenarioCol option={props.longerOption}>
             <Li>
               With the <b>{props.longerOption.term} year mortgage</b> you pay{' '}
-              <b>{toUSD(-props.longerOption.pmt)}</b> monthly for{' '}
+              <b>{toUSD(-props.longerOption.pmt, 1)}</b> monthly for{' '}
               {props.longerOption.term} years.
             </Li>
             <Li>
               You also invest{' '}
               <b>
-                {toUSD(-(props.shorterOption.pmt - props.longerOption.pmt))}
+                {toUSD(-(props.shorterOption.pmt - props.longerOption.pmt), 1)}
               </b>{' '}
               every month, making your total expenditure (
-              <b>{toUSD(-props.shorterOption.pmt)}</b>) the same as the{' '}
+              <b>{toUSD(-props.shorterOption.pmt, 1)}</b>) the same as the{' '}
               {props.shorterOption.term} year mortgage.
             </Li>
             <Li>
@@ -135,7 +135,7 @@ const Summary = props => {
                 )}{' '}
                 left to pay
               </b>{' '}
-              on your house, but your <b>investments</b> are worth{' '}
+              on your house, and your <b>investments</b> are worth{' '}
               <b>
                 {toUSD(
                   props.yearlyResultsByOption.longer[
