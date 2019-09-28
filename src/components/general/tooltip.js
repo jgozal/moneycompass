@@ -1,10 +1,10 @@
 import React from 'react'
-import { Tooltip } from 'reactstrap'
+import { Tooltip as ReactstrapTooltip } from 'reactstrap'
 import { css } from 'react-emotion'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
-export default class TooltipWrapper extends React.Component {
+export default class Tooltip extends React.Component {
   constructor (props) {
     super(props)
 
@@ -36,14 +36,14 @@ export default class TooltipWrapper extends React.Component {
           )}
         </span>
 
-        <Tooltip
+        <ReactstrapTooltip
           placement='right'
           isOpen={this.state.tooltipOpen}
           target={`${this.props.id}-tooltip`}
           toggle={this.toggle}
         >
           {this.props.content}
-        </Tooltip>
+        </ReactstrapTooltip>
       </div>
     )
   }
