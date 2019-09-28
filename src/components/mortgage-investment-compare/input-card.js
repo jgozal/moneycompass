@@ -35,11 +35,12 @@ const InputCard = props => {
       <Form>
         <FormGroup className='mb-3'>
           <Tooltip
-            children={<label>How much is your loan?</label>}
             icon={faQuestionCircle}
             content='The amount you promise to pay back after making your down payment'
             id='loanAmt'
-          />
+          >
+            <label>How much is your loan?</label>
+          </Tooltip>
           <InputGroup className='my-2'>
             <InputGroupAddon addonType='prepend'>
               <InputGroupText>$</InputGroupText>
@@ -66,11 +67,12 @@ const InputCard = props => {
         <hr />
         <FormGroup className='mb-3'>
           <Tooltip
-            children={<label>Loan Term</label>}
             icon={faQuestionCircle}
             content='The time you have to repay the loan (in years)'
             id='term'
-          />
+          >
+            <label>Loan Term</label>
+          </Tooltip>
           <Row form>
             <Col>
               <small>
@@ -136,11 +138,12 @@ const InputCard = props => {
         <hr />
         <FormGroup className='mb-3'>
           <Tooltip
-            children={<label>Annual Percentage Rate (APR) & Interest</label>}
             icon={faQuestionCircle}
             content='The yearly cost of borrowing the loan'
             id='interestRate'
-          />
+          >
+            <label>Annual Percentage Rate (APR) & Interest</label>
+          </Tooltip>
           <Row form>
             <Col>
               <small>
@@ -195,11 +198,12 @@ const InputCard = props => {
         <hr />
         <FormGroup className='mb-3'>
           <Tooltip
-            children={<label>Return on Investment (ROI)</label>}
             icon={faQuestionCircle}
             content='How well you expect your investment to perform each year'
             id='investmentRate'
-          />
+          >
+            <label>Return on Investment (ROI)</label>
+          </Tooltip>
           <InputGroup className='my-2'>
             <ValidatedNumberInput
               max={1000}
@@ -228,7 +232,7 @@ const InputCard = props => {
           <Accordion title='Return on Investment (ROI)'>
             Return on investment (ROI) is the gain or loss generated on your
             investment relative to the amount of money invested (expressed as a
-            percentage). This tool defaults to a {props.input.investmentRate}% ROI because that is roughly
+            percentage). This tool defaults to a 8% ROI because that is roughly
             the average historical annual return for the S&P 500.{' '}
             <a href='https://www.investopedia.com/ask/answers/042415/what-average-annual-return-sp-500.asp'>
               Investopedia
@@ -273,11 +277,12 @@ const InputCard = props => {
         <hr />
         <FormGroup className='mb-3'>
           <Tooltip
-            children={<label>Inflation</label>}
             icon={faQuestionCircle}
             content='How fast you expect prices to rise every year'
             id='inflation'
-          />
+          >
+            <label>Inflation</label>
+          </Tooltip>
           <InputGroup className='my-2'>
             <ValidatedNumberInput
               max={1000000000}
