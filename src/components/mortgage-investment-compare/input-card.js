@@ -11,10 +11,12 @@ import {
   InputGroupText,
   Row
 } from 'reactstrap'
+import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
 
 import { toUSD } from '../../utils/numberFormat'
-import Accordion from './accordion'
-import ValidatedNumberInput from './validated-number-input'
+import Accordion from '../general/accordion'
+import Tooltip from '../general/tooltip'
+import ValidatedNumberInput from '../general/validated-number-input'
 
 const InputCard = props => {
   function onInputChange (path, value) {
@@ -32,13 +34,19 @@ const InputCard = props => {
     <Card className='p-4'>
       <Form>
         <FormGroup className='mb-3'>
-          <label>How much is your loan?</label>
+          <Tooltip
+            icon={faQuestionCircle}
+            content='The amount you promise to pay back after making your down payment'
+            id='loanAmt'
+          >
+            <label>How much is your loan?</label>
+          </Tooltip>
           <InputGroup className='my-2'>
             <InputGroupAddon addonType='prepend'>
               <InputGroupText>$</InputGroupText>
             </InputGroupAddon>
             <ValidatedNumberInput
-              max={500000000}
+              max={5000000000}
               min={0}
               name='loanAmt'
               onChange={onInputChange}
@@ -58,7 +66,13 @@ const InputCard = props => {
         </FormGroup>
         <hr />
         <FormGroup className='mb-3'>
-          <label>Loan Term</label>
+          <Tooltip
+            icon={faQuestionCircle}
+            content='The time you have to repay the loan (in years)'
+            id='term'
+          >
+            <label>Loan Term</label>
+          </Tooltip>
           <Row form>
             <Col>
               <small>
@@ -123,7 +137,13 @@ const InputCard = props => {
         </FormGroup>
         <hr />
         <FormGroup className='mb-3'>
-          <label>Annual Percentage Rate (APR) & Interest</label>
+          <Tooltip
+            icon={faQuestionCircle}
+            content='The yearly cost of borrowing the loan'
+            id='interestRate'
+          >
+            <label>Annual Percentage Rate (APR) & Interest</label>
+          </Tooltip>
           <Row form>
             <Col>
               <small>
@@ -131,8 +151,8 @@ const InputCard = props => {
               </small>
               <InputGroup className='my-2'>
                 <ValidatedNumberInput
-                  max={100}
-                  min={-100}
+                  max={1000}
+                  min={-1000}
                   name='option1.interestRate'
                   onChange={onInputChange}
                   placeholder='APR'
@@ -149,8 +169,8 @@ const InputCard = props => {
               </small>
               <InputGroup className='my-2'>
                 <ValidatedNumberInput
-                  max={100}
-                  min={-100}
+                  max={1000}
+                  min={-1000}
                   name='option2.interestRate'
                   onChange={onInputChange}
                   placeholder='APR'
@@ -177,11 +197,17 @@ const InputCard = props => {
         </FormGroup>
         <hr />
         <FormGroup className='mb-3'>
-          <label>Return on Investment (ROI)</label>
+          <Tooltip
+            icon={faQuestionCircle}
+            content='How well you expect your investment to perform each year'
+            id='investmentRate'
+          >
+            <label>Return on Investment (ROI)</label>
+          </Tooltip>
           <InputGroup className='my-2'>
             <ValidatedNumberInput
-              max={100}
-              min={-100}
+              max={1000}
+              min={-1000}
               name='investmentRate'
               placeholder='ROI'
               value={props.input.investmentRate}
@@ -206,7 +232,7 @@ const InputCard = props => {
           <Accordion title='Return on Investment (ROI)'>
             Return on investment (ROI) is the gain or loss generated on your
             investment relative to the amount of money invested (expressed as a
-            percentage). This tool defaults to a 9% ROI because that is roughly
+            percentage). This tool defaults to a 8% ROI because that is roughly
             the average historical annual return for the S&P 500.{' '}
             <a href='https://www.investopedia.com/ask/answers/042415/what-average-annual-return-sp-500.asp'>
               Investopedia
@@ -250,11 +276,17 @@ const InputCard = props => {
         </FormGroup>
         <hr />
         <FormGroup className='mb-3'>
-          <label>Inflation</label>
+          <Tooltip
+            icon={faQuestionCircle}
+            content='How fast you expect prices to rise every year'
+            id='inflation'
+          >
+            <label>Inflation</label>
+          </Tooltip>
           <InputGroup className='my-2'>
             <ValidatedNumberInput
-              max={200}
-              min={-200}
+              max={1000000000}
+              min={-1000000000}
               name='inflation'
               onChange={onInputChange}
               placeholder='Inflation'

@@ -40,6 +40,8 @@ export default function (props) {
     <Input
       invalid={!isValid}
       name={props.name}
+      min={props.min}
+      max={props.max}
       onChange={onInputChange}
       placeholder={props.placeholder}
       type='number'
