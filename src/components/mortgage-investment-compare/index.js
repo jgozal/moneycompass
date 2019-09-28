@@ -196,12 +196,12 @@ class MortgageInvestmentCompare extends React.Component {
             />
           ) : (
             <Summary
-              shorterOption={shorterOption}
-              longerOption={longerOption}
               bestOption={bestOption}
-              optCost={this.state.result.optCost}
-              inflation={this.state.result.inflation}
+              inflation={this.state.input.inflation}
               investmentRate={this.state.input.investmentRate}
+              longerOption={longerOption}
+              optCost={this.state.result.optCost}
+              shorterOption={shorterOption}
               yearlyResultsByOption={this.state.result.yearlyResultsByOption}
             />
           )}
