@@ -11,7 +11,7 @@ import {
   InputGroupText,
   Row
 } from 'reactstrap'
-import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
+import { faQuestionCircle } from '@fortawesome/free-regular-svg-icons'
 
 import { toUSD } from '../../utils/numberFormat'
 import Accordion from '../general/accordion'

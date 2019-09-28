@@ -1,8 +1,8 @@
 import React from 'react'
 import { Tooltip as ReactstrapTooltip } from 'reactstrap'
-import { css } from 'react-emotion'
-
+import { css, cx } from 'react-emotion'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { GRAY } from '../../assets/colors'
 
 export default class Tooltip extends React.Component {
   constructor (props) {
@@ -28,10 +28,13 @@ export default class Tooltip extends React.Component {
           {this.props.icon && (
             <FontAwesomeIcon
               icon={this.props.icon}
-              className={css`
-                font-size: 0.7rem;
-                vertical-align: text-top;
-              `}
+              className={cx(
+                css`
+                  color: ${GRAY};
+                  font-size: 0.9rem;
+                `,
+                'ml-1'
+              )}
             />
           )}
         </span>
