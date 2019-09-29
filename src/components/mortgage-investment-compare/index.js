@@ -171,6 +171,12 @@ class MortgageInvestmentCompare extends React.Component {
     return (
       <Row>
         <Col xs='4'>
+          <h2>Compare Mortgage Terms</h2>
+          <p className='mt-4'>
+            Is a {this.state.result.option1.term} year mortgage better than a{' '}
+            {this.state.result.option2.term} mortgage? See what may happen in
+            each situation, with the same budget .
+          </p>
           <InputCard
             onInputChange={this.updateInput}
             input={this.state.input}

@@ -64,7 +64,7 @@ const Summary = props => {
   return (
     <div>
       <div>
-        <h4>Which is better?</h4>
+        <h4 className={css('line-height: 2.5rem;')}>Which is better?</h4>
         <p className='mt-4'>
           <b>
             You make {toUSD(props.optCost)} more by choosing the{' '}
