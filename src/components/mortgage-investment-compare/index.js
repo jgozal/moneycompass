@@ -18,6 +18,8 @@ import {
   getPurchasingPower
 } from '../../utils/timeSeriesResultsByOption'
 
+import { Overlay } from './overlay'
+
 // DEFAULT VALUES
 
 const COMPOUND_FREQUENCY = 12
@@ -52,6 +54,7 @@ class MortgageInvestmentCompare extends React.Component {
     this.state = {
       input,
       result,
+      showOverlay: true,
       showTable: false
     }
   }
@@ -171,6 +174,12 @@ class MortgageInvestmentCompare extends React.Component {
     return (
       <Row>
         <Col xs='4'>
+          <h3>Compare Mortgage Terms</h3>
+          <p className='mt-4'>
+            Is a {this.state.result.option1.term} year mortgage better than a{' '}
+            {this.state.result.option2.term} mortgage? See what may happen in
+            each situation, with the same budget .
+          </p>
           <InputCard
             onInputChange={this.updateInput}
             input={this.state.input}
@@ -205,6 +214,12 @@ class MortgageInvestmentCompare extends React.Component {
               yearlyResultsByOption={this.state.result.yearlyResultsByOption}
             />
           )}
+          {this.state.showOverlay ? (
+            <Overlay
+              onClick={() => this.setState({ showOverlay: false })}
+              text='Calculate'
+            />
+          ) : null}
         </Col>
       </Row>
     )
