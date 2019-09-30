@@ -23,8 +23,8 @@ import {
 const COMPOUND_FREQUENCY = 12
 
 class MortgageInvestmentCompare extends React.Component {
-  constructor () {
-    super()
+  constructor (props) {
+    super(props)
     this.calculateFV = this.calculateFV.bind(this)
     this.calculateInterestAmt = this.calculateInterestAmt.bind(this)
     this.calculateOpportunityCost = this.calculateOpportunityCost.bind(this)

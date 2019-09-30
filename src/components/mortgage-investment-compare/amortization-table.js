@@ -13,7 +13,7 @@ const tableDivider = css`
 const fixedTableLayout = css`
   display: table;
   width: ${window.innerWidth * 0.595}px;
-  table-layout: fixed; /* even columns width , fix width of table too*/
+  table-layout: fixed;
 `
 const tableFontSizeAlign = css`
   text-align: center;
@@ -25,7 +25,7 @@ const Thead = styled('thead')`
 
   width: calc(
     100% - 1em
-  ); /* scrollbar is average 1em/16px width, remove it from thead width */
+  );
 `
 const Tbody = styled('tbody')`
   ${tableFontSizeAlign}
