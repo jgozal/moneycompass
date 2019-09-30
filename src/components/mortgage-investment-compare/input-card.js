@@ -345,7 +345,7 @@ class InputCard extends React.Component {
               in the US during the 1960s was roughly $20,000. The average home
               price today is roughly{' '}
               <a href='https://www.census.gov/construction/nrs/pdf/uspricemon.pdf'>
-                $370,000
+                $400,000
               </a>
               . Because prices increase, your purchasing power decreases. If you
               had $370,000 to buy a house today and you just left the money in
