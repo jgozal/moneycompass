@@ -369,16 +369,18 @@ class InputCard extends React.Component {
               has a brief video that talks about the data behind the CPI.
             </Accordion>
             <Accordion title='How inflation affects your mortgage and investments'>
-              As time passes, inflation makes your mortgage payments cheaper and
-              your return on investment lower. We factor all of this
-              automatically so the final result you see on your right is not the
-              actual money you will have gained/lost in {longerOption.term}{' '}
-              years, but rather, the money you will have gained/lost in{' '}
-              {longerOption.term} years adjusted to today’s purchasing power. If
-              you’re curious about what the actual number would be, give
-              inflation a value of 0%. But remember that everything will be a
-              lot more expensive in {longerOption.term} years, and that is why
-              we need to include inflation.
+              As time passes, inflation makes your mortgage payments cheaper (or
+              more specifically, your purchasing power smaller) and your return
+              on investment lower. Everything will be a lot more expensive in{' '}
+              {longerOption.term} years, and that is why inflation matters so
+              much.{' '}
+              {this.props.includeInflation &&
+                `We factor all of this automatically so the
+              final result on your right is not the actual money you
+              will gain/lose in ${longerOption.term} years, but rather,
+              the money you will gain/lose in ${longerOption.term} years
+              adjusted to today’s purchasing power. If you’re curious about what
+              the actual number will be, disable inflation.`}
             </Accordion>
           </FormGroup>
         </Form>
