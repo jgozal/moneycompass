@@ -29,7 +29,7 @@ class MortgageInvestmentCompare extends React.Component {
     this.calculateInterestAmt = this.calculateInterestAmt.bind(this)
     this.calculateOpportunityCost = this.calculateOpportunityCost.bind(this)
     this.calculatePMT = this.calculatePMT.bind(this)
-    this.calculateResult = this.calculateResult.bind(this)
+    this.updtateResult = this.updtateResult.bind(this)
     this.toggleShowTable = this.toggleShowTable.bind(this)
     this.toggleIncludeROI = this.toggleIncludeROI.bind(this)
     this.toggleIncludeInflation = this.toggleIncludeInflation.bind(this)
@@ -59,7 +59,7 @@ class MortgageInvestmentCompare extends React.Component {
       }
     }
 
-    this.calculateResult(input)
+    this.updtateResult(input)
     this.setState({ input })
   }
 
@@ -130,7 +130,7 @@ class MortgageInvestmentCompare extends React.Component {
   }
 
   // Runs all calculations and returns a modified state
-  calculateResult (input) {
+  updtateResult (input) {
     const option1 = _.cloneDeep(input.option1)
     const option2 = _.cloneDeep(input.option2)
 
@@ -204,7 +204,7 @@ class MortgageInvestmentCompare extends React.Component {
             includeInflation={this.state.includeInflation}
             includeROI={this.state.includeROI}
             input={this.state.input}
-            calculateResult={this.calculateResult}
+            updtateResult={this.updtateResult}
           />
         </Col>
         <Col xs='8'>
@@ -229,7 +229,7 @@ class MortgageInvestmentCompare extends React.Component {
               includeInflation={this.state.includeInflation}
               includeROI={this.state.includeROI}
               input={this.state.input}
-              calculateResult={this.calculateResult}
+              updtateResult={this.updtateResult}
             />
           ) : (
             <Summary

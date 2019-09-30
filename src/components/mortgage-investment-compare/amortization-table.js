@@ -128,6 +128,12 @@ const hoverTableCells = (year, option1, option2) => {
  *   @property {Object} shorterOption
  *   @property {Object} longerOption
  *   @property {Object} yearlyResultsByOption
+ *   @property {function} onROISwitch
+ *   @property {function} onInflationSwitch
+ *   @property {boolean} includeROI
+ *   @property {boolean} includeInflation
+ *   @property {Object} input
+ *   @property {function} updtateResult
  */
 
 class AmortizationTable extends React.Component {
@@ -136,7 +142,7 @@ class AmortizationTable extends React.Component {
       !this.props.includeROI === nextProps.includeROI ||
       !this.props.includeInflation === nextProps.includeInflation
     ) {
-      this.props.calculateResult(nextProps.input)
+      this.props.updtateResult(nextProps.input)
     }
   }
 

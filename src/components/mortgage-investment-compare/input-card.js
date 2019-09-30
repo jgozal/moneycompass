@@ -31,7 +31,7 @@ class InputCard extends React.Component {
       !this.props.includeROI === nextProps.includeROI ||
       !this.props.includeInflation === nextProps.includeInflation
     ) {
-      this.props.calculateResult(nextProps.input)
+      this.props.updtateResult(nextProps.input)
     }
   }
 
