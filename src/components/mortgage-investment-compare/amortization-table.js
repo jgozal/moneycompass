@@ -227,8 +227,8 @@ class AmortizationTable extends React.Component {
         {this.props.includeInflation && (
           <small>
             <b>
-              ** If you include inflation, your payments will never actually
-              become smaller; they will have a smaller purchasing power.
+              ** Your payments will never actually become smaller; they will
+              have a smaller purchasing power.
             </b>
           </small>
         )}
