@@ -122,7 +122,7 @@ const hoverTableCells = (year, option1, option2) => {
 }
 
 /**
- * @param {*} props
+ * @param {*} this.props
  *   @property {Object} option1
  *   @property {Object} option2
  *   @property {Object} shorterOption
@@ -130,90 +130,105 @@ const hoverTableCells = (year, option1, option2) => {
  *   @property {Object} yearlyResultsByOption
  */
 
-const AmortizationTable = props => {
-  return (
-    <div>
-      <div className='d-flex flex-row align-items-baseline'>
-        <h4>Yearly Breakdown</h4>
-        <CustomInput
-          type='checkbox'
-          className='custom-switch ml-4'
-          id='roi-switch-yearly-breakdown'
-          name='roi-switch-yearly-breakdown'
-          label={<small>Include ROI?</small>}
-          checked={props.includeROI}
-          onChange={props.onROISwitch}
-        />
-        <CustomInput
-          type='checkbox'
-          className='custom-switch ml-4'
-          id='inflation-switch-yearly-breakdown'
-          name='inflation-switch-yearly-breakdown'
-          label={<small>Include Inflation?</small>}
-          checked={props.includeInflation}
-          onChange={props.onInflationSwitch}
-        />
-      </div>
-      <Table bordered responsive className='mt-1'>
-        <Thead>
-          <Tr>
-            <Th colSpan='1' />
-            <Th colSpan='4'>{props.shorterOption.term} year</Th>
-            <Th colSpan='4'>{props.longerOption.term} year</Th>
-          </Tr>
-          <Tr>
-            <Th colSpan='1' />
-            <Th>Mortgage Payment</Th>
-            <Th>Investment Payment</Th>
-            <Th>Loan Amount</Th>
-            <Th>Investment Amount</Th>
-            <Th>Mortgage Payment</Th>
-            <Th>Investment Payment</Th>
-            <Th>Loan Amount</Th>
-            <Th>Investment Amount</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {props.yearlyResultsByOption.shorter.map((_r, year) => {
-            const shorter = props.yearlyResultsByOption.shorter[year]
-            const longer = props.yearlyResultsByOption.longer[year]
+class AmortizationTable extends React.Component {
+  componentWillReceiveProps (nextProps) {
+    if (
+      !this.props.includeROI === nextProps.includeROI ||
+      !this.props.includeInflation === nextProps.includeInflation
+    ) {
+      this.props.calculateResult(nextProps.input)
+    }
+  }
 
-            return (
-              <Tr
-                key={'row' + year}
-                className={highlightTableCells(
-                  year,
-                  props.option1,
-                  props.option2
-                )}
-                onMouseOver={() =>
-                  hoverTableCells(year, props.option1, props.option2)
-                }
-              >
-                <Td>Year {year + 1}</Td>
-                <Td>{toUSD(shorter.pmt)}</Td>
-                <Td>{toUSD(shorter.investmentPMT)}</Td>
-                <Td>{toUSD(shorter.loanAmt)}</Td>
-                <Td>{toUSD(shorter.investmentAmt)}</Td>
-                <Td>{toUSD(longer.pmt)}</Td>
-                <Td>{toUSD(longer.investmentPMT)}</Td>
-                <Td>{toUSD(longer.loanAmt)}</Td>
-                <Td>{toUSD(longer.investmentAmt)}</Td>
-              </Tr>
-            )
-          })}
-        </Tbody>
-      </Table>
-      {props.includeInflation && (
-        <small>
-          <b>
-            ** If you include inflation, your payments will never actually
-            become smaller; they will have a smaller purchasing power.
-          </b>
-        </small>
-      )}
-    </div>
-  )
+  render () {
+    return (
+      <div>
+        <div className='d-flex flex-row align-items-baseline'>
+          <h4>Yearly Breakdown</h4>
+          <CustomInput
+            type='checkbox'
+            className='custom-switch ml-4'
+            id='roi-switch-yearly-breakdown'
+            name='roi-switch-yearly-breakdown'
+            label={<small>Include ROI?</small>}
+            checked={this.props.includeROI}
+            onChange={this.props.onROISwitch}
+          />
+          <CustomInput
+            type='checkbox'
+            className='custom-switch ml-4'
+            id='inflation-switch-yearly-breakdown'
+            name='inflation-switch-yearly-breakdown'
+            label={<small>Include Inflation?</small>}
+            checked={this.props.includeInflation}
+            onChange={this.props.onInflationSwitch}
+          />
+        </div>
+        <Table bordered responsive className='mt-1'>
+          <Thead>
+            <Tr>
+              <Th colSpan='1' />
+              <Th colSpan='4'>{this.props.shorterOption.term} year</Th>
+              <Th colSpan='4'>{this.props.longerOption.term} year</Th>
+            </Tr>
+            <Tr>
+              <Th colSpan='1' />
+              <Th>Mortgage Payment</Th>
+              <Th>Investment Payment</Th>
+              <Th>Loan Amount</Th>
+              <Th>Investment Amount</Th>
+              <Th>Mortgage Payment</Th>
+              <Th>Investment Payment</Th>
+              <Th>Loan Amount</Th>
+              <Th>Investment Amount</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {this.props.yearlyResultsByOption.shorter.map((_r, year) => {
+              const shorter = this.props.yearlyResultsByOption.shorter[year]
+              const longer = this.props.yearlyResultsByOption.longer[year]
+
+              return (
+                <Tr
+                  key={'row' + year}
+                  className={highlightTableCells(
+                    year,
+                    this.props.option1,
+                    this.props.option2
+                  )}
+                  onMouseOver={() =>
+                    hoverTableCells(
+                      year,
+                      this.props.option1,
+                      this.props.option2
+                    )
+                  }
+                >
+                  <Td>Year {year + 1}</Td>
+                  <Td>{toUSD(shorter.pmt)}</Td>
+                  <Td>{toUSD(shorter.investmentPMT)}</Td>
+                  <Td>{toUSD(shorter.loanAmt)}</Td>
+                  <Td>{toUSD(shorter.investmentAmt)}</Td>
+                  <Td>{toUSD(longer.pmt)}</Td>
+                  <Td>{toUSD(longer.investmentPMT)}</Td>
+                  <Td>{toUSD(longer.loanAmt)}</Td>
+                  <Td>{toUSD(longer.investmentAmt)}</Td>
+                </Tr>
+              )
+            })}
+          </Tbody>
+        </Table>
+        {this.props.includeInflation && (
+          <small>
+            <b>
+              ** If you include inflation, your payments will never actually
+              become smaller; they will have a smaller purchasing power.
+            </b>
+          </small>
+        )}
+      </div>
+    )
+  }
 }
 
 export default AmortizationTable

@@ -29,7 +29,7 @@ class MortgageInvestmentCompare extends React.Component {
     this.calculateInterestAmt = this.calculateInterestAmt.bind(this)
     this.calculateOpportunityCost = this.calculateOpportunityCost.bind(this)
     this.calculatePMT = this.calculatePMT.bind(this)
-    this.getResult = this.getResult.bind(this)
+    this.calculateResult = this.calculateResult.bind(this)
     this.toggleShowTable = this.toggleShowTable.bind(this)
     this.toggleIncludeROI = this.toggleIncludeROI.bind(this)
     this.toggleIncludeInflation = this.toggleIncludeInflation.bind(this)
@@ -59,12 +59,8 @@ class MortgageInvestmentCompare extends React.Component {
       }
     }
 
-    const result = this.getResult(input)
-
-    this.setState({
-      input,
-      result
-    })
+    this.calculateResult(input)
+    this.setState({ input })
   }
 
   toggleShowTable () {
@@ -72,28 +68,11 @@ class MortgageInvestmentCompare extends React.Component {
   }
 
   toggleIncludeROI () {
-    this.setState({ includeROI: !this.state.includeROI }, () => {
-      const input = _.cloneDeep(this.state.input)
-      input.investmentRate = this.state.includeROI
-        ? this.state.input.investmentRate
-        : 0
-
-      const result = this.getResult(input)
-      this.setState({ result })
-    })
+    this.setState({ includeROI: !this.state.includeROI })
   }
 
   toggleIncludeInflation () {
-    this.setState({ includeInflation: !this.state.includeInflation }, () => {
-      const input = _.cloneDeep(this.state.input)
-
-      input.inflation = this.state.includeInflation
-        ? this.state.input.inflation
-        : 0
-
-      const result = this.getResult(input)
-      this.setState({ result })
-    })
+    this.setState({ includeInflation: !this.state.includeInflation })
   }
 
   // Returns monthly payment.
@@ -147,12 +126,11 @@ class MortgageInvestmentCompare extends React.Component {
 
   // Runs every time an input is updated and uses input's name tag to make specific changes in the state
   updateInput (input) {
-    const result = this.getResult(input)
-    this.setState({ input, result })
+    this.setState({ input })
   }
 
   // Runs all calculations and returns a modified state
-  getResult (input) {
+  calculateResult (input) {
     const option1 = _.cloneDeep(input.option1)
     const option2 = _.cloneDeep(input.option2)
 
@@ -192,12 +170,14 @@ class MortgageInvestmentCompare extends React.Component {
       }
     })
 
-    return {
+    const result = {
       optCost,
       option1,
       option2,
       yearlyResultsByOption
     }
+
+    this.setState({ result })
   }
 
   render () {
@@ -215,7 +195,7 @@ class MortgageInvestmentCompare extends React.Component {
           <p className='mt-4'>
             Is a {this.state.result.option1.term} year mortgage better than a{' '}
             {this.state.result.option2.term} year mortgage? See what happens in
-            each situation, with the same budget .
+            each situation, with the same budget.
           </p>
           <InputCard
             onInputChange={this.updateInput}
@@ -224,6 +204,7 @@ class MortgageInvestmentCompare extends React.Component {
             includeInflation={this.state.includeInflation}
             includeROI={this.state.includeROI}
             input={this.state.input}
+            calculateResult={this.calculateResult}
           />
         </Col>
         <Col xs='8'>
@@ -247,6 +228,8 @@ class MortgageInvestmentCompare extends React.Component {
               onInflationSwitch={this.toggleIncludeInflation}
               includeInflation={this.state.includeInflation}
               includeROI={this.state.includeROI}
+              input={this.state.input}
+              calculateResult={this.calculateResult}
             />
           ) : (
             <Summary
