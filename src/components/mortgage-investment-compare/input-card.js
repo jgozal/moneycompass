@@ -272,9 +272,9 @@ class InputCard extends React.Component {
             </Accordion>
             <Accordion title='Risk and Diversification'>
               Diversification is about not putting all your eggs in one basket
-              to mitigate risk (how volatile is your investment). We recommend
-              you invest in a variety of low-cost index funds to diversify as
-              best as possible.{' '}
+              so as to mitigate risk (how volatile is your investment). We
+              recommend you invest in a variety of low-cost index funds to
+              diversify as best as possible.{' '}
               <a href='https://www.thebalance.com/the-importance-of-diversification-3025567'>
                 The Balance
               </a>{' '}
