@@ -12,7 +12,7 @@ const tableDivider = css`
 `
 const fixedTableLayout = css`
   display: table;
-  width: 53.5rem;
+  width: ${window.innerWidth * 0.595}px;
   table-layout: fixed; /* even columns width , fix width of table too*/
 `
 const tableFontSizeAlign = css`
