@@ -99,7 +99,12 @@ const Summary = props => {
               {props.shorterOption.term} years.
             </Li>
             <Li>
-              After the house is paid, you{' '}
+              On the{' '}
+              <b>
+                {props.shorterOption.term}
+                <sup>th</sup> year
+              </b>{' '}
+              you pay off your house, and you{' '}
               <b>invest {toUSD(-props.shorterOption.pmt, 1)}</b> monthly
               <b>
                 {props.includeROI && ` with a ROI of ${props.investmentRate}%`}
@@ -111,8 +116,12 @@ const Summary = props => {
               .
             </Li>
             <Li>
-              After <b>{props.longerOption.term} years</b>, your{' '}
-              <b>investments</b> are worth{' '}
+              On the{' '}
+              <b>
+                {props.longerOption.term}
+                <sup>th</sup> year
+              </b>
+              , your <b>investments</b> are worth{' '}
               <b>{toUSD(props.shorterOption.fv)}</b>.
             </Li>
           </ScenarioCol>
@@ -132,7 +141,12 @@ const Summary = props => {
               {props.shorterOption.term} year mortgage.
             </Li>
             <Li>
-              After <b>{props.shorterOption.term} years</b> you have{' '}
+              On the{' '}
+              <b>
+                {props.shorterOption.term}
+                <sup>th</sup> year
+              </b>{' '}
+              you have{' '}
               <b>
                 {toUSD(
                   props.yearlyResultsByOption.longer[
@@ -152,8 +166,12 @@ const Summary = props => {
               .
             </Li>
             <Li>
-              After <b>{props.longerOption.term} years</b> you pay off your
-              house, and your <b>investments</b> are worth{' '}
+              On the{' '}
+              <b>
+                {props.longerOption.term}
+                <sup>th</sup> year
+              </b>{' '}
+              you pay off your house, and your <b>investments</b> are worth{' '}
               <b>{toUSD(props.longerOption.fv)}</b>.
             </Li>
           </ScenarioCol>
