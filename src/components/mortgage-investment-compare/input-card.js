@@ -380,7 +380,7 @@ class InputCard extends React.Component {
               will gain/lose in ${longerOption.term} years, but rather,
               the money you will gain/lose in ${longerOption.term} years
               adjusted to today’s purchasing power. If you’re curious about what
-              the actual number will be, disable inflation.`}
+              the actual numbers will be, disable inflation.`}
             </Accordion>
           </FormGroup>
         </Form>
