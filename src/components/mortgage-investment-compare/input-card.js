@@ -9,7 +9,8 @@ import {
   InputGroup,
   InputGroupAddon,
   InputGroupText,
-  Row
+  Row,
+  CustomInput
 } from 'reactstrap'
 import { faQuestionCircle } from '@fortawesome/free-regular-svg-icons'
 
@@ -197,13 +198,24 @@ const InputCard = props => {
         </FormGroup>
         <hr />
         <FormGroup className='mb-3'>
-          <Tooltip
-            icon={faQuestionCircle}
-            content='How well you expect your investment to perform each year'
-            id='investmentRate'
-          >
-            <label>Return on Investment (ROI)</label>
-          </Tooltip>
+          <div className='d-flex flex-row justify-content-between'>
+            <Tooltip
+              icon={faQuestionCircle}
+              content='How well you expect your investment to perform each year'
+              id='investmentRate'
+            >
+              <label>Return on Investment (ROI)</label>
+            </Tooltip>
+            <CustomInput
+              type='checkbox'
+              className='custom-switch'
+              id='roi-switch'
+              name='roi-switch'
+              label={<small>Include?</small>}
+              checked={props.includeROI}
+              onChange={props.onROISwitch}
+            />
+          </div>
           <InputGroup className='my-2'>
             <ValidatedNumberInput
               max={1000}
@@ -212,6 +224,7 @@ const InputCard = props => {
               placeholder='ROI'
               value={props.input.investmentRate}
               onChange={onInputChange}
+              disabled={!props.includeROI}
             />
             <InputGroupAddon addonType='append'>
               <InputGroupText>%</InputGroupText>
@@ -276,13 +289,24 @@ const InputCard = props => {
         </FormGroup>
         <hr />
         <FormGroup className='mb-3'>
-          <Tooltip
-            icon={faQuestionCircle}
-            content='How fast you expect prices to rise every year'
-            id='inflation'
-          >
-            <label>Inflation</label>
-          </Tooltip>
+          <div className='d-flex flex-row justify-content-between'>
+            <Tooltip
+              icon={faQuestionCircle}
+              content='How fast you expect prices to rise every year'
+              id='inflation'
+            >
+              <label>Inflation</label>
+            </Tooltip>
+            <CustomInput
+              type='checkbox'
+              className='custom-switch'
+              id='inflation-switch'
+              name='inflation-switch'
+              label={<small>Include?</small>}
+              checked={props.includeInflation}
+              onChange={props.onInflationSwitch}
+            />
+          </div>
           <InputGroup className='my-2'>
             <ValidatedNumberInput
               max={1000000000}
@@ -291,6 +315,7 @@ const InputCard = props => {
               onChange={onInputChange}
               placeholder='Inflation'
               value={props.input.inflation}
+              disabled={!props.includeInflation}
             />
             <InputGroupAddon addonType='append'>
               <InputGroupText>%</InputGroupText>

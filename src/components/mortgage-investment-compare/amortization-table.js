@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Table } from 'reactstrap'
+import { Table, CustomInput } from 'reactstrap'
 import { GRAY_300, GRAY, GREEN_300 } from '../../assets/colors'
 import styled, { css } from 'react-emotion'
 
@@ -12,7 +12,7 @@ const tableDivider = css`
 `
 const fixedTableLayout = css`
   display: table;
-  width: 100%;
+  width: 53.5rem;
   table-layout: fixed; /* even columns width , fix width of table too*/
 `
 const tableFontSizeAlign = css`
@@ -31,7 +31,7 @@ const Tbody = styled('tbody')`
   ${tableFontSizeAlign}
 
   display: block;
-  height: 45rem;
+  height: 58.5rem;
   overflow: auto;
 `
 const Th = styled('th')`
@@ -133,8 +133,28 @@ const hoverTableCells = (year, option1, option2) => {
 const AmortizationTable = props => {
   return (
     <div>
-      <h4>Yearly Breakdown</h4>
-      <Table bordered responsive className='mt-3'>
+      <div className='d-flex flex-row align-items-baseline'>
+        <h4>Yearly Breakdown</h4>
+        <CustomInput
+          type='checkbox'
+          className='custom-switch ml-4'
+          id='roi-switch-yearly-breakdown'
+          name='roi-switch-yearly-breakdown'
+          label={<small>Include ROI?</small>}
+          checked={props.includeROI}
+          onChange={props.onROISwitch}
+        />
+        <CustomInput
+          type='checkbox'
+          className='custom-switch ml-4'
+          id='inflation-switch-yearly-breakdown'
+          name='inflation-switch-yearly-breakdown'
+          label={<small>Include Inflation?</small>}
+          checked={props.includeInflation}
+          onChange={props.onInflationSwitch}
+        />
+      </div>
+      <Table bordered responsive className='mt-1'>
         <Thead>
           <Tr>
             <Th colSpan='1' />
@@ -184,6 +204,14 @@ const AmortizationTable = props => {
           })}
         </Tbody>
       </Table>
+      {props.includeInflation && (
+        <small>
+          <b>
+            ** If you include inflation, your payments will never actually
+            become smaller; they will have a smaller purchasing power.
+          </b>
+        </small>
+      )}
     </div>
   )
 }

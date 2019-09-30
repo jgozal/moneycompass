@@ -31,8 +31,20 @@ class MortgageInvestmentCompare extends React.Component {
     this.calculatePMT = this.calculatePMT.bind(this)
     this.getResult = this.getResult.bind(this)
     this.toggleShowTable = this.toggleShowTable.bind(this)
+    this.toggleIncludeROI = this.toggleIncludeROI.bind(this)
+    this.toggleIncludeInflation = this.toggleIncludeInflation.bind(this)
     this.updateInput = this.updateInput.bind(this)
 
+    this.state = {
+      input: {},
+      result: {},
+      showTable: false,
+      includeROI: true,
+      includeInflation: false
+    }
+  }
+
+  componentWillMount () {
     const input = {
       inflation: 2,
       investmentRate: 8,
@@ -49,15 +61,39 @@ class MortgageInvestmentCompare extends React.Component {
 
     const result = this.getResult(input)
 
-    this.state = {
+    this.setState({
       input,
-      result,
-      showTable: false
-    }
+      result
+    })
   }
 
   toggleShowTable () {
     this.setState({ showTable: !this.state.showTable })
+  }
+
+  toggleIncludeROI () {
+    this.setState({ includeROI: !this.state.includeROI }, () => {
+      const input = _.cloneDeep(this.state.input)
+      input.investmentRate = this.state.includeROI
+        ? this.state.input.investmentRate
+        : 0
+
+      const result = this.getResult(input)
+      this.setState({ result })
+    })
+  }
+
+  toggleIncludeInflation () {
+    this.setState({ includeInflation: !this.state.includeInflation }, () => {
+      const input = _.cloneDeep(this.state.input)
+
+      input.inflation = this.state.includeInflation
+        ? this.state.input.inflation
+        : 0
+
+      const result = this.getResult(input)
+      this.setState({ result })
+    })
   }
 
   // Returns monthly payment.
@@ -76,33 +112,30 @@ class MortgageInvestmentCompare extends React.Component {
 
   // Returns future value dynamically depending on mortgage term length.
   calculateFV (option1, option2, input) {
+    const investmentRate = this.state.includeROI
+      ? input.investmentRate / 100 / COMPOUND_FREQUENCY
+      : 0
+    const inflationRate = this.state.includeInflation
+      ? input.inflation / 100
+      : 0
+
     if (option1.term >= option2.term) {
       return (
         FV(
-          input.investmentRate / 100 / COMPOUND_FREQUENCY,
+          investmentRate,
           option1.term * COMPOUND_FREQUENCY,
           option2.pmt - option1.pmt,
           0
-        ) *
-        getPurchasingPower(
-          option1.term,
-          input.inflation / 100,
-          COMPOUND_FREQUENCY
-        )
+        ) * getPurchasingPower(option1.term, inflationRate, COMPOUND_FREQUENCY)
       )
     } else if (option1.term < option2.term) {
       return (
         FV(
-          input.investmentRate / 100 / COMPOUND_FREQUENCY,
+          investmentRate,
           (option2.term - option1.term) * COMPOUND_FREQUENCY,
           option1.pmt,
           0
-        ) *
-        getPurchasingPower(
-          option2.term,
-          input.inflation / 100,
-          COMPOUND_FREQUENCY
-        )
+        ) * getPurchasingPower(option2.term, inflationRate, COMPOUND_FREQUENCY)
       )
     }
   }
@@ -136,10 +169,17 @@ class MortgageInvestmentCompare extends React.Component {
 
     const [shorter, longer] = _.sortBy([option1, option2], 'term')
 
+    const investmentRate = this.state.includeROI
+      ? input.investmentRate / 100
+      : 0
+    const inflationRate = this.state.includeInflation
+      ? input.inflation / 100
+      : 0
+
     const yearlyResultsByOption = getYearly({
       loanAmt: input.loanAmt,
-      investmentRate: input.investmentRate / 100,
-      inflationRate: input.inflation / 100,
+      investmentRate,
+      inflationRate,
       shorterOption: {
         mortgageRate: shorter.interestRate / 100,
         mortgageTerm: shorter.term,
@@ -174,11 +214,15 @@ class MortgageInvestmentCompare extends React.Component {
           <h2>Compare Mortgage Terms</h2>
           <p className='mt-4'>
             Is a {this.state.result.option1.term} year mortgage better than a{' '}
-            {this.state.result.option2.term} mortgage? See what may happen in
+            {this.state.result.option2.term} year mortgage? See what happens in
             each situation, with the same budget .
           </p>
           <InputCard
             onInputChange={this.updateInput}
+            onROISwitch={this.toggleIncludeROI}
+            onInflationSwitch={this.toggleIncludeInflation}
+            includeInflation={this.state.includeInflation}
+            includeROI={this.state.includeROI}
             input={this.state.input}
           />
         </Col>
@@ -199,6 +243,10 @@ class MortgageInvestmentCompare extends React.Component {
               shorterOption={shorterOption}
               longerOption={longerOption}
               yearlyResultsByOption={this.state.result.yearlyResultsByOption}
+              onROISwitch={this.toggleIncludeROI}
+              onInflationSwitch={this.toggleIncludeInflation}
+              includeInflation={this.state.includeInflation}
+              includeROI={this.state.includeROI}
             />
           ) : (
             <Summary
@@ -209,6 +257,8 @@ class MortgageInvestmentCompare extends React.Component {
               optCost={this.state.result.optCost}
               shorterOption={shorterOption}
               yearlyResultsByOption={this.state.result.yearlyResultsByOption}
+              includeInflation={this.state.includeInflation}
+              includeROI={this.state.includeROI}
             />
           )}
         </Col>

@@ -100,9 +100,15 @@ const Summary = props => {
             </Li>
             <Li>
               After the house is paid, you{' '}
-              <b>invest {toUSD(-props.shorterOption.pmt, 1)}</b> monthly with an{' '}
-              <b>ROI of {props.investmentRate}%</b> at an{' '}
-              <b>inflation rate of {props.inflation}%</b>.
+              <b>invest {toUSD(-props.shorterOption.pmt, 1)}</b> monthly
+              <b>
+                {props.includeROI && ` with a ROI of ${props.investmentRate}%`}
+              </b>
+              <b>
+                {props.includeInflation &&
+                  ` at an inflation rate of ${props.inflation}%`}
+              </b>
+              .
             </Li>
             <Li>
               After <b>{props.longerOption.term} years</b>, your{' '}
