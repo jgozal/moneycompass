@@ -28,8 +28,8 @@ class InputCard extends React.Component {
   componentWillReceiveProps (nextProps) {
     if (
       this.props.input !== nextProps.input ||
-      !this.props.includeROI === nextProps.includeROI ||
-      !this.props.includeInflation === nextProps.includeInflation
+      this.props.includeROI !== nextProps.includeROI ||
+      this.props.includeInflation !== nextProps.includeInflation
     ) {
       this.props.updtateResult(nextProps.input)
     }

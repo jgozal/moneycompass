@@ -139,8 +139,8 @@ const hoverTableCells = (year, option1, option2) => {
 class AmortizationTable extends React.Component {
   componentWillReceiveProps (nextProps) {
     if (
-      !this.props.includeROI === nextProps.includeROI ||
-      !this.props.includeInflation === nextProps.includeInflation
+      this.props.includeROI !== nextProps.includeROI ||
+      this.props.includeInflation !== nextProps.includeInflation
     ) {
       this.props.updtateResult(nextProps.input)
     }
