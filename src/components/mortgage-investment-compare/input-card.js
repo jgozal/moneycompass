@@ -370,8 +370,8 @@ class InputCard extends React.Component {
             </Accordion>
             <Accordion title='How inflation affects your mortgage and investments'>
               As time passes, inflation makes your mortgage payments cheaper (or
-              more specifically, your purchasing power smaller) and your return
-              on investment lower. Everything will be a lot more expensive in{' '}
+              more accurately, your purchasing power smaller) and your return on
+              investment lower. Everything will be a lot more expensive in{' '}
               {longerOption.term} years, and that is why inflation matters so
               much.{' '}
               {this.props.includeInflation &&
