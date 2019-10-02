@@ -32,6 +32,8 @@ class MortgageInvestmentCompare extends React.Component {
     this.getResult = this.getResult.bind(this)
     this.toggleShowTable = this.toggleShowTable.bind(this)
     this.updateInput = this.updateInput.bind(this)
+    this.handleROISwitch = this.handleROISwitch.bind(this)
+    this.handleInflationSwitch = this.handleInflationSwitch.bind(this)
 
     const input = {
       includeInflation: false,
@@ -115,6 +117,18 @@ class MortgageInvestmentCompare extends React.Component {
     this.setState({ input, result })
   }
 
+  handleROISwitch () {
+    const input = _.cloneDeep(this.state.input)
+    input.includeROI = !input.includeROI
+    this.updateInput(input)
+  }
+
+  handleInflationSwitch () {
+    const input = _.cloneDeep(this.state.input)
+    input.includeInflation = !input.includeInflation
+    this.updateInput(input)
+  }
+
   // Runs all calculations and returns a modified state
   getResult (input) {
     const option1 = _.cloneDeep(input.option1)
@@ -194,6 +208,8 @@ class MortgageInvestmentCompare extends React.Component {
               includeInflation={this.state.input.includeInflation}
               includeROI={this.state.input.includeROI}
               longerOption={longerOption}
+              onInflationSwitch={this.handleInflationSwitch}
+              onROISwitch={this.handleROISwitch}
               option1={this.state.result.option1}
               option2={this.state.result.option2}
               shorterOption={shorterOption}

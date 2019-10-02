@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Table } from 'reactstrap'
+import { CustomInput, Table } from 'reactstrap'
 import { GRAY_300, GRAY, GREEN_300 } from '../../assets/colors'
 import styled, { css } from 'react-emotion'
 
@@ -134,6 +134,24 @@ const AmortizationTable = props => {
   return (
     <div>
       <h4>Yearly Breakdown</h4>
+      <CustomInput
+        checked={props.includeROI}
+        className='custom-switch ml-4'
+        id='roi-switch-yearly-breakdown'
+        label={<small>Include ROI?</small>}
+        name='roi-switch-yearly-breakdown'
+        onChange={props.onROISwitch}
+        type='checkbox'
+      />
+      <CustomInput
+        checked={props.includeInflation}
+        className='custom-switch ml-4'
+        id='inflation-switch-yearly-breakdown'
+        label={<small>Include Inflation?</small>}
+        name='inflation-switch-yearly-breakdown'
+        onChange={props.onInflationSwitch}
+        type='checkbox'
+      />
       <Table bordered responsive className='mt-3'>
         <Thead>
           <Tr>
