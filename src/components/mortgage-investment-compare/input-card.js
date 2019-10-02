@@ -9,7 +9,8 @@ import {
   InputGroup,
   InputGroupAddon,
   InputGroupText,
-  Row
+  Row,
+  CustomInput
 } from 'reactstrap'
 import { faQuestionCircle } from '@fortawesome/free-regular-svg-icons'
 
@@ -19,7 +20,7 @@ import Tooltip from '../general/tooltip'
 import ValidatedNumberInput from '../general/validated-number-input'
 
 const InputCard = props => {
-  function onInputChange (path, value) {
+  const onInputChange = (path, value) => {
     const newInput = _.cloneDeep(props.input)
     _.set(newInput, path, value)
     props.onInputChange(newInput)
@@ -122,7 +123,7 @@ const InputCard = props => {
           </Accordion>
           <Accordion
             title={`What happens after you’re done paying off the
-            ${shorterOption.term}-year mortgage?`}
+              ${shorterOption.term}-year mortgage?`}
           >
             This tool assumes that you’ll invest the difference between the
             payment of the {shorterOption.term}-year and the {longerOption.term}
@@ -197,13 +198,26 @@ const InputCard = props => {
         </FormGroup>
         <hr />
         <FormGroup className='mb-3'>
-          <Tooltip
-            icon={faQuestionCircle}
-            content='How well you expect your investment to perform each year'
-            id='investmentRate'
-          >
-            <label>Return on Investment (ROI)</label>
-          </Tooltip>
+          <div className='d-flex flex-row justify-content-between'>
+            <Tooltip
+              icon={faQuestionCircle}
+              content='How well you expect your investment to perform each year'
+              id='investmentRate'
+            >
+              <label>Return on Investment (ROI)</label>
+            </Tooltip>
+            <CustomInput
+              type='checkbox'
+              className='custom-switch'
+              id='roi-switch'
+              name='roi-switch'
+              label={<small>Include?</small>}
+              checked={props.input.includeROI}
+              onChange={() =>
+                onInputChange('includeROI', !props.input.includeROI)
+              }
+            />
+          </div>
           <InputGroup className='my-2'>
             <ValidatedNumberInput
               max={1000}
@@ -212,6 +226,7 @@ const InputCard = props => {
               placeholder='ROI'
               value={props.input.investmentRate}
               onChange={onInputChange}
+              disabled={!props.input.includeROI}
             />
             <InputGroupAddon addonType='append'>
               <InputGroupText>%</InputGroupText>
@@ -240,10 +255,10 @@ const InputCard = props => {
             provides a little more background on this.
           </Accordion>
           <Accordion title='Risk and Diversification'>
-            Diversification is about not putting all your eggs in one basket to
-            mitigate risk (how volatile is your investment). We recommend you
-            invest in a variety of low-cost index funds to diversify as best as
-            possible.{' '}
+            Diversification is about not putting all your eggs in one basket so
+            as to mitigate risk (how volatile is your investment). We recommend
+            you invest in a variety of low-cost index funds to diversify as best
+            as possible.{' '}
             <a href='https://www.thebalance.com/the-importance-of-diversification-3025567'>
               The Balance
             </a>{' '}
@@ -276,13 +291,26 @@ const InputCard = props => {
         </FormGroup>
         <hr />
         <FormGroup className='mb-3'>
-          <Tooltip
-            icon={faQuestionCircle}
-            content='How fast you expect prices to rise every year'
-            id='inflation'
-          >
-            <label>Inflation</label>
-          </Tooltip>
+          <div className='d-flex flex-row justify-content-between'>
+            <Tooltip
+              icon={faQuestionCircle}
+              content='How fast you expect prices to rise every year'
+              id='inflation'
+            >
+              <label>Inflation</label>
+            </Tooltip>
+            <CustomInput
+              type='checkbox'
+              className='custom-switch'
+              id='inflation-switch'
+              name='inflation-switch'
+              label={<small>Include?</small>}
+              checked={props.input.includeInflation}
+              onChange={() =>
+                onInputChange('includeInflation', !props.input.includeInflation)
+              }
+            />
+          </div>
           <InputGroup className='my-2'>
             <ValidatedNumberInput
               max={1000000000}
@@ -291,6 +319,7 @@ const InputCard = props => {
               onChange={onInputChange}
               placeholder='Inflation'
               value={props.input.inflation}
+              disabled={!props.input.includeInflation}
             />
             <InputGroupAddon addonType='append'>
               <InputGroupText>%</InputGroupText>
@@ -301,7 +330,7 @@ const InputCard = props => {
             the US during the 1960s was roughly $20,000. The average home price
             today is roughly{' '}
             <a href='https://www.census.gov/construction/nrs/pdf/uspricemon.pdf'>
-              $370,000
+              $400,000
             </a>
             . Because prices increase, your purchasing power decreases. If you
             had $370,000 to buy a house today and you just left the money in
@@ -325,16 +354,18 @@ const InputCard = props => {
             has a brief video that talks about the data behind the CPI.
           </Accordion>
           <Accordion title='How inflation affects your mortgage and investments'>
-            As time passes, inflation makes your mortgage payments cheaper and
-            your return on investment lower. We factor all of this automatically
-            so the final result you see on your right is not the actual money
-            you will have gained/lost in {longerOption.term} years, but rather,
-            the money you will have gained/lost in {longerOption.term} years
-            adjusted to today’s purchasing power. If you’re curious about what
-            the actual number would be, give inflation a value of 0%. But
-            remember that everything will be a lot more expensive in{' '}
-            {longerOption.term} years, and that is why we need to include
-            inflation.
+            As time passes, inflation makes your mortgage payments cheaper (or
+            more accurately, your purchasing power smaller) and your return on
+            investment lower. Everything will be a lot more expensive in{' '}
+            {longerOption.term} years, and that is why inflation matters so
+            much.{' '}
+            {props.input.includeInflation &&
+              `We factor all of this automatically so the
+              final result on your right is not the actual money you
+              will gain/lose in ${longerOption.term} years, but rather,
+              the money you will gain/lose in ${longerOption.term} years
+              adjusted to today’s purchasing power. If you’re curious about what
+              the actual numbers will be, disable inflation.`}
           </Accordion>
         </FormGroup>
       </Form>

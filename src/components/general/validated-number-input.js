@@ -46,6 +46,7 @@ export default function (props) {
       placeholder={props.placeholder}
       type='number'
       value={value}
+      disabled={props.disabled}
     />
   )
 }
