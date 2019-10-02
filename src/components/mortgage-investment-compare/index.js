@@ -78,33 +78,28 @@ class MortgageInvestmentCompare extends React.Component {
 
   // Returns future value dynamically depending on mortgage term length.
   calculateFV (option1, option2, input) {
+    const investmentRate = input.includeROI
+      ? input.investmentRate / 100 / COMPOUND_FREQUENCY
+      : 0
+    const inflationRate = input.includeInflation ? input.inflation / 100 : 0
+
     if (option1.term >= option2.term) {
       return (
         FV(
-          input.investmentRate / 100 / COMPOUND_FREQUENCY,
+          investmentRate,
           option1.term * COMPOUND_FREQUENCY,
           option2.pmt - option1.pmt,
           0
-        ) *
-        getPurchasingPower(
-          option1.term,
-          input.inflation / 100,
-          COMPOUND_FREQUENCY
-        )
+        ) * getPurchasingPower(option1.term, inflationRate, COMPOUND_FREQUENCY)
       )
     } else if (option1.term < option2.term) {
       return (
         FV(
-          input.investmentRate / 100 / COMPOUND_FREQUENCY,
+          investmentRate,
           (option2.term - option1.term) * COMPOUND_FREQUENCY,
           option1.pmt,
           0
-        ) *
-        getPurchasingPower(
-          option2.term,
-          input.inflation / 100,
-          COMPOUND_FREQUENCY
-        )
+        ) * getPurchasingPower(option2.term, inflationRate, COMPOUND_FREQUENCY)
       )
     }
   }
