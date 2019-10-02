@@ -4,6 +4,7 @@ import React from 'react'
 import {
   Card,
   Col,
+  CustomInput,
   Form,
   FormGroup,
   InputGroup,
@@ -204,6 +205,17 @@ const InputCard = props => {
           >
             <label>Return on Investment (ROI)</label>
           </Tooltip>
+          <CustomInput
+            checked={props.input.includeROI}
+            className='custom-switch'
+            id='roi-switch'
+            label={<small>Include?</small>}
+            name='roi-switch'
+            onChange={() =>
+              onInputChange('includeROI', !props.input.includeROI)
+            }
+            type='checkbox'
+          />
           <InputGroup className='my-2'>
             <ValidatedNumberInput
               max={1000}
@@ -283,6 +295,17 @@ const InputCard = props => {
           >
             <label>Inflation</label>
           </Tooltip>
+          <CustomInput
+            checked={props.input.includeInflation}
+            className='custom-switch'
+            id='inflation-switch'
+            label={<small>Include?</small>}
+            name='inflation-switch'
+            onChange={() =>
+              onInputChange('includeInflation', !props.input.includeInflation)
+            }
+            type='checkbox'
+          />
           <InputGroup className='my-2'>
             <ValidatedNumberInput
               max={1000000000}
