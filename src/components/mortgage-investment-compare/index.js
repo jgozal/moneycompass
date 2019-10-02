@@ -34,6 +34,8 @@ class MortgageInvestmentCompare extends React.Component {
     this.updateInput = this.updateInput.bind(this)
 
     const input = {
+      includeInflation: false,
+      includeROI: true,
       inflation: 2,
       investmentRate: 8,
       loanAmt: 200000,
@@ -194,15 +196,19 @@ class MortgageInvestmentCompare extends React.Component {
           </Button>
           {this.state.showTable ? (
             <AmortizationTable
+              includeInflation={this.state.input.includeInflation}
+              includeROI={this.state.input.includeROI}
+              longerOption={longerOption}
               option1={this.state.result.option1}
               option2={this.state.result.option2}
               shorterOption={shorterOption}
-              longerOption={longerOption}
               yearlyResultsByOption={this.state.result.yearlyResultsByOption}
             />
           ) : (
             <Summary
               bestOption={bestOption}
+              includeInflation={this.state.input.includeInflation}
+              includeROI={this.state.input.includeROI}
               inflation={this.state.input.inflation}
               investmentRate={this.state.input.investmentRate}
               longerOption={longerOption}
