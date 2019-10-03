@@ -27,7 +27,7 @@ const InputCard = props => {
   }
 
   const [shorterOption, longerOption] = _.sortBy(
-    [props.input.option1, props.input.option2],
+    [props.result.option1, props.result.option2],
     'term'
   )
 
@@ -59,7 +59,11 @@ const InputCard = props => {
             Most financial advisers agree that people should spend no more than{' '}
             <b>28 percent</b> of their gross monthly income on housing expenses
             and no more than <b>36 percent</b> on total debt.{' '}
-            <a href='https://www.bankrate.com/calculators/mortgages/new-house-calculator.aspx'>
+            <a
+              href='https://www.bankrate.com/calculators/mortgages/new-house-calculator.aspx'
+              target='_blank'
+              rel='noopener noreferrer'
+            >
               Bankrate
             </a>{' '}
             has a great tool to help you determine how much you can afford.
@@ -115,14 +119,18 @@ const InputCard = props => {
             </Col>
           </Row>
           <Accordion title='Pros and Cons'>
-            <a href='https://thelendersnetwork.com/15-year-mortgage-vs-30-year-mortgage-rates/'>
+            <a
+              href='https://thelendersnetwork.com/15-year-mortgage-vs-30-year-mortgage-rates/'
+              target='_blank'
+              rel='noopener noreferrer'
+            >
               The Lender’s Network
             </a>{' '}
             has an excellent article which outlines the pros and cons of 15-year
             versus 30-year mortgages.
           </Accordion>
           <Accordion
-            title={`What happens after you’re done paying off the
+            title={`What happens after you're done paying off the
               ${shorterOption.term}-year mortgage?`}
           >
             This tool assumes that you’ll invest the difference between the
@@ -185,12 +193,22 @@ const InputCard = props => {
           </Row>
           <Accordion title='What is the annual percentage rate (APR)?'>
             APR measures how much it costs to borrow money.{' '}
-            <a href='https://www.bankrate.com/glossary/a/apr/'>Bankrate</a>{' '}
+            <a
+              href='https://www.bankrate.com/glossary/a/apr/'
+              target='_blank'
+              rel='noopener noreferrer'
+            >
+              Bankrate
+            </a>{' '}
             provides a more in-depth explanation.
           </Accordion>
           <Accordion title='Fixed vs. Variable Interest Rates'>
             This tool assumes your mortgage interest rate is fixed.{' '}
-            <a href='https://www.valuepenguin.com/loans/fixed-vs-variable-interest-rates'>
+            <a
+              href='https://www.valuepenguin.com/loans/fixed-vs-variable-interest-rates'
+              target='_blank'
+              rel='noopener noreferrer'
+            >
               Value Penguin
             </a>{' '}
             has a great article about how fixed and variable rates work.
@@ -238,8 +256,19 @@ const InputCard = props => {
             appreciate (increase in value). You can invest in anything: real
             estate, index funds, stocks, bonds etc. Most times, you will need a
             brokerage account to invest.{' '}
-            <a href='https://investor.vanguard.com/home/'>Vanguard</a>, an{' '}
-            <a href='https://about.vanguard.com/what-sets-vanguard-apart/why-ownership-matters/'>
+            <a
+              href='https://investor.vanguard.com/home/'
+              target='_blank'
+              rel='noopener noreferrer'
+            >
+              Vanguard
+            </a>
+            , an{' '}
+            <a
+              href='https://about.vanguard.com/what-sets-vanguard-apart/why-ownership-matters/'
+              target='_blank'
+              rel='noopener noreferrer'
+            >
               investor-owned
             </a>{' '}
             fund company, offers great mutual funds and ETFs with very low fees.
@@ -249,7 +278,11 @@ const InputCard = props => {
             investment relative to the amount of money invested (expressed as a
             percentage). This tool defaults to a 8% ROI because that is roughly
             the average historical annual return for the S&P 500.{' '}
-            <a href='https://www.investopedia.com/ask/answers/042415/what-average-annual-return-sp-500.asp'>
+            <a
+              href='https://www.investopedia.com/ask/answers/042415/what-average-annual-return-sp-500.asp'
+              target='_blank'
+              rel='noopener noreferrer'
+            >
               Investopedia
             </a>{' '}
             provides a little more background on this.
@@ -259,7 +292,11 @@ const InputCard = props => {
             as to mitigate risk (how volatile is your investment). We recommend
             you invest in a variety of low-cost index funds to diversify as best
             as possible.{' '}
-            <a href='https://www.thebalance.com/the-importance-of-diversification-3025567'>
+            <a
+              href='https://www.thebalance.com/the-importance-of-diversification-3025567'
+              target='_blank'
+              rel='noopener noreferrer'
+            >
               The Balance
             </a>{' '}
             has a great article on diversification.
@@ -269,7 +306,11 @@ const InputCard = props => {
             contrast, short term investments are usually held for a year or
             less. Note that short term investments usually have a{' '}
             <b>higher tax burden</b> than long term investments.{' '}
-            <a href='https://www.edwardjones.ca/financial-focus/investment-topics/short-term-vs-long-term-investments.html'>
+            <a
+              href='https://www.edwardjones.ca/financial-focus/investment-topics/short-term-vs-long-term-investments.html'
+              target='_blank'
+              rel='noopener noreferrer'
+            >
               Edward Jones
             </a>{' '}
             provides some info about the distinctions between a long term and
@@ -283,7 +324,11 @@ const InputCard = props => {
             will have to pay taxes on your profit). Retirement accounts (IRA,
             401k, 403b, etc) in contrast, are tax-sheltered, but the caveat is
             that your money suffers from some withdrawal restrictions.{' '}
-            <a href='https://www.sofi.com/learn/content/what-is-a-taxable-account/'>
+            <a
+              href='https://www.sofi.com/learn/content/what-is-a-taxable-account/'
+              target='_blank'
+              rel='noopener noreferrer'
+            >
               SoFi
             </a>{' '}
             provides a more in-depth analysis on this topic.
@@ -329,16 +374,24 @@ const InputCard = props => {
             Prices generally increase as time passes. The average home price in
             the US during the 1960s was roughly $20,000. The average home price
             today is roughly{' '}
-            <a href='https://www.census.gov/construction/nrs/pdf/uspricemon.pdf'>
+            <a
+              href='https://www.census.gov/construction/nrs/pdf/uspricemon.pdf'
+              target='_blank'
+              rel='noopener noreferrer'
+            >
               $400,000
             </a>
             . Because prices increase, your purchasing power decreases. If you
-            had $370,000 to buy a house today and you just left the money in
+            had $400,000 to buy a house today and you just left the money in
             your bank account for 10 years, it is unlikely you would be able to
             buy the same house for that price again 10 years later. That is
             inflation, and that is why investing is so important, to protect
             your purchasing power against it.{' '}
-            <a href='https://www.khanacademy.org/economics-finance-domain/core-finance/inflation-tutorial/inflation-basics-tutorial/v/what-is-inflation'>
+            <a
+              href='https://www.khanacademy.org/economics-finance-domain/core-finance/inflation-tutorial/inflation-basics-tutorial/v/what-is-inflation'
+              target='_blank'
+              rel='noopener noreferrer'
+            >
               Khan Academy
             </a>{' '}
             has a great video about inflation.
@@ -346,9 +399,19 @@ const InputCard = props => {
           <Accordion title='How do you determine inflation?'>
             The Fed sets a target inflation rate of 2%. Inflation in the US is
             determined by the{' '}
-            <a href='https://www.bls.gov/cpi/'>Consumer Price Index (CPI)</a>.
-            Other countries have a similar way to measure inflation.{' '}
-            <a href='https://www.khanacademy.org/economics-finance-domain/core-finance/inflation-tutorial/inflation-basics-tutorial/v/inflation-data'>
+            <a
+              href='https://www.bls.gov/cpi/'
+              target='_blank'
+              rel='noopener noreferrer'
+            >
+              Consumer Price Index (CPI)
+            </a>
+            . Other countries have a similar way to measure inflation.{' '}
+            <a
+              href='https://www.khanacademy.org/economics-finance-domain/core-finance/inflation-tutorial/inflation-basics-tutorial/v/inflation-data'
+              target='_blank'
+              rel='noopener noreferrer'
+            >
               Khan Academy
             </a>{' '}
             has a brief video that talks about the data behind the CPI.
