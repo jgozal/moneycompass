@@ -20,7 +20,7 @@
   "bugs": {
     "url": "https://github.com/jgozal/moneycompass/issues"
   },
-  "homepage": "https://github.com/jgozal/moneycompass#readme",
+  "homepage": "https://jgozal.github.io/moneycompass",
   "devDependencies": {
     "babel-core": "^6.26.3",
     "babel-eslint": "^10.0.2",

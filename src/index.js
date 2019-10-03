@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { BrowserRouter as Router, Route } from 'react-router-dom'
+import { HashRouter, Route } from 'react-router-dom'
 
 import { GRAY_900, BLUE_GRAY_900, LIGHT_BLUE } from './assets/colors'
 import FeedbackButton from './components/general/feedback-button'
@@ -37,7 +37,7 @@ class App extends React.Component {
   render () {
     // TODO 018.12.09: Include an intro paragraph
     return (
-      <Router>
+      <HashRouter basename={process.env.PUBLIC_URL}>
         <div className={globalStyles}>
           <Navbar className='border-bottom sticky-top' color='white' light>
             <NavbarBrand href='/'>
@@ -60,7 +60,7 @@ class App extends React.Component {
             </p>
           </footer>
         </div>
-      </Router>
+      </HashRouter>
     )
   }
 }
