@@ -194,8 +194,9 @@ class MortgageInvestmentCompare extends React.Component {
             each situation, with the same budget.
           </p>
           <InputCard
-            onInputChange={this.updateInput}
             input={this.state.input}
+            onInputChange={this.updateInput}
+            result={this.state.result}
           />
         </Col>
         <Col xs='8'>

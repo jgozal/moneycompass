@@ -27,7 +27,7 @@ const InputCard = props => {
   }
 
   const [shorterOption, longerOption] = _.sortBy(
-    [props.input.option1, props.input.option2],
+    [props.result.option1, props.result.option2],
     'term'
   )
 
@@ -130,7 +130,7 @@ const InputCard = props => {
             versus 30-year mortgages.
           </Accordion>
           <Accordion
-            title={`What happens after you’re done paying off the
+            title={`What happens after you're done paying off the
               ${shorterOption.term}-year mortgage?`}
           >
             This tool assumes that you’ll invest the difference between the
