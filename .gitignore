@@ -62,4 +62,4 @@ typings/
 
 # Custom
 package-lock.json
-dist
+dist/
