@@ -136,12 +136,14 @@ const InputCard = props => {
             This tool assumes that you’ll invest the difference between the
             payment of the {shorterOption.term}-year and the {longerOption.term}
             -year mortgages. If you had to make monthly payments of{' '}
-            {toUSD(-shorterOption.pmt)} for your {shorterOption.term}
-            -year mortgage versus {toUSD(-longerOption.pmt)} for your{' '}
+            {toUSD(-shorterOption.pmt, 1)} for your {shorterOption.term}
+            -year mortgage versus {toUSD(-longerOption.pmt, 1)} for your{' '}
             {longerOption.term}
             -year mortgage, you would invest the difference (
-            {toUSD(-1 * (shorterOption.pmt - longerOption.pmt))}) monthly after
-            paying off your {shorterOption.term}-year mortgage.
+            {toUSD(-1 * (shorterOption.pmt - longerOption.pmt), 1)}) monthly in
+            the case of your {longerOption.term}-year mortgage, and{' '}
+            {toUSD(-shorterOption.pmt, 1)} monthly after paying off your{' '}
+            {shorterOption.term}-year mortgage.
           </Accordion>
         </FormGroup>
         <hr />
