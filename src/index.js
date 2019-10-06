@@ -9,7 +9,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { HashRouter, Route } from 'react-router-dom'
 
-import { GRAY_900, BLUE_GRAY_900, LIGHT_BLUE } from './assets/colors'
+import { GRAY_100, GRAY_900, BLUE_GRAY_900, LIGHT_BLUE } from './assets/colors'
 import FeedbackButton from './components/general/feedback-button'
 import MortgageInvestmentCompare from './components/mortgage-investment-compare/index'
 
@@ -45,7 +45,10 @@ class App extends React.Component {
               MoneyCompass
             </NavbarBrand>
           </Navbar>
-          <Container fluid className='pt-4 px-5'>
+          <Container
+            fluid
+            className={cx(css(`background-color: ${GRAY_100}`), 'pt-4', 'px-5')}
+          >
             <Route
               path='/mortgage-investment-compare'
               component={MortgageInvestmentCompare}

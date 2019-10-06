@@ -9,6 +9,7 @@ export const GREEN_300 = '#81C784'
 export const WHITE = '#FFF'
 
 export const GRAY = '#9E9E9E'
+export const GRAY_100 = '#FAFAFA'
 export const GRAY_300 = '#E0E0E0'
 export const GRAY_900 = '#212121'
 

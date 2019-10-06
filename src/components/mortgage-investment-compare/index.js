@@ -187,7 +187,7 @@ class MortgageInvestmentCompare extends React.Component {
     return (
       <Row>
         <Col xs='4'>
-          <h2>Compare Mortgage Terms</h2>
+          <h2><b>Compare Mortgage Terms</b></h2>
           <p className='mt-4'>
             Is a {this.state.result.option1.term} year mortgage better than a{' '}
             {this.state.result.option2.term} year mortgage? See what happens in
